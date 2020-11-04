@@ -1,0 +1,169 @@
+.header
+
+.h1 Test for basic formatting
+
+- headers
+- italic/bold/underline
+- links
+- lists
+- side-notes
+- pre-block
+
+.h2 Nunc omni virtuti vitium contrario nomine opponitur.
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+Quae diligentissime contra Aristonem dicuntur a Chryippo.
+Qua ex cognitione facilior facta est investigatio rerum
+occultissimarum. 
+.i Duo Reges: constructio interrete.
+.side italic
+Hoc dictum in una re latissime patet, ut in omnibus
+factis re, non teste moveamur. 
+.link http://loripsum.net/ Sed ego in hoc resisto;
+Cuius similitudine
+perspecta in formarum specie ac dignitate transitum
+est ad honestatem dictorum atque factorum. Primum cur
+ista res digna odio est, nisi quod est turpis? Mihi
+quidem Homerus huius modi quiddam vidisse videatur in
+iis, quae de Sirenum cantibus finxerit.
+
+- list
+- with dashes
+	# sublist numeric
+	# second item
+		@ third level
+		@ alpha list
+	# back to level 2
+- back to dash
+- again, dash
+
+Hoc est non modo cor non habere, sed ne palatum quidem.
+Cur igitur, inquam, res tam dissimiles eodem nomine
+appellas? Et quidem iure fortasse, sed tamen non gravissimum
+est testimonium multitudinis. Quod ea non occurrentia
+fingunt, vincunt Aristonem;
+.u Cave
+.u putes
+.u quicquam
+.u esse
+.u verius.
+.side underlined
+Eaedem res maneant alio modo. Quid
+ergo attinet gloriose loqui, nisi constanter loquare?
+Etenim semper illud extra est, quod arte comprehenditur.
+
+Nec vero sum nescius esse utilitatem in historia,
+non modo voluptatem. Quid enim tanto opus est instrumento
+in optimis artibus comparandis? 
+.link loripsum.net/ An tu me de L. 
+.side link
+.i Murenam te accusante defenderem.
+Graecum enim hunc versum nostis omnes-:
+Suavis laborum est praeteritorum memoria.
+.link https://dullaart.website Certe non potest.
+Ille vero, si
+insipiens-quo certe, quoniam tyrannus -, numquam beatus;
+Cum salvum esse flentes sui respondissent, rogavit
+essentne fusi hostes. Quam ob rem tandem, inquit, non
+satisfacit? Est enim effectrix multarum et magnarum voluptatum.
+
+Quod maxime efficit Theophrasti de beata vita liber,
+in quo multum admodum fortunae datur. Graecis hoc modicum
+est: Leonidas, Epaminondas, tres aliqui aut quattuor;
+Cenasti in vita numquam bene, cum omnia in ista Consumis
+squilla atque acupensere cum decimano. 
+.i Quis Aristidem non mortuum diligit?
+Est enim effectrix multarum
+et magnarum voluptatum. Manebit ergo amicitia tam diu,
+quam diu sequetur utilitas, et, si utilitas amicitiam
+constituet, tollet eadem. Ecce aliud simile dissimile.
+
+# Sed nonne merninisti
+.i licere
+mihi ista probare, quae sunt a te dicta?
+# Tibi hoc incredibile,
+.u quod
+beatissimum.
+# Dicam,
+.b inquam,
+et quidem discendi causa magis, quam quo te aut Epicurum reprehensum velim.
+# Non minor, inquit, voluptas percipitur ex vilissimis rebus quam ex pretiosissimis.
+
+
+Sed tamen intellego quid velit. Si longus, levis.
+.link http://loripsum.net/ Qualem igitur hominem natura inchoavit?
+Sin laboramus, quis est, qui alienae modum statuat industriae?
+Tamen a proposito, inquam, aberramus. Sin laboramus,
+quis est, qui alienae modum statuat industriae?
+.link http://loripsum.net/ target="_blank"
+igitur ne non debeas verbis nostris uti, sententiis
+tuis. Ego quoque, inquit, didicerim libentius
+si quid attuleris, quam te reprehenderim. Ergo id
+est convenienter naturae vivere, a natura discedere.
+
+.pre
+Ista similia non sunt, Cato, in quibus quamvis multum
+processeris tamen illud in eadem causa est, a quo abesse
+velis, donec evaseris;
+
+Haec et tu ita posuisti, et verba vestra sunt.
+.pre
+
+
+.b Ea, quae dialectici nunc tradunt et docent, nonne ab illis instituta sunt aut inventa sunt?
+
+
+Sullae consulatum?	Invidiosum nomen est, infame, suspectum.
+
+Sed nimis multa.	Nihil est enim, de quo aliter tu sentias atque ego, modo commutatis verbis ipsas res conferamus.
+
+Confecta res esset.	Immo alio genere;
+
+Recte, inquit, intellegis.	Nunc haec primum fortasse audientis servire debemus.
+
+Qui convenit?	Sed emolumenta communia esse dicuntur, recte autem facta
+.side et peccata
+non habentur communia.
+
+
+.h2 Consequentia exquirere, quoad sit id, quod volumus, effectum.
+
+.u Occultum facinus esse potuerit, gaudebit;
+Sit hoc ultimum bonorum, quod nunc a me defenditur;
+.b Nam ante Aristippus, et ille melius.
+Age sane,
+inquam. Vitiosum est enim in dividendo partem in genere
+numerare. 
+.link http://loripsum.net/ Qui est in parvis malis.
+
+Non enim, si omnia non sequebatur, idcirco non erat
+ortus illinc. Non minor, inquit, voluptas percipitur
+ex vilissimis rebus quam ex pretiosissimis. Ergo adhuc,
+quantum equidem intellego, causa non videtur fuisse
+mutandi nominis. Vos autem cum perspicuis dubia debeatis
+illustrare, dubiis perspicua conamini tollere. Quis
+non odit sordidos, vanos, leves, futtiles? Fortitudinis
+quaedam praecepta sunt ac paene leges, quae effeminari
+virum vetant in dolore. Itaque his sapiens semper
+vacabit. Nec tamen ullo modo summum pecudis bonum
+et hominis idem mihi videri potest.
+
+@ Quae cum magnifice primo dici viderentur, considerata minus probabantur.
+@ Quae fere omnia appellantur uno ingenii nomine, easque virtutes qui habent, ingeniosi vocantur.
+@ A primo, ut opinor, animantium ortu petitur origo summi boni.
+@ Iam quae corporis sunt, ea nec auctoritatem cum animi partibus, comparandam et cognitionem habent faciliorem.
+
+
+.b Hoc mihi cum tuo fratre convenit.
+De malis
+autem et bonis ab iis animalibus, quae nondum depravata
+sint, ait optime iudicari.
+.i An est aliquid, quod te sua sponte delectet?
+Quod idem cum vestri faciant,
+non satis magnam tribuunt inventoribus gratiam. Etenim
+nec iustitia nec amicitia esse omnino poterunt, nisi
+ipsae per se expetuntur. Ut placet, inquit, etsi enim
+illud erat aptius, aequum cuique concedere. Habent
+enim et bene longam et satis litigiosam disputationem.
+
+

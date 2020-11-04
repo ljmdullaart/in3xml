@@ -1,0 +1,69 @@
+<!--
+This is the in3 xml definition
+#INSTALL@ /usr/local/share/in3xml.dtd
+-->
+<!-- Entity corresponding to formatrequest -->
+<!ELEMENT underline (#PCDATA)>
+<!ELEMENT italic (#PCDATA)>
+<!ELEMENT bold (#PCDATA)>
+<!ELEMENT center (#PCDATA)>
+<!ELEMENT lst (#PCDATA)>
+<!ELEMENT fixed (#PCDATA)>
+<!ELEMENT link (target|text)+>
+
+
+
+<!-- Main element definitions -->
+
+<!ELEMENT in3xml (title     |subtitle  |author |
+				  video     |image     |cover  |
+				  headerlink|set       |heading|   
+				  table     |list      |include|
+				  lst       |paragraph |block  |
+				  header
+				  )*>
+
+<!-- Lists -->
+<!ELEMENT list (type|list|item)*>
+<!ELEMENT item (#PCDATA | underline|italic|bold|center|lst|fixed|video|image|block|link|set)* >
+
+<!ELEMENT header (#PCDATA)>
+<!ELEMENT heading (level,seq,text)>
+
+<!-- Paragraphs -->
+<!ELEMENT paragraph (text|sidenote|leftnote)*>
+<!ELEMENT text (#PCDATA | underline|italic|bold|center|lst|fixed|video|image|block|link|set)* >
+<!ELEMENT sidenote (#PCDATA)>
+<!ELEMENT leftnote (#PCDATA)>
+
+<!-- Tables -->
+<!ELEMENT table (row*)>
+<!ELEMENT row (cell*)>
+<!ELEMENT cell (#PCDATA | underline|italic|bold|center|lst|fixed|video|image|block|link|set)* >
+	<!ATTLIST cell
+		rowspan CDATA #IMPLIED
+		colspan CDATA #IMPLIED
+	>
+<!-- Elements that may be stand-alone or part of paragraphs -->
+
+<!-- Variable handling -->
+<!ELEMENT set (variable,value)>
+<!ELEMENT value (#PCDATA)>
+<!ELEMENT variable (#PCDATA)>
+
+<!ELEMENT image ANY>
+<!ELEMENT block (name|type|blocktext)*>
+<!ELEMENT blocktext (#PCDATA)>
+
+
+
+<!--
+	Below are variable=value types that may be common
+	sub-elements of many different other types
+-->
+<!ELEMENT type (#PCDATA)>
+<!ELEMENT seq (#PCDATA)>
+<!ELEMENT name (#PCDATA)>
+<!ELEMENT file (#PCDATA)>
+<!ELEMENT level (#PCDATA)>
+<!ELEMENT target (#PCDATA)>

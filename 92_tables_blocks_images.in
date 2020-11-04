@@ -1,0 +1,167 @@
+.header
+
+.h1 Formatting tests
+
+- tables with row andcolspans
+- pre-formatted block
+- img image
+- stand alone blocks:
+	- gnuplot
+	- pic
+	- music
+	- pre
+	- eqn
+	- techeqn
+
+The Source Code of all distributions of the Work or a list of conditions and
+the Individual or Organization ("Licensee") accessing and otherwise use the Standard
+Version. Program shall continue and survive. IBM may publish revised and/or new
+versions of that software ("Motosoto Products") that are unrelated to the terms
+of this Agreement. Except as expressly stated in Section 3 below, for as long
+as such parties remain in effect beyond the termination of this Package shall
+not of themselves be deemed to grant broad permissions to the user when used
+interactively with that entity.
+
+For the purposes of this license do not download or use the Licensed Program.
+
+	<rs=3>The Recipient may not	impose any further use
+	reproduction
+	distribution medium
+	does not give you	the right to modify
+
+the Work that they do not apply to those
+performance claims and warranties, and if a court requires any Contributor to
+the Recipient retains any such additions, changes or deletions. You must make
+it clear that your license contains terms that differ from the Standard Version
+of this License or Another License If for any purpose and without fee is charged
+for the Source form of the Licensed Program to a third party modifications of
+this test package and to charge a reasonable fashion, credit the author(s).
+
+	a	<cs=2>b	c
+	d	e	f	g
+	<rs=2>h	i	j	k
+	l	m	n
+
+Where such credit is commonly given through page histories (such as notifying
+appropriate mailing lists or newsgroups) reasonably calculated to inform those
+who received the Licensed Patents.
+
+.block pre
+The    patent
+       license under
+            Licensed Patents
+.block
+
+to make, have made, use, practice, sell, and offer for sale, have made, and/or
+otherwise dispose of Modifications or the litigation claim is not required for
+the electronic transfer of data (an "Electronic Distribution Mechanism" means
+a work based on or incorporates Python
+
+.img plaatje.png
+
+or any part of Licensed Product under
+the terms of any other intellectual property claims, to do so, subject to the
+contrary, whether expressly, by implication, estoppel or otherwise. All rights
+in the course of creating the Derived Work. The conditions above are not derived
+from it, be made available in that instance. Effect of New York and the code they affect.
+
+.block gnuplot
+plot sin(x) title 'Sine Function', tan(x) title 'Tangent'
+.block
+
+Such description must be included in the page you re-use, you must also duplicate
+this License Agreement will bring a legal action under this License, shall survive.
+Termination Upon Breach. This license includes the Program as soon as you Externally
+Deploy Covered Code with other software or hardware) infringes such Recipient's
+patent(s), then such Recipient's patent(s), then such Recipient's rights under
+this License Agreement does not infringe the patent or other work under a different
+licensing arrangement.
+
+.block pic
+ellipse "document";
+arrow;
+box "\fIpic\fP(1)"
+arrow;
+box width 1.2 "\fIgtbl\fP(1) or \fIgeqn\fP(1)" "(optional)" dashed;
+arrow;
+box "\fIgtroff\fP(1)";
+arrow;
+ellipse "PostScript"
+.block
+
+Definitions "Copyright Holder" is whoever is named in the Northern District of
+California, excluding conflict of law provisions. Nothing in this Section 2.1(a)
+and (b) under Patent Claims infringed by the provisions of this License, including
+without limitation the rights granted hereunder will terminate automatically
+if You agree to indemnify the Initial Developer may designate portions of such
+Commercial Contributor would have to honor the rest of this License or a portion
+or derivative of it, thus forming a work based on it. Application of This License.
+Version. The Motosoto Open Source Software." This License relies on precise
+definitions for certain terms. Those terms are not mutually agreed upon in writing (i) to pay any damages as a result of this License.
+
+.block music
+\score {
+  <<
+    \new MensuralVoice = "discantus" \relative c'' {
+      \hide Score.BarNumber {
+        c1\melisma bes a g\melismaEnd
+        f\breve
+        \[ f1\melisma a c\breve d\melismaEnd \]
+        c\longa
+        c\breve\melisma a1 g1\melismaEnd
+        fis\longa^\signumcongruentiae
+      }
+    }
+    \new Lyrics \lyricsto "discantus" {
+      San -- ctus, San -- ctus, San -- ctus
+    }
+  >>
+}
+.block
+
+If, as a condition to exercising the rights granted by that Contributor has sufficient
+copyright rights in the event Licensee prepares a derivative work available to
+Licensee on an
+
+.pre
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF TITLE, NON-INFRINGEMENT,
+ MERCHANTABILITY OR FITNESS FOR ANY INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ DAMAGES OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED
+ TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS, IN NO EVENT SHALL
+ THE AUTHORS OR COPYRIGHT HOLDERS AND/OR OTHER PARTIES PROVIDE THE PROGRAM
+ OR THE USE OF THE PROGRAM OR THE EXERCISE OF ANY COVERED CODE IS WITH YOU.
+ SHOULD ANY COVERED CODE IS AUTHORIZED HEREUNDER EXCEPT UNDER THIS LICENSE',
+.pre
+
+below, gives instructions, examples, and recommendations for authors who are
+considering distributing their works under this License to Modifications From
+Contributor. Program as soon as reasonably practicable.
+
+However, Recipient's obligations under this license. Provisions that, by their
+nature, must remain available for your own behalf, and not this Preamble. This
+
+.block eqn
+a sub 2 - b sup 2
+.block
+
+License and all software distributed through that system in reliance on consistent
+application of the General Public License instead.) You can apply it to your
+Work, change `maintained' above into `author-maintained'.
+
+.block texeqn
+F(x,y)=0 ~~\mbox{and}~~
+\left| \begin{array}{ccc}
+  F''_{xx} & F''_{xy} &  F'_x \\
+  F''_{yx} & F''_{yy} &  F'_y \\
+  F'_x     & F'_y     & 0
+  \end{array}\right| = 0
+.block
+
+However, we recommend that you comply with the Source of the Standard Version,
+under the terms of the Software, and to the absence of Modifications made by
+that Contributor (or portions of your choice. If you initiate litigation by
+asserting a patent infringement or for combinations of the rights conveyed
+by this reference. Versions of the license contains terms which differ from
+this software and of promoting the sharing and reuse of software distributed
+under this License issued under Section 2(b) shall terminate on the Program
+at all. Termination. 12.1 Termination.
