@@ -1,6 +1,11 @@
 #!/usr/bin/perl
 #INSTALL@ /usr/local/bin/xml3html
 use strict;
+use File::Basename;
+
+my $dvifontpath=`find /usr/share -name 'ps2pk.map' | tail -1`;
+chomp $dvifontpath;
+$dvifontpath=dirname($dvifontpath);
 
 
 my $trace=0;
@@ -39,77 +44,77 @@ sub error {
 
 # Variables for overall use
 my %variables;
+    $variables{'H1'}=0;
+    $variables{'H2'}=0;
+    $variables{'H3'}=0;
+    $variables{'H4'}=0;
+    $variables{'H5'}=0;
+    $variables{'H6'}=0;
+    $variables{'H7'}=0;
+    $variables{'H8'}=0;
+    $variables{'H9'}=0;
+    $variables{'appendix'}=-1;
+    $variables{'author'}='';
+    $variables{'blockcnt'}=0;
+    $variables{'cover'}='';
+    $variables{'debug'}=0;
+    $variables{'do_cover'}='no';
+    $variables{'do_headers'}='yes';
+    $variables{'imagex'}=800;
+    $variables{'imagey'}=800;
+    $variables{'inlineemp'}=0;
+    $variables{'interpret'}=1;
+	$variables{'mapnumber'}=1;
+    $variables{'markdown'}=0;
+    $variables{'notes'}=0;
     $variables{'sidechar'}='*';
     $variables{'sidesep'}=';';
-    $variables{'notes'}=0;
-    $variables{'interpret'}=1;
-    $variables{'markdown'}=0;
-    $variables{'inlineemp'}=0;
-    $variables{'debug'}=0;
-    $variables{"appendix"}=-1;
-    $variables{"H1"}=0;
-    $variables{"H2"}=0;
-    $variables{"H3"}=0;
-    $variables{"H4"}=0;
-    $variables{"H5"}=0;
-    $variables{"H6"}=0;
-    $variables{"H7"}=0;
-    $variables{"H8"}=0;
-    $variables{"H9"}=0;
-    $variables{"blockcnt"}=0;
-    $variables{"author"}='';
-    $variables{"title"}='';
-    $variables{"subtitle"}='';
-    $variables{"cover"}='';
-    $variables{"do_cover"}='no';
-    $variables{"do_headers"}='yes';
-    $variables{"imagex"}=800;
-    $variables{"imagey"}=800;
-	$variables{'mapnumber'}=1;
+    $variables{'subtitle'}='';
+    $variables{'title'}='';
 
 my @input;
 my @infile;
 
 # Variables that are picked-up in sub-states and used when higher states close
-my $varname='';
-my $value='';
-my $text='';			
 my $class='';
-my $target='';
 my $coord='';
-my $image;
 my $file='';
+my $format='';
+my $image;
 my $level=0;
+my $name;
 my $seq='';
+my $target='';
+my $text='';			
+my $type;
+my $value='';
+my $varname='';
+my $video;
 
 # Control variables
-my @listtype;
-my @listblock;
-my @mapfields;
-push @listtype,'none';
-my $listlevel=0;
-my $ptableopen=0;		# Paragraph table is open. This allows using the same table
-						# for different paragraphs
-my $inline=0;
-my @sidenotes;
-my @leftnotes;
-my @blocktext='';
-my $progressindicator=0;
 my $fileline=0;
-my $video;
-my $type;
-my $name;
+my $inline=0;
+my $listlevel=0;
+my $progressindicator=0;
+my $ptableopen=0;		# Paragraph table is open. This allows using the same table for different paragraphs
+my @blocktext='';
+my @leftnotes;
+my @listblock;
+my @listtype;
+	push @listtype,'none';
+my @mapfields;
+my @sidenotes;
 
 my $what='';
 for (@ARGV){
 	if ($what eq ''){
 		if (/^--$/){ while (<STDIN>){push @input,$_;}}
-		elsif (/^--debug([0-9]+)/){ $variables{"DEBUG"}=$1; }
-		elsif (/^--debug=([0-9]+)/){ $variables{"DEBUG"}=$1; }
+		elsif (/^--debug([0-9]+)/){ $variables{'DEBUG'}=$1; }
+		elsif (/^--debug=([0-9]+)/){ $variables{'DEBUG'}=$1; }
 		elsif (/^-d$/){$what='debug';}
 		elsif (/^--debug$/){$what='debug';}
-		elsif (/^-c([0-9]+)/){ $variables{"H1"}=$1;$variables{"do_cover"}='no';}
-		elsif (/^--chapter([0-9]+)/){ $variables{"H1"}=$1-1;$variables{"do_cover"}='no';}
+		elsif (/^-c([0-9]+)/){ $variables{'H1'}=$1;$variables{'do_cover'}='no';}
+		elsif (/^--chapter([0-9]+)/){ $variables{'H1'}=$1-1;$variables{'do_cover'}='no';}
 		elsif (/^--chapter=([0-9]+)/){ $variables{"H1"}=$1-1;$variables{"do_cover"}='no';}
 		elsif (/^-c$/){$what='chapter';$variables{"do_cover"}='no';}
 		elsif (/^--chapter$/){$what='chapter';$variables{"do_cover"}='no';}
@@ -125,6 +130,7 @@ for (@ARGV){
 		elsif (/^-m/){$variables{"markdown"}=1;}
 		elsif (/^--markdown/){$variables{"markdown"}=1;}
 		elsif (/^--noheaders/){$variables{"do_headers"}='no';}
+		elsif (/^--no-headers/){$variables{"do_headers"}='no';}
 		elsif (/^--no_headers/){$variables{"do_headers"}='no';}
 		elsif (/^--nocover/){$variables{"do_cover"}='no';}
 		elsif (/^--no_cover/){$variables{"do_cover"}='no';}
@@ -208,6 +214,18 @@ for $linenumber (0 .. $#input){
 	if ($input[$linenumber] =~/<side[note]*>/){ $variables{'notes'}=2;}
 }
 
+#
+#   ___ ___  _ __ ___  _ __ ___   ___  _ __
+#  / __/ _ \| '_ ` _ \| '_ ` _ \ / _ \| '_ \
+# | (_| (_) | | | | | | | | | | | (_) | | | |
+#  \___\___/|_| |_| |_|_| |_| |_|\___/|_| |_|
+#
+#   __                            _
+#  / _| ___  _ __ _ __ ___   __ _| |_ ___
+# | |_ / _ \| '__| '_ ` _ \ / _` | __/ __|
+# |  _| (_) | |  | | | | | | (_| | |_\__ \
+# |_|  \___/|_|  |_| |_| |_|\__,_|\__|___/
+#
 sub formatrequest {
 	if ($input[$linenumber] =~/<underline>/){
 		output('<u>');
@@ -274,6 +292,7 @@ sub outimage {
 	(my $img)=@_;
 	chomp $img;
 	$img=~s/ *$//;
+	my $baseimg=basename($img);
 	my $imgsize=` imageinfo --geom $img`;
 	chomp $imgsize;
 	my $scale=100; #percent
@@ -291,13 +310,14 @@ sub outimage {
 	my $height=($y*$scale)/100;
 	my $align=$y/10;
 	if ($inline>0){
-		output ("<img src=\"$img\" alt=\"$img\" width=\"$width\" height=\"$height\" style=\"vertical-align:-$align%;\">");
+		output ("<img src=\"$baseimg\" alt=\"$img\" width=\"$width\" height=\"$height\" style=\"vertical-align:-$align%;\">");
 	}
 	else {
 		output ('<div style="text-align: center">');
-		output ("<img src=\"$img\" alt=\"$img\" width=\"$width\" height=\"$height\" align='center'>");
+		output ("<img src=\"$baseimg\" alt=\"$img\" width=\"$width\" height=\"$height\" align='center'>");
 		output ('</div>');
 	}
+	system ("cp $img web/$baseimg");
 
 }
 
@@ -581,7 +601,6 @@ while ( $linenumber <= $#input){
 		}
 	}
 	elsif ($state  eq 'block'){
-
 		if ($input[$linenumber] =~/<\/block>/){
 			for (@blocktext){
 				s/&lt;/</g;
@@ -681,7 +700,7 @@ while ( $linenumber <= $#input){
 					close $TEXEQN;
             		system("cd block; echo '' | latex ../$blk.tex > /dev/null 2>/dev/null");
 					#system("convert  -trim  -density $density  $blk.dvi  $blk.png");
-            		system("dvisvgm -n -c1.5  $blk.dvi -o $blk.svg");
+            		system("dvisvgm -n -c1.5 -m $dvifontpath $blk.dvi -o $blk.svg");
 					output("<img src=\"$blk.svg\" alt=\"$blk\" style=\"vertical-align:middle;\">");
 				}
 				else {
@@ -818,6 +837,9 @@ while ( $linenumber <= $#input){
 		}
 		elsif ($input[$linenumber] =~/<blocktext>/){
 			state_push('blocktext');
+		}
+		elsif ($input[$linenumber] =~/<format>/){
+			state_push('format');
 		}
 		elsif ($input[$linenumber] =~/<text>/){
 			state_push('blocktext');
@@ -1005,11 +1027,13 @@ while ( $linenumber <= $#input){
 		if ($input[$linenumber] =~/<\/video>/){
 			if ($file ne ''){
 				if ($text eq ''){ $text=$file;}
+				my $basefile=basename($file);
 				output ('<br>');
 				output('<div style="text-align: center;">');
-				output ("<video controls>","<source src=\"$file\">",$text,"</video>");
+				output ("<video controls>","<source src=\"$basefile\">",$text,"</video>");
 				output ('<br>');
 				output ('</div>');
+				system ("cp $file web/$basefile");
 				$text='';
 				$file='';
 			}
@@ -1029,13 +1053,14 @@ while ( $linenumber <= $#input){
 		if ($input[$linenumber] =~/<\/map>/){
 			if ($file ne ''){
 				if ($text eq ''){ $text=$file;}
-
+				my $basefile=basename($file);
 				output ('<div style="text-align: center">');
-				output ("<img src=\"$file\" alt=\"$file\" usemap=#map$variables{'mapnumber'}>");
+				output ("<img src=\"$basefile\" alt=\"$file\" usemap=#map$variables{'mapnumber'}>");
 				output ("<map name=map$variables{'mapnumber'}>");
 				for (@mapfields){ output ($_);}
 				output ('</map>');
 				output ('</div>');
+				system("cp $file web/$basefile");
 				$text='';
 				$file='';
 				$image='';
@@ -1178,6 +1203,16 @@ while ( $linenumber <= $#input){
 			$variables{'subtitle'}=$input[$linenumber];
 		}
 	}
+	elsif ($state  eq 'format'){
+		if ($input[$linenumber] =~/<\/format>/){
+			$format=~s/"$//;
+			$format=~s/^"//;
+			state_pop();
+		}
+		else {
+			$format=$input[$linenumber];
+		}
+	}
 	elsif ($state  eq 'author'){
 		if ($input[$linenumber] =~/<\/author>/){
 			state_pop();
@@ -1198,7 +1233,7 @@ while ( $linenumber <= $#input){
 		if ($input[$linenumber] =~/<\/header>/){
 			state_pop();
 		}
-		if ($input[$linenumber] =~/<\/headerfile>/){
+		elsif ($input[$linenumber] =~/<\/headerfile>/){
 			state_pop();
 		}
 		else {
