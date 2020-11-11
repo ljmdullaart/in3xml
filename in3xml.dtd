@@ -20,26 +20,27 @@ This is the in3 xml definition
 				  headerlink|set       |heading|   
 				  table     |list      |include|
 				  lst       |paragraph |block  |
-				  header
+				  header	|map       |toc
 				  )*>
 
 <!-- Lists -->
 <!ELEMENT list (type|list|item)*>
-<!ELEMENT item (#PCDATA | underline|italic|bold|center|lst|fixed|video|image|block|link|set)* >
+<!ELEMENT item (#PCDATA |break| underline|italic|bold|center|lst|fixed|video|image|block|link|set)* >
 
 <!ELEMENT header (#PCDATA)>
 <!ELEMENT heading (level,seq,text)>
+<!ELEMENT toc (#PCDATA)>
 
 <!-- Paragraphs -->
 <!ELEMENT paragraph (text|sidenote|leftnote)*>
-<!ELEMENT text (#PCDATA | underline|italic|bold|center|lst|fixed|video|image|block|link|set)* >
+<!ELEMENT text (#PCDATA |break| underline|italic|bold|center|lst|fixed|video|image|block|link|set)* >
 <!ELEMENT sidenote (#PCDATA)>
 <!ELEMENT leftnote (#PCDATA)>
 
 <!-- Tables -->
 <!ELEMENT table (row*)>
 <!ELEMENT row (cell*)>
-<!ELEMENT cell (#PCDATA | underline|italic|bold|center|lst|fixed|video|image|block|link|set)* >
+<!ELEMENT cell (#PCDATA |break| underline|italic|bold|center|lst|fixed|video|image|block|link|set)* >
 	<!ATTLIST cell
 		rowspan CDATA #IMPLIED
 		colspan CDATA #IMPLIED
@@ -52,8 +53,13 @@ This is the in3 xml definition
 <!ELEMENT variable (#PCDATA)>
 
 <!ELEMENT image ANY>
-<!ELEMENT block (name|type|blocktext)*>
+<!ELEMENT block (name|type|blocktext|image|format)*>
 <!ELEMENT blocktext (#PCDATA)>
+
+<!ELEMENT video (file)>
+
+<!ELEMENT map (file|field)*>
+<!ELEMENT field (target|coord)*>
 
 
 
@@ -67,3 +73,6 @@ This is the in3 xml definition
 <!ELEMENT file (#PCDATA)>
 <!ELEMENT level (#PCDATA)>
 <!ELEMENT target (#PCDATA)>
+<!ELEMENT coord (#PCDATA)>
+<!ELEMENT format (#PCDATA)>
+<!ELEMENT break (#PCDATA)*>
