@@ -238,6 +238,12 @@ sub varset{
 	elsif ($line=~/^\.set *([\w]+) *(.*)/){
 		$variables{$1}=$2;
 	}
+	elsif ($line=~/^\.side  *char  *(.*)/){
+		$variables{'sidechar'}=$1;
+	}
+	elsif ($line=~/^\.side  *separator  *(.*)/){
+		$variables{'sidesep'}=$1;
+	}
 	if ($inlinenr[$lineindex]=~/(.*):/){$variables{'filename'}=$1;}
 }
 sub varpush{
@@ -262,6 +268,7 @@ sub depricatepass{
 	$passname='depricatepass';
 	foreach (@passin){
 		$lineindex++;
+		$_='' unless defined $_;
 		varset($_);
 		chomp;
 		if (/^\.$/){	#deprecated . to separate paragraphs
@@ -320,6 +327,8 @@ sub varpass{
 		elsif (/^\.author *(.*)/){ varpush('author',$1); }
 		elsif (/^\.appendix *(.*)/){ varpush('appendix',1); }
 		elsif (/^\.back *(.*)/){ varpush('back',1); }
+		elsif (/^\.side *separator *(.*)/){varpush('sidesep',$1);}
+		elsif (/^\.side *char *(.*)/){varpush('sidechar',$1);}
 		elsif (/^\.set *([\w]+) *(.*)/){ varpush($1,$2); }
 		elsif (/^\.dumpvar (.*)/){ pushout($variables{$1});}
 		elsif (/^\.dumpvar/){
@@ -350,8 +359,10 @@ sub varpass{
 sub includepass {
 	$passname='includepass';
 	for (@passin){
-		$lineindex++;
 		$_='' unless defined $_;
+		chomp;
+		varset($_);
+		$lineindex++;
 		varset($_);
 		if (/^\.header/){
 			pushout('<header>');
@@ -1079,7 +1090,9 @@ sub parapass{
 							push @leftnote,$1;
 							s/^([\w?,. ;:]+)\t//;
 						}
-						if (/^\.side (.*)/){
+						if (/^\.side *char (.*)/){}
+						elsif (/^\.side *separator (.*)/){}
+						elsif (/^\.side (.*)/){
 							push @sidenote,$1;
 						}
 					}
@@ -1151,15 +1164,20 @@ sub parapass{
 #
 sub commentpass {
 	$passname='commentpass';
-	if ($passin[0]=~/#!(.*)/){
-		$passin[0]="<!-- $1 -->";
-	}
+	my $inblock=0;
 	for (@passin){
 		my $line=$_;
+		if (/^\.block .*/){$inblock=1;}
+		elsif (/^\.block/){$inblock=0;}
 		varset($line);
 		$lineindex++;
-		if (/^#--(.*)/){
-			pushout("<!-- $1 -->");
+		if (/^#!(.*)/){
+			if ($inblock==0){pushout("<!-- $1 -->");}
+			else { pushout($_); }
+		}
+		elsif (/^#--(.*)/){
+			if ($inblock==0){pushout("<!-- $1 -->");}
+			else { pushout($_); }
 		}
 		else {
 			pushout($_);
@@ -1291,6 +1309,7 @@ sub standalonepass {	# make images, videos or blocks that occupy a
 	my $inpara=0;
 	my $inblk=0;
 	my $invideo=0;
+	my $intoc=0;
 	my $inimg=0;
 	my $dontstrip=0;
 	my $line;
@@ -1316,7 +1335,9 @@ sub standalonepass {	# make images, videos or blocks that occupy a
 					elsif (/^<.image>/){ $inimg=0; }
 					elsif (/^<video>/){ $invideo=1; }
 					elsif (/^<.video>/){ $invideo=0; }
-					elsif ($inimg+$inblk+$invideo>0){ }
+					elsif (/^<toc>/){ $intoc=1; }
+					elsif (/^<.toc>/){ $intoc=0; }
+					elsif ($inimg+$inblk+$invideo+$intoc>0){ }
 					else {
 						$dontstrip=1;
 				   	}
@@ -1331,9 +1352,11 @@ sub standalonepass {	# make images, videos or blocks that occupy a
 						elsif (/^<.block>/){ $inblk=0; pushout($_);}
 						elsif (/^<image>/){ $inimg=1; pushout($_);}
 						elsif (/^<.image>/){ $inimg=0; pushout($_);}
+						elsif (/^<toc>/){ $intoc=1; pushout($_);}
+						elsif (/^<.toc>/){ $intoc=0; pushout($_);}
 						elsif (/^<video>/){ $invideo=1; pushout($_);}
 						elsif (/^<.video>/){ $invideo=0; pushout($_);}
-						elsif ($inimg+$inblk+$invideo>0){ pushout($_);}
+						elsif ($inimg+$inblk+$invideo+$intoc>0){ pushout($_);}
 						else { $dontstrip=1; print STDERR "MEUH? dontstrip==0, but 1 anyway?\n";}
 					}
 				}
@@ -1593,9 +1616,9 @@ sub blockmakepass {
 
 
 $lineindex=-1;
-includepass();
 depricatepass();
 xmlifypass();
+includepass();
 markdownpass(); progress;
 blockpass(); progress;
 inlinepass(); progress;
