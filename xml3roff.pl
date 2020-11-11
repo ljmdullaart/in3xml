@@ -12,9 +12,9 @@ sub output{
 	for (@_){
 		my $txt=$_;
 		#if (/^ \./){ s/^ \./\\&./; }
-		if ($txt=~/[Ѐ-ӿ]/){
-			$txt=~s/([Ѐ-ӿ ]+)/\\f[SFOR]$1\\f[]/g;
-		}
+		#if ($txt=~/[Ѐ-ӿ][Ѐ-ӿ][Ѐ-ӿ]/){
+		#$txt=~s/([Ѐ-ӿ ][Ѐ-ӿ][Ѐ-ӿ]+)/\\f[SFOR]$1\\f[]/g;
+		#}
 
 		push @output, $txt;
 		if ($trace > 0){print STDERR "#                                                               output: $_\n";}
@@ -48,14 +48,6 @@ sub error {
 
 # Variables for overall use
 my %variables;
-    $variables{'sidechar'}='*';
-    $variables{'sidesep'}=';';
-    $variables{'notes'}=0;
-    $variables{'interpret'}=1;
-    $variables{'markdown'}=0;
-    $variables{'inlineemp'}=0;
-    $variables{'debug'}=$DEBUG;
-    $variables{"appendix"}=-1;
     $variables{"H1"}=0;
     $variables{"H2"}=0;
     $variables{"H3"}=0;
@@ -65,48 +57,56 @@ my %variables;
     $variables{"H7"}=0;
     $variables{"H8"}=0;
     $variables{"H9"}=0;
-    $variables{"blockcnt"}=0;
+    $variables{"appendix"}=-1;
     $variables{"author"}='';
-    $variables{"title"}='';
-    $variables{"subtitle"}='';
+    $variables{"blockcnt"}=0;
     $variables{"cover"}='';
     $variables{"do_cover"}='no';
     $variables{"do_headers"}='yes';
     $variables{"imagex"}=800;
     $variables{"imagey"}=800;
+    $variables{"subtitle"}='';
+    $variables{"title"}='';
+    $variables{'debug'}=$DEBUG;
+    $variables{'inlineemp'}=0;
+    $variables{'interpret'}=1;
+    $variables{'markdown'}=0;
+    $variables{'notes'}=0;
+    $variables{'sidechar'}='*';
+    $variables{'sidesep'}=';';
 
 my @input;
 my @infile;
 
 # Variables that are picked-up in sub-states and used when higher states close
-my $varname='';
-my $value='';
-my $text='';			
-my $name='';			
 my $class='';
-my $target='';
-my $image;
+my $coord='';
 my $file='';
+my $format;
+my $image;
 my $level=0;
+my $name='';			
 my $seq='';
+my $target='';
+my $text='';			
+my $type;
+my $value='';
+my $varname='';
+my $video;
 
 # Control variables
-my @listtype;
-my @listblock;
-push @listtype,'none';
-my $listlevel=0;
-my $ptableopen=0;		# Paragraph table is open. This allows using the same table
-						# for different paragraphs
-my $pcellopen=0;
-my $inline=0;
-my @sidenotes;
-my @leftnotes;
-my @blocktext='';
-my $progressindicator=0;
 my $fileline=0;
-my $video;
-my $type;
-my $format;
+my $inline=0;
+my $listlevel=0;
+my $pcellopen=0;
+my $progressindicator=0;
+my $ptableopen=0;		# Paragraph table is open. This allows using the same table for different paragraphs
+my @blocktext='';
+my @leftnotes;
+my @listblock;
+my @listtype;
+	push @listtype,'none';
+my @sidenotes;
 
 sub debug {
 	if ($variables{'debug'} >0){
@@ -115,6 +115,7 @@ sub debug {
 		}
 	}
 }
+
 my $what='';
 for (@ARGV){
 	if ($what eq ''){
@@ -398,7 +399,9 @@ sub close_paratable {
 			else{
 				output ('T}@T{');
 				if (($variables{'notes'}&2)>0){
-					for (@sidenotes){ output ($_); }
+					my $notestr='';
+					for (@sidenotes){$notestr.=$_;}
+					output ($notestr);
 					output ('T}');
 				}
 			}
@@ -566,6 +569,10 @@ while ( $linenumber <= $#input){
 			close_paratable();
 			state_push('video');
 		}
+		elsif ($input[$linenumber] =~/<map>/){
+			close_paratable();
+			state_push('map');
+		}
 		elsif ($input[$linenumber] =~/<image>/){
 			close_paratable();
 			state_push('image');
@@ -673,6 +680,7 @@ while ( $linenumber <= $#input){
 						$inside=0;
 					}
 					else {
+						chomp $input[$endpara];
 						push @sidenotes,$input[$endpara];
 					}
 				}
@@ -708,8 +716,8 @@ while ( $linenumber <= $#input){
 				output ('.TS');
 				output ('tab(@);');
 				if ($variables{'notes'}==1) { output ('lw(2c) lw(12.5c).');}
-				if ($variables{'notes'}==2) { output ('lw(12.8c) lp6w(2c).');}
-				if ($variables{'notes'}==3) { output ('lw(2c) lw(10.2c) lp6w(2c).');}
+				if ($variables{'notes'}==2) { output ('lw(12.8c) lp6w(2c)v-5.');}
+				if ($variables{'notes'}==3) { output ('lw(2c) lw(10.2c) lp6w(2c)v-5.');}
 				output ('T{');
 				if (($variables{'notes'}&1)>0){
 					for (@leftnotes){ output ($_);}
@@ -738,7 +746,7 @@ while ( $linenumber <= $#input){
 			undef@blocktext;
 			state_push('block');
 		}
-		elsif($input[$linenumber] =~/^<header>$/){
+		elsif($input[$linenumber] =~/<header>/){
 			close_paratable();
 			state_push('headerfile');
 		}
@@ -947,7 +955,7 @@ while ( $linenumber <= $#input){
 						$format=~s/scale=[0-9]+//;
 					}
 					$mscale=$mscale/2;
-					system ("rm $blk.*");
+					system ("rm $blk.eps");
 					if (open (my $MUSIC, '>',"$blk.ly")){
 						print $MUSIC "\\version \"2.18.2\"\n";
 						print $MUSIC "\\book {\n";
@@ -993,7 +1001,7 @@ while ( $linenumber <= $#input){
 					$mscale=$1;
 					$format=~s/scale=[0-9]+//;
 				}
-				system ("rm $blk.*");
+				system ("rm $blk.dvi");
 				if (open (my $TEXEQN, '>',"$blk.tex")){
 					print $TEXEQN "\\documentclass{article}\n";
 					print $TEXEQN "\\usepackage{amsmath}\n";
@@ -1061,6 +1069,9 @@ while ( $linenumber <= $#input){
 		}
 		elsif ($input[$linenumber] =~/<blocktext>/){
 			state_push('blocktext');
+		}
+		elsif ($input[$linenumber] =~/<format>/){
+			state_push('format');
 		}
 		elsif ($input[$linenumber] =~/<text>/){
 			state_push('blocktext');
@@ -1242,7 +1253,6 @@ while ( $linenumber <= $#input){
 		}
 	}
 	elsif ($state  eq 'video'){
-
 		if ($input[$linenumber] =~/<\/video>/){
 			print STDERR  ("OUTPUT A VIDEO\n");
 			if ($file ne ''){
@@ -1251,9 +1261,9 @@ while ( $linenumber <= $#input){
 				my $epsfile=basename($file);
 				$epsfile=~s/\.[^.]*$/.eps/;
 				$imgfile=~s/\.\w+$/.jpg/;
-				system("rm -f 'pdf/$imgfile'");
-				system("ffmpeg -ss 00:00:05 -i '$file' -vframes 1 -q:v 2 'pdf/$imgfile' 2>/dev/null");
-				outimage("pdf/$imgfile",'');
+				system("rm -f '$imgfile'");
+				system("ffmpeg -ss 00:00:05 -i '$file' -vframes 1 -q:v 2 '$imgfile' 2>/dev/null");
+				outimage("$imgfile",'');
 			}
 			$file='';
 			$text='';
@@ -1268,6 +1278,29 @@ while ( $linenumber <= $#input){
 		else {
 			error ("Video: text out of block");
 		}
+	}
+	elsif ($state eq 'map'){
+		if ($input[$linenumber] =~/<\/map>/){
+			if ($file ne ''){
+				outimage ($file);
+			}
+			$file='';
+		}
+		elsif ($input[$linenumber] =~/<file>/){
+			$file='';
+			state_push('file');
+		}
+		elsif ($input[$linenumber] =~/<field>/){
+			$target='';
+			$coord='';
+			state_push('field');
+		}
+	}
+	elsif ($state  eq 'field'){
+		if ($input[$linenumber] =~/<\/field>/){
+			state_pop();
+		}
+		# We ignore the target/coord section
 	}
 	elsif ($state  eq 'image'){
 		if ($input[$linenumber] =~/<\/image>/){
@@ -1317,6 +1350,16 @@ while ( $linenumber <= $#input){
 		}
 		else {
 			$name=$input[$linenumber];
+		}
+	}
+	elsif ($state  eq 'format'){
+		if ($input[$linenumber] =~/<\/format>/){
+			$format=~s/^"//;
+			$format=~s/"$//;
+			state_pop();
+		}
+		else {
+			$format=$input[$linenumber];
 		}
 	}
 	elsif ($state  eq 'text'){
