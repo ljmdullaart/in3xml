@@ -1261,21 +1261,25 @@ sub footnotepass {
 			my $mx=$#passout;
 			my $ref=$variables{'notestring'};
 			$variables{'notenumber'}++;
-			my $j=$variables{'notenumber'};
-			my $a=('a' .. 'z' )[$j-1];
-			my $A=('A' .. 'Z' )[$j-1];
-			$ref=~s/%NUM/$j/;
+			my $J=$variables{'notenumber'};
+			my $a=('a' .. 'z' )[$J-1];
+			my $A=('A' .. 'Z' )[$J-1];
+			my $j='';
+			$ref=~s/%NUM/$J/;
 			$ref=~s/%alpha/$a/;
 			$ref=~s/%ALPHA/$A/;
 			$passout[$mx]="$passout[$mx]$ref";
 			pushout('<note>');
-			pushout($ref);
+			pushout('<ref>'); pushout($ref); pushout('</ref>');
+			pushout('<seq>'); pushout($variables{'notenumber'});pushout('</seq>');
+			pushout('<notetext>');
 			if ($content=~/%\\n/){
 				my @cellines=split /%\\n/ , $content;
 				for (@cellines){pushout($_);}
 				undef @cellines;
 			}
 			else { pushout($content);}
+			pushout('</notetext>');
 			pushout('</note>');
 		}
 		else { pushout($_);}
@@ -1311,6 +1315,7 @@ sub standalonepass {	# make images, videos or blocks that occupy a
 	my $invideo=0;
 	my $intoc=0;
 	my $inimg=0;
+	my $inset=0;
 	my $dontstrip=0;
 	my $line;
 	for (@passin){
@@ -1335,9 +1340,11 @@ sub standalonepass {	# make images, videos or blocks that occupy a
 					elsif (/^<.image>/){ $inimg=0; }
 					elsif (/^<video>/){ $invideo=1; }
 					elsif (/^<.video>/){ $invideo=0; }
+					elsif (/^<set>/){ $inset=1; }
+					elsif (/^<.set>/){ $inset=0; }
 					elsif (/^<toc>/){ $intoc=1; }
 					elsif (/^<.toc>/){ $intoc=0; }
-					elsif ($inimg+$inblk+$invideo+$intoc>0){ }
+					elsif ($inimg+$inblk+$invideo+$intoc+$inset>0){ }
 					else {
 						$dontstrip=1;
 				   	}
@@ -1352,11 +1359,13 @@ sub standalonepass {	# make images, videos or blocks that occupy a
 						elsif (/^<.block>/){ $inblk=0; pushout($_);}
 						elsif (/^<image>/){ $inimg=1; pushout($_);}
 						elsif (/^<.image>/){ $inimg=0; pushout($_);}
+						elsif (/^<set>/){ $inset=1; pushout($_);}
+						elsif (/^<.set>/){ $inset=0; pushout($_);}
 						elsif (/^<toc>/){ $intoc=1; pushout($_);}
 						elsif (/^<.toc>/){ $intoc=0; pushout($_);}
 						elsif (/^<video>/){ $invideo=1; pushout($_);}
 						elsif (/^<.video>/){ $invideo=0; pushout($_);}
-						elsif ($inimg+$inblk+$invideo+$intoc>0){ pushout($_);}
+						elsif ($inimg+$inblk+$invideo+$inset+$intoc>0){ pushout($_);}
 						else { $dontstrip=1; print STDERR "MEUH? dontstrip==0, but 1 anyway?\n";}
 					}
 				}
