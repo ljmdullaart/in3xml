@@ -3,9 +3,26 @@
 #
 use strict;
 use File::Basename;
+use Tk;
+use Tk::Font;
+my $DEBUG=0;
+
+my $mw = MainWindow->new();
+my $font = $mw->fontCreate( 'TimesNew Roman' );
+
+sub timesspace {
+	(my $text)=@_;
+	$text=~s/&lt;/</g;
+	$text=~s/&gt;/>/g;
+	$text=~s/&quot;/"/g;
+	$text=~s/&apos;/'/g;
+	$text=~s/&amp;/&/g;
+	my $retval= $font->measure( $text )/4.5;
+	return int($retval);
+}
+
 
 my $trace=0;
-my $DEBUG=1;
 
 my @output;
 sub output{
@@ -86,6 +103,7 @@ my $format;
 my $image;
 my $level=0;
 my $name='';			
+my $ref='';
 my $seq='';
 my $target='';
 my $text='';			
@@ -95,13 +113,16 @@ my $varname='';
 my $video;
 
 # Control variables
+my $currentline='';
 my $fileline=0;
 my $inline=0;
+my $lastline='';
 my $listlevel=0;
 my $pcellopen=0;
 my $progressindicator=0;
 my $ptableopen=0;		# Paragraph table is open. This allows using the same table for different paragraphs
 my @blocktext='';
+my @footnote;
 my @leftnotes;
 my @listblock;
 my @listtype;
@@ -230,7 +251,33 @@ for $linenumber (0 .. $#input){
 	if ($input[$linenumber] =~/<side[note]*>/){ $variables{'notes'}=2;}
 }
 
+#   __                            _                                  _
+#  / _| ___  _ __ _ __ ___   __ _| |_ _ __ ___  __ _ _   _  ___  ___| |_
+# | |_ / _ \| '__| '_ ` _ \ / _` | __| '__/ _ \/ _` | | | |/ _ \/ __| __|
+# |  _| (_) | |  | | | | | | (_| | |_| | |  __/ (_| | |_| |  __/\__ \ |_
+# |_|  \___/|_|  |_| |_| |_|\__,_|\__|_|  \___|\__, |\__,_|\___||___/\__|
+#                                                 |_|
+
 sub formatrequest {
+	if (!($input[$linenumber] =~/<.*>/)){
+		if ($input[$linenumber]=~/=====*&gt;(.*)/){
+			$currentline=$currentline . $1;
+		}
+		else {
+			$currentline=$currentline . $input[$linenumber];
+		}
+	}
+	if ($input[$linenumber] =~/^([^=]*)=====*&gt;(.*)/){
+		my $pre=$1;
+		my $post=$2;
+		$lastline=~s/\\\[..\]/a/g;
+		my $l=timesspace($lastline)-timesspace($pre);
+		my $spaces='\\ ' x $l;
+		# output ("lastline=$lastline ($l)");
+		$input[$linenumber] =~s/^====*&gt;/$spaces/;
+		$currentline="$lastline $post";
+		#output ($spaces);
+	}
 	if ($input[$linenumber] =~/<underline>/){
 		state_push('underline');
 	}
@@ -268,6 +315,12 @@ sub formatrequest {
 		undef@blocktext;
 		state_push('block');
 	}
+	elsif ($input[$linenumber] =~/<note>/){
+		undef @footnote;
+		$seq='';
+		$ref='';
+		state_push('note');
+	}
 	elsif ($input[$linenumber] =~/<link>/){
 		$target='';
 		$text='';
@@ -290,7 +343,6 @@ sub formatrequest {
 #                    |___/
 
 sub outimage {
-	print STDERR "IMAGE TYPE $type \n";
 	(my $img, my $iformat)=@_;
 	my $scale=100;
 	if ($iformat=~/scale=([0-9]+)/){ $scale=$1;}
@@ -655,6 +707,8 @@ while ( $linenumber <= $#input){
 			state_push('lst');
 		}
 		elsif ($input[$linenumber] =~/<paragraph>/){
+			$lastline=$currentline;
+			$currentline='';
 			my @paratext;
 			undef @sidenotes;
 			undef @leftnotes;
@@ -716,7 +770,7 @@ while ( $linenumber <= $#input){
 				output ('.TS');
 				output ('tab(@);');
 				if ($variables{'notes'}==1) { output ('lw(2c) lw(12.5c).');}
-				if ($variables{'notes'}==2) { output ('lw(12.8c) lp6w(2c)v-5.');}
+				if ($variables{'notes'}==2) { output ('lw(12.5c) lp6w(2c)v-5.');}
 				if ($variables{'notes'}==3) { output ('lw(2c) lw(10.2c) lp6w(2c)v-5.');}
 				output ('T{');
 				if (($variables{'notes'}&1)>0){
@@ -820,6 +874,40 @@ while ( $linenumber <= $#input){
 		else {
 			$inline=1;
 			formatrequest();
+		}
+	}
+	elsif ($state  eq 'note'){
+		if ($input[$linenumber] =~/<\/note>/){
+			if ($ref eq ''){
+				output ('.FS');
+			}
+			else {
+				output (".FS '$ref'");
+			}
+			output($ref);
+			for (@footnote){
+				output ($_);
+			}
+			output ('.FE');
+			state_pop();
+		}
+		elsif($input[$linenumber] =~/<ref>/){
+			state_push('ref');
+		}
+		elsif($input[$linenumber] =~/<seq>/){
+			state_push('seq');
+		}
+		elsif($input[$linenumber] =~/<notetext>/){
+			state_push('notetext');
+		}
+
+	}
+	elsif ($state  eq 'notetext'){
+		if ($input[$linenumber] =~/<\/notetext>/){
+			state_pop();
+		}
+		else {
+			push @footnote,$input[$linenumber];
 		}
 	}
 	elsif ($state  eq 'block'){
@@ -1132,8 +1220,10 @@ while ( $linenumber <= $#input){
 			}
 			elsif($pcellopen>0) {
 				output ('T}@T{');
+				output('.na');
 				if (($variables{'notes'}&2)>0){
 					for (@sidenotes){ output ($_); }
+					output('.ad');
 					output ('T}');
 				}
 			}		# Table is always closed at the end.
@@ -1372,6 +1462,16 @@ while ( $linenumber <= $#input){
 			$text=$input[$linenumber];
 		}
 	}
+	elsif ($state  eq 'ref'){
+		if ($input[$linenumber] =~/<\/ref>/){
+			$ref=~s/^"//;
+			$ref=~s/"$//;
+			state_pop();
+		}
+		else {
+			$ref=$input[$linenumber];
+		}
+	}
 	elsif ($state  eq 'seq'){
 		if ($input[$linenumber] =~/<\/seq>/){
 			$seq=~s/^"//;
@@ -1482,9 +1582,16 @@ while ( $linenumber <= $#input){
 		if ($input[$linenumber] =~/<\/set>/){
 			if ($varname ne ''){
 				$variables{$varname}=$value;
-				$value='';
-				$varname='';
 			}
+			if ($varname eq 'H1'){ output (".nr H1 $value"); }
+			if ($varname eq 'H2'){ output (".nr H2 $value"); }
+			if ($varname eq 'H3'){ output (".nr H3 $value"); }
+			if ($varname eq 'H4'){ output (".nr H4 $value"); }
+			if ($varname eq 'H5'){ output (".nr H5 $value"); }
+			if ($varname eq 'H6'){ output (".nr H6 $value"); }
+			if ($varname eq 'H7'){ output (".nr H7 $value"); }
+			$value='';
+			$varname='';
 			state_pop();
 		}
 		elsif ($input[$linenumber] =~/<variable>/){
