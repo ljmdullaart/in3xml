@@ -28,19 +28,6 @@ sub outputlast {
 }
 
 
-sub debug {
-	for (@_){
-		print STDERR "debug: $_\n";
-	}
-}
-
-
-sub error {
-	for (@_){
-		print STDERR "$_\n";
-	}
-}
-
 
 # Variables for overall use
 my %variables;
@@ -83,6 +70,7 @@ my $format='';
 my $image;
 my $level=0;
 my $name;
+my $ref='';
 my $seq='';
 my $target='';
 my $text='';			
@@ -94,9 +82,12 @@ my $video;
 # Control variables
 my $fileline=0;
 my $inline=0;
+my $lastline='';
 my $listlevel=0;
+my $noteatend=0;
 my $progressindicator=0;
 my $ptableopen=0;		# Paragraph table is open. This allows using the same table for different paragraphs
+my $xmlclose=0;
 my @blocktext='';
 my @leftnotes;
 my @listblock;
@@ -104,6 +95,21 @@ my @listtype;
 	push @listtype,'none';
 my @mapfields;
 my @sidenotes;
+
+sub debug {
+	if ($variables{'DEBUG'}>0){
+		for (@_){
+			print STDERR "debug: $_\n";
+		}
+	}
+}
+
+
+sub error {
+	for (@_){
+		print STDERR "$_\n";
+	}
+}
 
 my $what='';
 for (@ARGV){
@@ -226,57 +232,73 @@ for $linenumber (0 .. $#input){
 # |  _| (_) | |  | | | | | | (_| | |_\__ \
 # |_|  \___/|_|  |_| |_| |_|\__,_|\__|___/
 #
+
 sub formatrequest {
-	if ($input[$linenumber] =~/<underline>/){
+	(my $input)=@_;
+	if ($input=~/======*&gt;/){
+		output ('<span style="visibility: hidden">');
+		output ($lastline);
+		output ('</span>');
+		$input=~s/======*&gt;//;
+		$lastline="$lastline $input";
+	}
+	else {
+		$lastline=$input;
+	}
+
+	if ($input =~/<underline>/){
 		output('<u>');
 		state_push('underline');
 	}
-	elsif ($input[$linenumber] =~/<italic>/){
+	elsif ($input =~/<italic>/){
 		output('<i>');
 		state_push('italic');
 	}
-	elsif ($input[$linenumber] =~/<bold>/){
+	elsif ($input =~/<bold>/){
 		output('<b>');
 		state_push('bold');
 	}
-	elsif ($input[$linenumber] =~/<center>/){
+	elsif ($input =~/<center>/){
 		output('<div style="text-align: center;">');
 		state_push('center');
 	}
-	elsif ($input[$linenumber] =~/<lst>/){
+	elsif ($input =~/<lst>/){
 		state_push('lst');
 	}
-	elsif ($input[$linenumber] =~/<fixed>/){
+	elsif ($input =~/<hr>/){
+		state_push('hr');
+	}
+	elsif ($input =~/<fixed>/){
 		output('<tt>');
 		state_push('fixed');
 	}
-	elsif ($input[$linenumber] =~/<video>/){
+	elsif ($input =~/<video>/){
 		$video='';
 		$file='';
 		$text='';
 		state_push('video');
 	}
-	elsif ($input[$linenumber] =~/<image>/){
+	elsif ($input =~/<image>/){
 		$image='';
 		$file='';
 		$text='';
 		state_push('image');
 	}
-	elsif ($input[$linenumber] =~/<block>/){
+	elsif ($input =~/<block>/){
 		$type='pre';
 		$image='';
 		$class='';
 		undef@blocktext;
 		state_push('block');
 	}
-	elsif ($input[$linenumber] =~/<link>/){
+	elsif ($input =~/<link>/){
 		state_push('link');
 	}
-	elsif ($input[$linenumber] =~/<set>/){
+	elsif ($input =~/<set>/){
 		state_push('set');
 	}
 	else {
-		output ($input[$linenumber]);
+		output ($input);
 	}
 
 }
@@ -338,6 +360,10 @@ while ( $linenumber <= $#input){
 
 	elsif ($state  eq 'outside'){
 		if ($input[$linenumber] =~/<in3xml>/){
+			$xmlclose=$linenumber;
+			while (!($input[$xmlclose]=~/<\/in3xml>/) && ($xmlclose<$#input)){
+				$xmlclose++;
+			}
 			state_push('in3xml');
 		}
 	}
@@ -525,6 +551,10 @@ while ( $linenumber <= $#input){
 		elsif ($input[$linenumber] =~/<header>/){
 			state_push('headerfile');
 		}
+		elsif ($input[$linenumber] =~/<hr>/){
+			if ($ptableopen>0){ output('</table>');$ptableopen=0;}
+			state_push('hr');
+		}
 		elsif($input[$linenumber] =~/^$/){}
 		else {
 			error ("in3xml: Plain text outside constructs in $linenumber: $input[$linenumber]");
@@ -597,7 +627,7 @@ while ( $linenumber <= $#input){
 		}
 		else {
 			$inline=1;
-			formatrequest();
+			formatrequest($input[$linenumber]);
 		}
 	}
 	elsif ($state  eq 'block'){
@@ -854,7 +884,7 @@ while ( $linenumber <= $#input){
 			state_pop();
 		}
 		else {
-			formatrequest();
+			formatrequest($input[$linenumber]);
 		}
 	}
 	elsif ($state  eq 'row'){
@@ -914,10 +944,13 @@ while ( $linenumber <= $#input){
 		elsif ($input[$linenumber] =~/<side[note]*>/){
 			state_push('side');
 		}
-		elsif ($input[$linenumber] =~/<text>/){}
+		elsif ($input[$linenumber] =~/<note>/){
+			state_push('note');
+		}
+		elsif ($input[$linenumber] =~/<text>/){}	#Text-markers are currently ignored. 
 		elsif ($input[$linenumber] =~/<\/text>/){}
 		else {
-			formatrequest();
+			formatrequest($input[$linenumber]);
 		}
 	}
 	elsif ($state  eq 'italic'){
@@ -1012,6 +1045,29 @@ while ( $linenumber <= $#input){
 			error ("heading Header accepts level, seq, or text: $input[$linenumber]");
 		}
 	}
+	elsif ($state  eq 'notetext'){
+		if ($input[$linenumber] =~/<\/notetext>/){
+			state_pop();
+		}
+		elsif ($input[$linenumber] =~/<\/text>/){
+			state_pop();
+		}
+		else {
+			if ($noteatend==0){
+				$noteatend=1;
+				splice @input,$xmlclose,1,'<hr>',@input[$xmlclose];$xmlclose++;
+				splice @input,$xmlclose,1,'</hr>',@input[$xmlclose];$xmlclose++;
+				splice @input,$xmlclose,1,'<paragraph>',@input[$xmlclose];$xmlclose++;
+				splice @input,$xmlclose,1,'<text>',@input[$xmlclose];$xmlclose++;
+				splice @input,$xmlclose,1,'</text>',@input[$xmlclose];$xmlclose++;
+				splice @input,$xmlclose,1,'</paragraph>',@input[$xmlclose];$xmlclose++;
+			}
+			if ($ref ne ''){
+				splice @input,$xmlclose-2,1,$ref,@input[$xmlclose-2];$xmlclose++;
+			}
+			splice @input,$xmlclose-2,1,$input[$linenumber],@input[$xmlclose-2];$xmlclose++;
+		}
+	}
 	elsif ($state  eq 'blocktext'){
 		if ($input[$linenumber] =~/<\/blocktext>/){
 			state_pop();
@@ -1048,6 +1104,24 @@ while ( $linenumber <= $#input){
 		else {
 			error ("Video: text out of block");
 		}
+	}
+	elsif ($state  eq 'note'){
+		if ($input[$linenumber] =~/<\/note>/){
+			state_pop();
+		}
+		elsif($input[$linenumber] =~/<ref>/){
+			state_push('ref');
+		}
+		elsif($input[$linenumber] =~/<seq>/){
+			state_push('seq');
+		}
+		elsif($input[$linenumber] =~/<notetext>/){
+			state_push('notetext');
+		}
+		else {
+			error ("Note text out of scope: $input[$linenumber]");
+		}
+
 	}
 	elsif ($state  eq 'map'){
 		if ($input[$linenumber] =~/<\/map>/){
@@ -1167,6 +1241,14 @@ while ( $linenumber <= $#input){
 			$text=$input[$linenumber];
 		}
 	}
+	elsif ($state  eq 'ref'){
+		if ($input[$linenumber] =~/<\/ref>/){
+			state_pop();
+		}
+		else {
+			$ref=$input[$linenumber];
+		}
+	}
 	elsif ($state  eq 'seq'){
 		if ($input[$linenumber] =~/<\/seq>/){
 			$seq=~s/^"//;
@@ -1248,6 +1330,15 @@ while ( $linenumber <= $#input){
 					error("Cannot open $input[$linenumber]");
 				}
 			}
+		}
+	}
+	elsif ($state  eq 'hr'){
+		if ($input[$linenumber] =~/<\/hr>/){
+			output('<hr>');
+			state_pop();
+		}
+		else {
+			# Header links are for the header only; they are ignored in normal text
 		}
 	}
 	elsif ($state  eq 'headerlink'){
@@ -1353,6 +1444,7 @@ while ( $linenumber <= $#input){
 	$state=state_tos();
 	$linenumber++;
 }
+if ($ptableopen>0){ output('</table>');$ptableopen=0;}
 
 
 if ($trace > 0){
