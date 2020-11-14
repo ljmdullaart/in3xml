@@ -28,7 +28,7 @@ not_applicable (){
 
 # Test if applicable; if not call `not_applicable' 
 
-if [ ! -d in3xml ] ; then
+if [ ! -d $XML ] ; then
 	not_applicable
 fi
 
@@ -119,7 +119,7 @@ done
 echo >> Makefile
 rm "complete.in"
 echo -n "	cat">> Makefile
-for infile in $(ls *.in) ; do
+for infile in $(ls *.in| sort -n) ; do
 	stem=${infile%.in}
 	if [ "$infile" = "complete.in" ] ; then
 		:
@@ -205,6 +205,31 @@ if [ -d $WWW ] ; then
 	done
 	echo >> Makefile
 fi
+
+if [ -d $HTM ] ; then
+	echo -n "tag/in3xml.$HTM: tag/in3xml.xml" >> Makefile
+	for infile in *.in ; do		# the *.in are the only guaranteed availables
+		stem=${infile%.in}
+		if [ "$infile" = "meta.in" ] ; then
+			:
+		else
+			echo -n " $HTM/$stem.htm" >> Makefile
+		fi
+	done
+	echo ' |tag'>> Makefile
+	echo "	touch tag/in3xml.$HTM" >> Makefile
+
+	for infile in *.in ; do
+		stem=${infile%.in}
+		if [ "$infile" = "meta.in" ] ; then
+			:
+		else
+			echo "$HTM/$stem.htm: $XML/$stem.xml " >> Makefile
+			echo "	xml3html --no-headers $XML/$stem.xml > $HTM/$stem.htm" >> Makefile
+		fi
+	done
+	echo >> Makefile
+fi
 	
 
 #  ____  ____  _____   _                       _
@@ -236,7 +261,7 @@ if [ -d $PDF ] ; then
 			echo "$PDF/$stem.pdf: $PDF/$stem.ps " >> Makefile
 			echo "	cat $PDF/$stem.ps | ps2pdf - - > $PDF/$stem.pdf" >> Makefile
 			echo "$PDF/$stem.ps: $PDF/$stem.roff " >> Makefile
-			echo "	cat $PDF/$stem.roff |preconv|pic|eqn|tbl|groff -min > $PDF/$stem.ps" >> Makefile
+			echo "	cat $PDF/$stem.roff |preconv|pic|eqn|tbl|groff -min -Kutf8 > $PDF/$stem.ps" >> Makefile
 			echo "$PDF/$stem.roff: $XML/$stem.xml " >> Makefile
 			echo "	xml3roff $XML/$stem.xml > $PDF/$stem.roff" >> Makefile
 		fi
