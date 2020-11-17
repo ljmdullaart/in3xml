@@ -117,8 +117,8 @@ for infile in *.in ; do
 	fi
 done
 echo >> Makefile
-rm "complete.in"
-echo -n "	cat">> Makefile
+touch "complete.in"
+echo -n "	grep -vh '^\.header' ">> Makefile
 for infile in $(ls *.in| sort -n) ; do
 	stem=${infile%.in}
 	if [ "$infile" = "complete.in" ] ; then
@@ -155,7 +155,7 @@ for infile in *.in ; do
 	fi
 done
 echo ' |tag'>> Makefile
-echo '	touch tag/$XML.xml' >> Makefile
+echo "	touch tag/$XML.xml" >> Makefile
 
 for infile in *.in ; do
 	stem=${infile%.in}
