@@ -3,7 +3,7 @@
 use strict;
 use File::Basename;
 
-my $dvifontpath=`find /usr/share -name 'ps2pk.map' | tail -1`;
+my $dvifontpath=`find /usr/share -name 'ps2pk.map' 2>&1 | grep -v 'Permission denied' | tail -1`;
 chomp $dvifontpath;
 $dvifontpath=dirname($dvifontpath);
 
@@ -242,7 +242,7 @@ sub formatrequest {
 		$input=~s/======*&gt;//;
 		$lastline="$lastline $input";
 	}
-	else {
+	elsif (!($input=~/<.*>/) && !($input=~/\(.*\)/)) {
 		$lastline=$input;
 	}
 
@@ -264,6 +264,9 @@ sub formatrequest {
 	}
 	elsif ($input =~/<lst>/){
 		state_push('lst');
+	}
+	elsif ($input =~/<blank>/){
+		state_push('blank');
 	}
 	elsif ($input =~/<hr>/){
 		state_push('hr');
@@ -403,6 +406,9 @@ while ( $linenumber <= $#input){
 		elsif ($input[$linenumber] =~/<set>/){
 			state_push('set');
 		}
+		elsif ($input[$linenumber] =~/<toc>/){
+			state_push('toc');
+		}
 		elsif ($input[$linenumber] =~/<heading>/){
 			$variables{'notes'}=$variables{'notes'}&2;
 			if ($ptableopen>0){ output ('</table>'); $ptableopen=0; }
@@ -479,6 +485,7 @@ while ( $linenumber <= $#input){
 			my $inleft=0;
 			my $intext=0;
 			$inline=1;
+			my $prevnotes=$variables{'notes'};
 			my $endpara=$linenumber;
 			# Collect all side notes
 			while (($endpara<=$#input) && !($input[$endpara] =~/<\/paragraph>/)){
@@ -519,6 +526,9 @@ while ( $linenumber <= $#input){
 				}
 				$endpara++;
 			}
+			if ($prevnotes != $variables{'notes'}){
+				if ($ptableopen>0){ output('</table>');$ptableopen=0;}
+			}
 			if ($variables{'notes'}==0){
 				output ('<p>');
 			}
@@ -550,6 +560,10 @@ while ( $linenumber <= $#input){
 		}
 		elsif ($input[$linenumber] =~/<header>/){
 			state_push('headerfile');
+		}
+		elsif ($input[$linenumber] =~/<blank>/){
+			if ($ptableopen>0){ output('</table>');$ptableopen=0;}
+			state_push('blank');
 		}
 		elsif ($input[$linenumber] =~/<hr>/){
 			if ($ptableopen>0){ output('</table>');$ptableopen=0;}
@@ -1332,13 +1346,20 @@ while ( $linenumber <= $#input){
 			}
 		}
 	}
+	elsif ($state  eq 'blank'){
+		if ($input[$linenumber] =~/<\/blank>/){
+			output('<br>&nbsp;<br>');
+			state_pop();
+		}
+		else {
+		}
+	}
 	elsif ($state  eq 'hr'){
 		if ($input[$linenumber] =~/<\/hr>/){
 			output('<hr>');
 			state_pop();
 		}
 		else {
-			# Header links are for the header only; they are ignored in normal text
 		}
 	}
 	elsif ($state  eq 'headerlink'){
@@ -1380,6 +1401,11 @@ while ( $linenumber <= $#input){
 	}
 	elsif ($state  eq 'set'){
 		if ($input[$linenumber] =~/<\/set>/){
+			state_pop();
+		}
+	}
+	elsif ($state  eq 'set'){
+		if ($input[$linenumber] =~/<\/set>/){
 			if ($varname ne ''){
 				$variables{$varname}=$value;
 				$value='';
@@ -1411,6 +1437,16 @@ while ( $linenumber <= $#input){
 		}
 		else {
 			$value=$input[$linenumber];
+		}
+	}
+	elsif ($state  eq 'toc'){
+		if ($input[$linenumber] =~/<\/toc>/){
+			state_pop();
+		}
+		else {
+			output ('<h1 class="toc">');
+			output ($input[$linenumber]);
+			output ('</h1>');
 		}
 	}
 	elsif ($state  eq 'file'){
