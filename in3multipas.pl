@@ -272,11 +272,11 @@ sub depricatepass{
 		varset($_);
 		chomp;
 		if (/^\.$/){	#deprecated . to separate paragraphs
-			pushout ('');
+			pushout ('.P');
 		}
-		elsif (/^\.[Pp]$/){	#deprecated .p to separate paragraphs
-			pushout ('');
-		}
+		#	elsif (/^\.[Pp]$/){	#deprecated .p to separate paragraphs
+		#pushout ('');
+		#}
 		elsif (/^\.h[0-9]$/){	#deprecated header without blankline before
 			pushout ('');
 			pushout ($_);
@@ -1004,7 +1004,7 @@ sub lstpass {
 				progress();
 				pushout("<name>"); pushout("\"$blockname\""); pushout("</name>");
 				pushout("<type>"); pushout('"lst"'); pushout("</type>");
-				pushout("<text>");
+				pushout("<blocktext>");
 			}
 			$inlst=1;
 			s/^\.lst//;  # in two substitute, because of empty ,lst lines
@@ -1014,7 +1014,7 @@ sub lstpass {
 		else {
 
 			if ($inlst>0){
-				pushout("</text>");
+				pushout("</blocktext>");
 				pushout("</block>");
 			}
 			$inlst=0;
@@ -1067,7 +1067,7 @@ sub parapass{
 					pushout($_);
 				}
 			} #end  <> in the inputline
-			elsif (/^$/){
+			elsif (/^[ 	]*$/){
 					pushout($_);
 				}
 			else {
@@ -1086,9 +1086,9 @@ sub parapass{
 				if ($#parablock>=0){	# paragraph-block is not empty
 					# Collect all side and left notes from the paragraph block
 					for (@parablock){
-						if (/^([\w?,. ;:]+)\t.*/){
+						if (/^([\w?,. ;:\(\)]+)\t.*/){
 							push @leftnote,$1;
-							s/^([\w?,. ;:]+)\t//;
+							s/^([\w?,. ;:\(\)]+)\t//;
 						}
 						if (/^\.side *char (.*)/){}
 						elsif (/^\.side *separator (.*)/){}
