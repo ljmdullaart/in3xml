@@ -259,7 +259,7 @@ for $linenumber (0 .. $#input){
 #                                                 |_|
 
 sub formatrequest {
-	if (!($input[$linenumber] =~/<.*>/)){
+	if (!($input[$linenumber] =~/<.*>/) && !($input[$linenumber] =~/\(.*\)/)){
 		if ($input[$linenumber]=~/=====*&gt;(.*)/){
 			$currentline=$currentline . $1;
 		}
@@ -292,6 +292,15 @@ sub formatrequest {
 	}
 	elsif ($input[$linenumber] =~/<lst>/){
 		state_push('lst');
+	}
+	elsif ($input[$linenumber] =~/<hr>/){
+		state_push('hr');
+	}
+	elsif ($input[$linenumber] =~/<break>/){
+		state_push('break');
+	}
+	elsif ($input[$linenumber] =~/<blank>/){
+		state_push('blank');
 	}
 	elsif ($input[$linenumber] =~/<fixed>/){
 		state_push('fixed');
@@ -638,6 +647,24 @@ while ( $linenumber <= $#input){
 		elsif ($input[$linenumber] =~/<set>/){
 			state_push('set');
 		}
+		elsif ($input[$linenumber] =~/<hr>/){
+			state_push('hr');
+		}
+		elsif ($input[$linenumber] =~/<break>/){
+			state_push('break');
+		}
+		elsif ($input[$linenumber] =~/<blank>/){
+			state_push('blank');
+		}
+		elsif ($input[$linenumber] =~/<toc>/){
+			close_paratable();
+			output(".bp");
+			output(".ps +12");
+			output(".ls 3");
+			output(".P");
+			output("");
+			state_push('toc');
+		}
 		elsif ($input[$linenumber] =~/<heading>/){
 			$variables{'notes'}=$variables{'notes'}&2;
 			close_paratable();
@@ -769,9 +796,9 @@ while ( $linenumber <= $#input){
 			elsif ($ptableopen==0){    
 				output ('.TS');
 				output ('tab(@);');
-				if ($variables{'notes'}==1) { output ('lw(2c) lw(12.5c).');}
-				if ($variables{'notes'}==2) { output ('lw(12.5c) lp6w(2c)v-5.');}
-				if ($variables{'notes'}==3) { output ('lw(2c) lw(10.2c) lp6w(2c)v-5.');}
+				if ($variables{'notes'}==1) { output ('lw(2c) lw(12.4c).');}
+				if ($variables{'notes'}==2) { output ('lw(12.4c) lp6w(2c)v-5.');}
+				if ($variables{'notes'}==3) { output ('lw(2c) lw(10.1c) lp6w(2c)v-5.');}
 				output ('T{');
 				if (($variables{'notes'}&1)>0){
 					for (@leftnotes){ output ($_);}
@@ -1278,12 +1305,49 @@ while ( $linenumber <= $#input){
 			output ('.ft 6','.ps -2',$input[$linenumber],'.ps','.ft');
 		}
 	}
+	elsif ($state  eq 'break'){
+		if ($input[$linenumber] =~/<\/break>/){
+			output ('.br');
+			output (' ');
+			output ('.br');
+			state_pop();
+		}
+	}
+	elsif ($state  eq 'blank'){
+		if ($input[$linenumber] =~/<\/blank>/){
+			output ('.br');
+			output (' ');
+			output ('.br');
+			state_pop();
+		}
+	}
+	elsif ($state  eq 'hr'){
+		if ($input[$linenumber] =~/<\/hr>/){
+			output ('.br');
+			output ('\\l\'15c\'');
+			output ('.br');
+			state_pop();
+		}
+	}
 	elsif ($state  eq 'underline'){
 		if ($input[$linenumber] =~/<\/underline>/){
 			state_pop();
 		}
 		else {
 			output (".underline \"$input[$linenumber]\"");
+		}
+	}
+	elsif ($state  eq 'toc'){
+		if ($input[$linenumber] =~/<\/toc>/){
+			output ('.P');
+			output ('.ps +0');
+			output ('.ls 1');
+			output ('.P');
+			output ('');
+			state_pop();
+		}
+		else {
+			output ($input[$linenumber]);
 		}
 	}
 	elsif ($state  eq 'lst'){
