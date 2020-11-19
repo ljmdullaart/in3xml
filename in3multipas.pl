@@ -1226,6 +1226,26 @@ sub formatpass {
 			pushout('</target>');
 			pushout('</link>');
 		}
+		elsif ($line=~/^\.img *LEFT *([^ ]*)/){
+			pushout('<image>');
+			pushout('<format>');
+			pushout('left');
+			pushout('</format>');
+			pushout('<file>');
+			pushout("\"$1\"");
+			pushout('</file>');
+			pushout('</image>');
+		}
+		elsif ($line=~/^\.img *RIGHT *([^ ]*)/){
+			pushout('<image>');
+			pushout('<format>');
+			pushout('right');
+			pushout('</format>');
+			pushout('<file>');
+			pushout("\"$1\"");
+			pushout('</file>');
+			pushout('</image>');
+		}
 		elsif ($line=~/^\.img ([^ ]*)/){
 			pushout('<image>');
 			pushout('<file>');
