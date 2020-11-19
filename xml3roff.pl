@@ -376,7 +376,7 @@ sub outimage {
 	}
 	else {
 		debug ("img=other");
-		system("convert  $img  pnm:- | convert -trim - block/$imagename");
+		system("convert  $img  pnm:- | convert -density 300 -trim - block/$imagename");
 	}
 	# We now have an image in block/$imagename as .eps
 	if ($iformat =~/inlinejhegfqewugfwueygfxqbugfquyfgxbqweuyfgbqeugfbqgefb/){
@@ -430,8 +430,8 @@ sub outimage {
 		if ($x>$variables{'imagex'}){$myscale=$variables{'imagex'}*$scale/$x;}
 		my $y2=$y*$myscale/$variables{'imagey'};
 		if ($y2>$variables{'imagey'}){$myscale=$variables{'imagey'}*$scale/$y;}
-		$y=$y*$myscale/750;
-		$x=$x*$myscale/750;
+		$y=$y*$myscale/500;
+		$x=$x*$myscale/500;
 		my $up=$y/100;
 		my $need=$y*5;
 		#output ("\\v'$up"."c'");
@@ -439,6 +439,14 @@ sub outimage {
 			output ("\\v'$up".'v\'');
 			output (".dospark block/$imagename $x $y");
 			output ("\\v'-$up".'v\'');
+		}
+		elsif($format =~/left/){
+			output (".ne $need".'p');
+			output (".lfloat block/$imagename");
+		}
+		elsif($format =~/right/){
+			output (".ne $need".'p');
+			output (".rfloat block/$imagename");
 		}
 		else {
 			output (".ne $need".'p');
@@ -1011,6 +1019,7 @@ while ( $linenumber <= $#input){
 							system ("pic $blk.pic > $blk.groff");
 							system ("groff $blk.groff > $blk.ps");
 							system ("eps2eps -B1  $blk.ps $blk.eps");
+							$mscale=2*$mscale;
 							outimage("$blk.eps", $format." scale=$mscale ");
 						}
 						else {
@@ -1463,12 +1472,16 @@ while ( $linenumber <= $#input){
 				outimage($file);
 				$text='';
 				$file='';
+				$format='';
 				$image='';
 			}
 			state_pop();
 		}
 		elsif ($input[$linenumber]=~/<text>/){
 			state_push('text');
+		}
+		elsif ($input[$linenumber]=~/<format>/){
+			state_push('format');
 		}
 		elsif ($input[$linenumber]=~/<file>/){
 			state_push('file');
