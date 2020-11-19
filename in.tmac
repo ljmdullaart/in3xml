@@ -35,6 +35,10 @@ Index		array!index
 #INSTALL@ /usr/share/groff/current/tmac/in.tmac
 
 Updates by ljm
+  - added dospark macro by Ted Harding
+  - added rfloat by Werner Lemberg
+  - added lfloat by ljm
+  
 ..
 .special S
 .if !\n(.g .ab These mm macros require groff.
@@ -3602,4 +3606,144 @@ in=\\n[.i] fi=\\n[.u] .d=\\n[.d] nl=\\n[nl] pg=\\n[%]
 \\n[llx] \\n[lly] \\n[urx] \\n[ury] \
 \\n[deswd] \\n[desht]’\
 \h’\\n[deswd]u’\x’-\\n[xht]u’
+..
+.
+.\" rfloat Version 1.1 (2011-Jan-02) by Werner LEMBERG
+.\" Adjust PSPIC to provide a correct width within a diversion.
+.am PSPIC
+.  vpt 0
+\h'(\\n[ps-offset]u + \\n[ps-deswid]u)'
+.  sp -1
+.  vpt 1
+..
+.
+.de end
+..
+.
+.\" Prepare environment.
+.ev rfloat-div-env
+.  in 0
+.  ti 0
+.ev
+.
+.
+.\" rfloat <image> <in-paragraph>
+.\"
+.\" Position an image to the right so that text is floating around the image.
+.\" We assume that there is enough vertical space available for the image.
+.\"
+.\" If there is a second argument, start the image one line below.  This is
+.\" necessary if `rfloat' is called in the middle of a paragraph.
+.\"
+.\" The horizontal separation between the image and the floating text is
+.\" given in register `\n[rfloat-hori-sep]' (set initially to 1m), the
+.\" vertical separation in register `\n[rfloat-vert-sep]' (set initially
+.\" to 0v since we measure from the base of the current line).
+.
+.nr rfloat-hori-sep .5m
+.nr rfloat-vert-sep 0v
+.
+.de rfloat
+.  ie '\\$2'' \
+.    nr rfloat-in-par 0
+.  el \
+.    nr rfloat-in-par 1
+.
+.  ev rfloat-env
+.    di rfloat-div
+.      PSPIC -L \\$1
+.    di
+.  ev
+.
+.  \" The vertical and horizontal dimensions of the image are now stored in
+.  \" \n[dn] and \n[dl], respectively.  We disable vertical traps so that we
+.  \" can safely return to the current position.
+.  nr rfloat-width \\n[dl]
+.  nr rfloat-start \\n[nl]
+.  nr rfloat-end (\\n[nl] + \\n[dn] + \\n[rfloat-in-par]v + 0.5v)
+.
+.  vpt 0
+.  mk
+.  ev rfloat-div-env
+.    evc 0
+.    in (\\n[.l]u - \\n[rfloat-width]u)
+.    sp +(\\n[rfloat-vert-sep]u + \\n[rfloat-in-par]v)
+.    rfloat-div
+.    sp +\\n[rfloat-vert-sep]u
+.  ev
+.  rt
+.  vpt 1
+.
+.  \" Reduce right margin.  For -me, `.ll' is macro, accepting a single
+.  \" argument only, thus we must compute the value in advance.
+.  nr float-ll (\\n[rfloat-width] + \\n[rfloat-hori-sep])
+.  ll -\\n[float-ll]u
+.
+.  \" Define macro to reset right margin and to remove trap.  Since the
+.  \" effect of `.ll' is delayed until the current partial line is emitted,
+.  \" we position the trap one line higher.
+.  de rfloat-end-trap end
+.    ll
+.    wh (\\n[rfloat-end]u - 2v)
+.  end
+.
+.  \" Set trap.
+.  wh (\\n[rfloat-end]u - 2v) rfloat-end-trap
+..
+.\" lfloat.tmac
+.\"
+.
+.
+.\" Prepare environment.
+.ev lfloat-div-env
+.  in 0
+.  ti 0
+.ev
+.
+.
+.\" lfloat <image>
+.\" lfloat version 1 by ljm (based on Werners rfloat)
+.
+.nr lfloat-hori-sep .5m
+.nr lfloat-vert-sep 0v
+.
+.de lfloat
+.    di lfloat-div
+.      PSPIC -L \\$1
+.    di
+.
+.  \" The vertical and horizontal dimensions of the image are now stored in
+.  \" \n[dn] and \n[dl], respectively.  We disable vertical traps so that we
+.  \" can safely return to the current position.
+.  nr lfloat-width \\n[dl]
+.  nr lfloat-start \\n[nl]
+.  nr lfloat-end (\\n[nl] + \\n[dn] + \\n[lfloat-in-par]v)
+.  nr lfloat-po \\n[.o]
+.  vpt 0
+.  mk
+.  ev lfloat-div-env
+.    evc 0
+.    sp +(\\n[lfloat-vert-sep]u + \\n[lfloat-in-par]v - 0.5m)
+.    lfloat-div
+.    sp +\\n[lfloat-vert-sep]u
+.  ev
+.  rt
+.  vpt 1
+.
+.  nr float-ll (\\n[lfloat-width] + \\n[lfloat-hori-sep])
+.  po +\\n[float-ll]u
+.  ll -\\n[float-ll]u
+.
+.  de lfloat-end-trap end
+.    po
+.    wh (\\n[lfloat-end]u - 1v)
+.  end
+.  de lfloat-endll-trap end
+.    ll
+.    wh (\\n[lfloat-end]u - 2v)
+.  end
+.
+.  \" Set trap.
+.  wh (\\n[lfloat-end]u - 1v) lfloat-end-trap
+.  wh (\\n[lfloat-end]u - 2v) lfloat-endll-trap
 ..
