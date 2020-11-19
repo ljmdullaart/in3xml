@@ -68,7 +68,7 @@ This is the in3 xml definition
 <!ELEMENT value (#PCDATA)>
 <!ELEMENT variable (#PCDATA)>
 
-<!ELEMENT image ANY>
+<!ELEMENT image (file|format)*>
 <!ELEMENT block (name|type|blocktext|image|format)*>
 <!ELEMENT blocktext (#PCDATA)>
 
