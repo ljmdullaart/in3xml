@@ -54,6 +54,7 @@ my %variables;
 	$variables{'mapnumber'}=1;
     $variables{'markdown'}=0;
     $variables{'notes'}=0;
+    $variables{'parastartdelay'}='';
     $variables{'sidechar'}='*';
     $variables{'sidesep'}=';';
     $variables{'subtitle'}='';
@@ -285,6 +286,7 @@ sub formatrequest {
 		$image='';
 		$file='';
 		$text='';
+		$format='';
 		state_push('image');
 	}
 	elsif ($input =~/<block>/){
@@ -318,6 +320,10 @@ sub outimage {
 	chomp $img;
 	$img=~s/ *$//;
 	my $baseimg=basename($img);
+	if ($baseimg=~/(.*)\.xcf/){
+		$baseimg="$1.png";
+		system ("convert $img $baseimg");
+	}
 	my $imgsize=` imageinfo --geom $img`;
 	chomp $imgsize;
 	my $scale=100; #percent
@@ -331,11 +337,19 @@ sub outimage {
 	}
 	my $align='';
 	if ($inline>0){$scale=24;}
-	my $width=($x*$scale)/100;
-	my $height=($y*$scale)/100;
+	my $width=($x*$scale)/200;
+	my $height=($y*$scale)/200;
 	my $align=$y/10;
 	if ($inline>0){
 		output ("<img src=\"$baseimg\" alt=\"$img\" width=\"$width\" height=\"$height\" style=\"vertical-align:-$align%;\">");
+	}
+	elsif ($format=~/left/){
+		output ("<img src=\"$baseimg\" alt=\"$img\" width=\"$width\" height=\"$height\" align='left' style=\"margin:10px 10px;vertical-align:-10;\">");
+		$variables{'parastartdelay'}='<hr style="height:1px; visibility:hidden;">';
+
+	}
+	elsif ($format=~/right/){
+		output ("<img src=\"$baseimg\" alt=\"$img\" width=\"$width\" height=\"$height\" align='right' style=\"margin:10px 10px;vertical-align:-10;\">");
 	}
 	else {
 		output ('<div style="text-align: center">');
@@ -395,6 +409,10 @@ while ( $linenumber <= $#input){
 		}
 		elsif ($input[$linenumber] =~/<image>/){
 			if ($ptableopen>0){ output('</table>');$ptableopen=0;}
+			$text='';
+			$file='';
+			$format='';
+			$image='';
 			state_push('image');
 		}
 		elsif ($input[$linenumber] =~/<cover>/){
@@ -531,6 +549,10 @@ while ( $linenumber <= $#input){
 			}
 			if ($variables{'notes'}==0){
 				output ('<p>');
+				if ( $variables{'parastartdelay'} ne ''){
+					output ($variables{'parastartdelay'});
+					$variables{'parastartdelay'}='';
+				}
 			}
 			elsif ($ptableopen==0){
 				output('<table class=paragraph>');
@@ -547,6 +569,10 @@ while ( $linenumber <= $#input){
 			}
 			if ($variables{'notes'}>0){
 				output ('<td class=paragraph>');
+				if ( $variables{'parastartdelay'} ne ''){
+					output ($variables{'parastartdelay'});
+					$variables{'parastartdelay'}='';
+				}
 			}
 			state_push('paragraph');
 		}
@@ -877,6 +903,10 @@ while ( $linenumber <= $#input){
 			state_push('type');
 		}
 		elsif ($input[$linenumber] =~/<image>/){
+			$text='';
+			$file='';
+			$format='';
+			$image='';
 			state_push('image');
 		}
 		elsif ($input[$linenumber] =~/<blocktext>/){
@@ -1175,9 +1205,13 @@ while ( $linenumber <= $#input){
 				outimage($file);
 				$text='';
 				$file='';
+				$format='';
 				$image='';
 			}
 			state_pop();
+		}
+		elsif ($input[$linenumber]=~/<format>/){
+			state_push('format');
 		}
 		elsif ($input[$linenumber]=~/<text>/){
 			state_push('text');
@@ -1243,6 +1277,9 @@ while ( $linenumber <= $#input){
 		}
 		else {
 			$target=$input[$linenumber];
+			$target=~s/^"//;
+			$target=~s/"$//;
+
 		}
 	}
 	elsif ($state  eq 'text'){
