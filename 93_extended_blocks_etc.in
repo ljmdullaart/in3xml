@@ -20,14 +20,14 @@ named Duden flows by their place and supplies it with the necessary regelialia.
 It is a paradisematic country, in which roasted parts of sentences fly into
 your mouth.
 
-.img LEFT E.xcf
+.img LEFT E.png
 
 ven the all-powerful Pointing
 .img IMG_0364.png
 has no control about the blind texts; it is
 an almost unorthographic life One day however a small line of blind text
 .block pic
-.block format scale=10
+.block format scale=20
 box; arrow;circle; arrow;ellipse;
 .block
 by the name of Lorem Ipsum decided to leave for the far World of Grammar.
@@ -58,8 +58,9 @@ been rewritten, then they are still using her.
 	<cs=3>A nice table
 	directive	type	example
 	img	image	.img plaatje.png
-	<rs=3>block	eqn	.inline eqn x sub i = y sub i * i sub y
+	<rs=4>block	eqn	.inline eqn x sub i = y sub i * i sub y
 	pic	.inline pic box; arrow; box;
+	texeqn	.inline texeqn L' = {L}{\sqrt{1-\frac{v^2}{c^2}}}
 	music	.block music%\n%\n\version "2.18.2"%\n\relative c'' {%\n\new PianoStaff <<%\n\new Staff { \time 2/4 c4 e | g g, | }%\n>>%\n}%\n.block
 	nothing	text	bla bla bla
 
