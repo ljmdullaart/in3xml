@@ -9,6 +9,7 @@ $dvifontpath=dirname($dvifontpath);
 
 
 my $trace=0;
+my $DEBUG=0;
 my @output;
 sub output{
 	for (@_){
@@ -25,6 +26,25 @@ sub outputlast {
 	my $top=pop@output;
 	push @output,$top;
 	return $top;
+}
+
+my $progres=0;
+my $progresschar=' ';
+sub progress {
+	$progres++;
+	if ($progresschar eq ' '){$progresschar='1';}
+	elsif ($progresschar eq '1'){$progresschar='2';}
+	elsif ($progresschar eq '2'){$progresschar='3';}
+	elsif ($progresschar eq '3'){$progresschar='4';}
+	elsif ($progresschar eq '4'){$progresschar='5';}
+	elsif ($progresschar eq '5'){$progresschar='6';}
+	elsif ($progresschar eq '6'){$progresschar='7';}
+	elsif ($progresschar eq '7'){$progresschar='8';}
+	elsif ($progresschar eq '8'){$progresschar='9';}
+	elsif ($progresschar eq '9'){$progresschar='0';}
+	elsif ($progresschar eq '0'){$progresschar='1';}
+	print STDERR "\r$progresschar";
+	print STDERR "." x $progres;
 }
 
 
@@ -44,7 +64,7 @@ my %variables;
     $variables{'author'}='';
     $variables{'blockcnt'}=0;
     $variables{'cover'}='';
-    $variables{'debug'}=0;
+    $variables{'DEBUG'}=$DEBUG;
     $variables{'do_cover'}='no';
     $variables{'do_headers'}='yes';
     $variables{'imagex'}=800;
@@ -114,8 +134,10 @@ sub error {
 
 my $what='';
 for (@ARGV){
+	debug ("Argument parsing $_");
 	if ($what eq ''){
 		if (/^--$/){ while (<STDIN>){push @input,$_;}}
+		elsif (/^-d([0-9]+)/){ $variables{'DEBUG'}=$1; }
 		elsif (/^--debug([0-9]+)/){ $variables{'DEBUG'}=$1; }
 		elsif (/^--debug=([0-9]+)/){ $variables{'DEBUG'}=$1; }
 		elsif (/^-d$/){$what='debug';}
@@ -184,6 +206,7 @@ for (@ARGV){
 }
 
 if ($#input<0){
+	debug ("No input lines");
 	$fileline=0;
 	while (<STDIN>){
 		$fileline++;
@@ -322,7 +345,8 @@ sub outimage {
 	my $baseimg=basename($img);
 	if ($baseimg=~/(.*)\.xcf/){
 		$baseimg="$1.png";
-		system ("convert $img $baseimg");
+		progress();
+		system ("convert $img $baseimg >/dev/null 2>/dev/null");
 	}
 	my $imgsize=` imageinfo --geom $img`;
 	chomp $imgsize;
@@ -356,7 +380,8 @@ sub outimage {
 		output ("<img src=\"$baseimg\" alt=\"$img\" width=\"$width\" height=\"$height\" align='center'>");
 		output ('</div>');
 	}
-	system ("cp $img web/$baseimg");
+	progress();
+	system ("cp $img web/$baseimg >/dev/null 2>/dev/null");
 
 }
 
@@ -372,6 +397,7 @@ while ( $linenumber <= $#input){
 	chomp $input[$linenumber];
 	$input[$linenumber]=~s/^[ 	]*//;
 	my $state=state_tos();
+	debug ("$state $linenumber | $input[$linenumber]");
 	if ($trace>0){printf STDERR "# %10.10s - %8.8d : %s\n",($state,$linenumber,$input[$linenumber]);}
 	if ($input[$linenumber] =~/<!--.*-->/){}
 
@@ -734,7 +760,8 @@ while ( $linenumber <= $#input){
 						print $PLOT "$_\n";
 					}
 					close $PLOT;
-					system("gnuplot $blk.gnuplot");
+					progress();
+					system("gnuplot $blk.gnuplot >/dev/null 2>/dev/null");
 					#system ("eps2eps -B1  $blk.ps $blk.eps");
 					output("<img src=\"$blk.svg\"  width=\"$x\">");
 				}
@@ -768,9 +795,10 @@ while ( $linenumber <= $#input){
 					print $TEXEQN "\\end{titlepage}\n";
 					print $TEXEQN "\\end{document}\n";
 					close $TEXEQN;
+					progress();
             		system("cd block; echo '' | latex ../$blk.tex > /dev/null 2>/dev/null");
 					#system("convert  -trim  -density $density  $blk.dvi  $blk.png");
-            		system("dvisvgm -n -c1.5 -m $dvifontpath $blk.dvi -o $blk.svg");
+            		system("dvisvgm -n -c1.5 -m $dvifontpath $blk.dvi -o $blk.svg >/dev/null 2>/dev/null");
 					output("<img src=\"$blk.svg\" alt=\"$blk\" style=\"vertical-align:middle;\">");
 				}
 				else {
@@ -795,10 +823,11 @@ while ( $linenumber <= $#input){
 					}
 					print $EQN ".EN\n";
 					close $EQN;
-					system ("eqn $blk.eqn > $blk.groff");
-					system ("groff $blk.groff > $blk.ps");
-					system ("ps2pdf $blk.ps  $blk.pdf");
-					system ("convert -trim -density $density $blk.pdf  $blk.png");
+					progress();
+					system ("eqn $blk.eqn > $blk.groff 2>/dev/null");
+					system ("groff $blk.groff > $blk.ps 2>/dev/null");
+					system ("ps2pdf $blk.ps  $blk.pdf 2>/dev/null");
+					system ("convert -trim -density $density $blk.pdf  $blk.png >/dev/null 2>/dev/null");
 					my $imgsize=` imageinfo --geom $blk.png`;
 					my $x; my $y; my $yn;
 					($x,$y)=split ('x',$imgsize);
@@ -826,10 +855,11 @@ while ( $linenumber <= $#input){
 					}
 					print $PIC ".PE\n";
 					close $PIC;
-					system ("pic $blk.pic > $blk.groff");
-					system ("groff $blk.groff > $blk.ps");
-					system ("ps2pdf $blk.ps  $blk.pdf");
-					system ("convert -trim -density $density $blk.pdf  $blk.png");
+					progress();
+					system ("pic $blk.pic > $blk.groff 2> /dev/null");
+					system ("groff $blk.groff > $blk.ps 2> /dev/null");
+					system ("ps2pdf $blk.ps  $blk.pdf 2> /dev/null");
+					system ("convert -trim -density $density $blk.pdf  $blk.png 2> /dev/null");
 					my $imgsize=` imageinfo --geom $blk.png`;
 					my $x; my $y; my $yn;
 					($x,$y)=split ('x',$imgsize);
@@ -870,9 +900,10 @@ while ( $linenumber <= $#input){
 					}
 					print $MUSIC "}\n";
 					close $MUSIC;
-					system ("cd block; lilypond --png  -dresolution=500  ../$blk.music");
+					progress();
+					system ("cd block; lilypond --png  -dresolution=500  ../$blk.music 2>/dev/null" );
 					system ("mv $blk.png $blk.fs.png");
-					system ("convert -trim $blk.fs.png $blk.png");
+					system ("convert -trim $blk.fs.png $blk.png 2>/dev/null");
 
 					my $imgsize=` imageinfo --geom $blk.png`;
 					my $x; my $y; my $yn;
@@ -1541,8 +1572,8 @@ if ($variables{"do_headers"} eq 'yes'){
 
 
 my $charmapfile;
-if ( -f "/usr/local/share/in3charmap$variables{'interpret'}" ){
-	$charmapfile="/usr/local/share/in3charmap$variables{'interpret'}";
+if ( -f "/usr/local/share/in3/in3charmap$variables{'interpret'}" ){
+	$charmapfile="/usr/local/share/in3/in3charmap$variables{'interpret'}";
 }
 else {
 	$charmapfile="in3charmap$variables{'interpret'}";
