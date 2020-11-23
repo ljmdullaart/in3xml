@@ -512,12 +512,12 @@ sub markdownpass {
 			debug ("markdown=1 for '$line'");
 			$mx=$#passout;
 			#ATX headings
-			if (/^ {0,3}# /){ s/^ {0,3}#/.h1/;s/ *#$//; pushout($_); debug ('atx h1');}
-			elsif (/^ {0,3}## /){ s/^ {0,3}##/.h2/;s/ *##$//; pushout($_); debug ('atx h2');}
-			elsif (/^ {0,3}### /){ s/^ {0,3}###/.h3/;s/ *###$//; pushout($_); debug ('atx h3');}
-			elsif (/^ {0,3}#### /){ s/^ {0,3}####/.h4/;s/ *####$//; pushout($_); debug ('atx h4');}
+			if (/^ {0,3}###### /){ s/^ {0,3}######/.h6/;s/ *######$//; pushout($_); debug ('atx h6');}
 			elsif (/^ {0,3}##### /){ s/^ {0,3}#####/.h5/;s/ *#####$//; pushout($_); debug ('atx h5');}
-			elsif (/^ {0,3}###### /){ s/^ {0,3}######/.h6/;s/ *######$//; pushout($_); debug ('atx h6');}
+			elsif (/^ {0,3}#### /){ s/^ {0,3}####/.h4/;s/ *####$//; pushout($_); debug ('atx h4');}
+			elsif (/^ {0,3}### /){ s/^ {0,3}###/.h3/;s/ *###$//; pushout($_); debug ('atx h3');}
+			elsif (/^ {0,3}## /){ s/^ {0,3}##/.h2/;s/ *##$//; pushout($_); debug ('atx h2');}
+			elsif (/^ {0,3}#.*#$/){ s/^ {0,3}#/.h1/;s/ *#$//; pushout($_); debug ('atx h1');}
 			# Setex heading and thematic breaks
 			elsif (/^ {0,3}===/){
 				debug ('setex h1');
@@ -961,12 +961,17 @@ sub codefilepass {
 				progress();
 				pushout("<name>"); pushout("\"$blockname\""); pushout("</name>");
 				pushout("<type>"); pushout('"lst"'); pushout("</type>");
-				pushout("<text>");
+				pushout("<blocktext>");
 				while (<$CODEFILE>){
 					chomp;
+					s/&/&amp;/g;
+					s/</&lt;/g;
+					s/>/&gt;/g;
+					s/"/&quot;/g;
+					s/'/&apos;/g;
 					pushout("\"$_\"");
 				}
-				pushout("</text>");
+				pushout("</blocktext>");
 				pushout("</block>");
 			}
 			else {
@@ -1673,7 +1678,7 @@ commentpass(); progress;
 noppass();
 
 print "<?xml version=\"1.0\"?>\n";
-print "<!DOCTYPE in3xml SYSTEM \"/usr/local/share/in3xml.dtd\">\n";
+print "<!DOCTYPE in3xml SYSTEM \"/usr/local/share/in3/in3xml.dtd\">\n";
 print "<in3xml>\n";
 for (@passin){
 	print "$_\n";
