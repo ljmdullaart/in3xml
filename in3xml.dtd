@@ -1,6 +1,6 @@
 <!--
 This is the in3 xml definition
-#INSTALL@ /usr/local/share/in3xml.dtd
+#INSTALL@ /usr/local/share/in3/in3xml.dtd
 -->
 <!-- Entity corresponding to formatrequest -->
 <!ELEMENT bold (#PCDATA)>
