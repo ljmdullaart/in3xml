@@ -1,4 +1,4 @@
-#INSTALL@ /usr/local/share/in3charmap
+#INSTALL@ /usr/local/share/in3/in3charmap
 #char	groff	html
 ¡	\[r!]	&iexcl;
 ¢	\[ct]	&cent;
