@@ -3,12 +3,7 @@
 #
 use strict;
 use File::Basename;
-use Tk;
-use Tk::Font;
 my $DEBUG=0;
-
-my $mw = MainWindow->new();
-my $font = $mw->fontCreate( 'TimesNew Roman' );
 
 sub timesspace {
 	(my $text)=@_;
@@ -17,7 +12,7 @@ sub timesspace {
 	$text=~s/&quot;/"/g;
 	$text=~s/&apos;/'/g;
 	$text=~s/&amp;/&/g;
-	my $retval= $font->measure( $text )/4.5;
+	my $retval= length( $text )/4.5;
 	return int($retval);
 }
 
@@ -958,7 +953,7 @@ while ( $linenumber <= $#input){
 			my $blk="block/$name";
 			if ($type eq 'pre'){
 				close_paratable();
-				output ('.ne 4v','.sp 1','.B1','.ft 6','.ps -2','.nf','.eo');
+				output ('.ne 4v','.sp 1','.B1','.ft 6','.ps -4','.nf','.eo');
 				for (@blocktext){
 					s/^"//;
 					s/"$//;
@@ -973,7 +968,7 @@ while ( $linenumber <= $#input){
 			}
 			elsif ($type eq 'lst'){
 				close_paratable();
-				output ('.ne 4v','.sp 1','.ft 6','.ps -2','.nf','.eo');
+				output ('.ne 4v','.ft 6','.ps -4','.nf','.eo','.vs -4');
 				for (@blocktext){
 					s/^"//;
 					s/"$//;
@@ -984,7 +979,7 @@ while ( $linenumber <= $#input){
 					s/'/&apos;/g;
 					output('.br',$_);
 				}
-				output ('.sp 1',,'.ps','.ft','.ec','.fi');
+				output ('.vs','.ps','.ft','.ec','.fi');
 			}
 			elsif ($type eq 'pic'){
 				if ($inline==0){
@@ -1739,8 +1734,8 @@ if ($trace > 0){
 
 
 my $charmapfile;
-if ( -f "/usr/local/share/in3charmap$variables{'interpret'}" ){
-	$charmapfile="/usr/local/share/in3charmap$variables{'interpret'}";
+if ( -f "/usr/local/share/in3/in3charmap$variables{'interpret'}" ){
+	$charmapfile="/usr/local/share/in3/in3charmap$variables{'interpret'}";
 }
 else {
 	$charmapfile="in3charmap$variables{'interpret'}";
