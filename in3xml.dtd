@@ -30,6 +30,7 @@ This is the in3 xml definition
 				  lst       |
 				  map       |
 				  note      |
+				  page      |
 				  paragraph |
 				  set       |
 				  subtitle  |
@@ -94,6 +95,7 @@ This is the in3 xml definition
 <!ELEMENT hr (#PCDATA)*>
 <!ELEMENT level (#PCDATA)>
 <!ELEMENT name (#PCDATA)>
+<!ELEMENT page (#PCDATA)>
 <!ELEMENT ref (#PCDATA)>
 <!ELEMENT seq (#PCDATA)>
 <!ELEMENT target (#PCDATA)>

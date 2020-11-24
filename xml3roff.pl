@@ -4,6 +4,7 @@
 use strict;
 use File::Basename;
 my $DEBUG=0;
+my $trace=0;
 
 sub timesspace {
 	(my $text)=@_;
@@ -12,12 +13,12 @@ sub timesspace {
 	$text=~s/&quot;/"/g;
 	$text=~s/&apos;/'/g;
 	$text=~s/&amp;/&/g;
+	$text=~s/&#0092;/\\/g;
 	my $retval= length( $text )/4.5;
 	return int($retval);
 }
 
 
-my $trace=0;
 
 my @output;
 sub output{
@@ -568,7 +569,7 @@ sub table_lookahead{
 		}
 		$localline++;
 	}
-	my $vspace=2*$maxrow;
+	my $vspace=$maxrow;
 	nodupoutput (".ne $vspace".'v');
 	output ('.TS');
 	output ('expand,allbox,center;');
@@ -620,44 +621,77 @@ while ( $linenumber <= $#input){
 		if ($input[$linenumber] =~/<\/in3xml>/){
 			state_pop();
 		}
-		elsif ($input[$linenumber] =~/<title>/){
-			state_push('title');
-		}
-		elsif ($input[$linenumber] =~/<subtitle>/){
-			state_push('subtitle');
-		}
 		elsif ($input[$linenumber] =~/<author>/){
 			state_push('author');
 		}
-		elsif ($input[$linenumber] =~/<video>/){
-			close_paratable();
-			state_push('video');
+		elsif ($input[$linenumber] =~/<blank>/){
+			state_push('blank');
 		}
-		elsif ($input[$linenumber] =~/<map>/){
+		elsif ($input[$linenumber] =~/<block>/){	# note: these are stand alone blocks
 			close_paratable();
-			state_push('map');
+			$type='pre';
+			$image='';
+			$class='';
+			undef@blocktext;
+			state_push('block');
+		}
+		elsif ($input[$linenumber] =~/<break>/){
+			state_push('break');
+		}
+		elsif ($input[$linenumber] =~/<cover>/){
+			state_push('cover');
+		}
+		elsif($input[$linenumber] =~/<header>/){
+			close_paratable();
+			state_push('headerfile');
+		}
+		elsif ($input[$linenumber] =~/<headerlink>/){
+			state_push('headerlink');
+		}
+		elsif ($input[$linenumber] =~/<heading>/){
+			$variables{'notes'}=$variables{'notes'}&2;
+			close_paratable();
+			state_push('heading');
+		}
+		elsif ($input[$linenumber] =~/<hr>/){
+			state_push('hr');
 		}
 		elsif ($input[$linenumber] =~/<image>/){
 			close_paratable();
 			state_push('image');
 		}
-		elsif ($input[$linenumber] =~/<cover>/){
-			state_push('cover');
+		elsif ($input[$linenumber] =~/<include>/){
+			state_push('include');
 		}
-		elsif ($input[$linenumber] =~/<headerlink>/){
-			state_push('headerlink');
+		elsif ($input[$linenumber] =~/<lst>/){
+			close_paratable();
+			output ('.P');
+			state_push('lst');
+		}
+		elsif ($input[$linenumber] =~/<map>/){
+			close_paratable();
+			state_push('map');
+		}
+		elsif ($input[$linenumber] =~/<page>/){
+			state_push('page');
 		}
 		elsif ($input[$linenumber] =~/<set>/){
 			state_push('set');
 		}
-		elsif ($input[$linenumber] =~/<hr>/){
-			state_push('hr');
+		elsif ($input[$linenumber] =~/<subtitle>/){
+			state_push('subtitle');
 		}
-		elsif ($input[$linenumber] =~/<break>/){
-			state_push('break');
+		elsif ($input[$linenumber] =~/<table>/){
+			$inline=1;
+			$variables{'notes'}=$variables{'notes'}&2;
+			close_paratable();
+			table_lookahead($linenumber);
+			$tablerow=0;
+			$tablecol=0;
+			state_push('table');
 		}
-		elsif ($input[$linenumber] =~/<blank>/){
-			state_push('blank');
+		elsif ($input[$linenumber] =~/<title>/){
+			state_push('title');
 		}
 		elsif ($input[$linenumber] =~/<toc>/){
 			close_paratable();
@@ -668,19 +702,9 @@ while ( $linenumber <= $#input){
 			output("");
 			state_push('toc');
 		}
-		elsif ($input[$linenumber] =~/<heading>/){
-			$variables{'notes'}=$variables{'notes'}&2;
+		elsif ($input[$linenumber] =~/<video>/){
 			close_paratable();
-			state_push('heading');
-		}
-		elsif ($input[$linenumber] =~/<table>/){
-			$inline=1;
-			$variables{'notes'}=$variables{'notes'}&2;
-			close_paratable();
-			table_lookahead($linenumber);
-			$tablerow=0;
-			$tablecol=0;
-			state_push('table');
+			state_push('video');
 		}
 		elsif ($input[$linenumber] =~/<([acdhlmnopritu]*)list>/){
 			$type='';
@@ -728,14 +752,6 @@ while ( $linenumber <= $#input){
 			$inline=1;
 			state_push('list');
 		}
-		elsif ($input[$linenumber] =~/<include>/){
-			state_push('include');
-		}
-		elsif ($input[$linenumber] =~/<lst>/){
-			close_paratable();
-			output ('.P');
-			state_push('lst');
-		}
 		elsif ($input[$linenumber] =~/<paragraph>/){
 			$lastline=$currentline;
 			$currentline='';
@@ -765,6 +781,7 @@ while ( $linenumber <= $#input){
 					}
 					else {
 						chomp $input[$endpara];
+						$input[$endpara]=~s/_/ /;
 						push @sidenotes,$input[$endpara];
 					}
 				}
@@ -821,18 +838,6 @@ while ( $linenumber <= $#input){
 					# process the text part of the paragraph.
 			$pcellopen=1;
 			state_push('paragraph');
-		}
-		elsif ($input[$linenumber] =~/<block>/){	# note: these are stand alone blocks
-			close_paratable();
-			$type='pre';
-			$image='';
-			$class='';
-			undef@blocktext;
-			state_push('block');
-		}
-		elsif($input[$linenumber] =~/<header>/){
-			close_paratable();
-			state_push('headerfile');
 		}
 		elsif($input[$linenumber] =~/^$/){}
 		else {
@@ -949,6 +954,7 @@ while ( $linenumber <= $#input){
 				s/&quot;/"/g;
 				s/&apos;/'/g;
 				s/&amp;/&/g;
+				s/&#0092;/\\/g;
 			}
 			my $blk="block/$name";
 			if ($type eq 'pre'){
@@ -962,6 +968,7 @@ while ( $linenumber <= $#input){
 					s/>/&gt;/g;
 					s/"/&quot;/g;
 					s/'/&apos;/g;
+					s/&#0092;/\\/g;
 					output('.br',$_);
 				}
 				output ('.sp 1',,'.ps','.ft','.ec','.fi','.B2');
@@ -977,6 +984,7 @@ while ( $linenumber <= $#input){
 					s/>/&gt;/g;
 					s/"/&quot;/g;
 					s/'/&apos;/g;
+					s/&#0092;/\\/g;
 					output('.br',$_);
 				}
 				output ('.vs','.ps','.ft','.ec','.fi');
@@ -1322,6 +1330,12 @@ while ( $linenumber <= $#input){
 			output ('.br');
 			output (' ');
 			output ('.br');
+			state_pop();
+		}
+	}
+	elsif ($state  eq 'page'){
+		if ($input[$linenumber] =~/<\/page>/){
+			output ('.SK');
 			state_pop();
 		}
 	}
@@ -1768,6 +1782,9 @@ for (@charmap){
 		if ($output[$i]=~/$char/){
 			$output[$i]=~s/$char/$groff/g;
 		}
+		if ($output[$i]=~/$html/){
+			$output[$i]=~s/$html/$groff/g;
+		}
 	}
 }
 
@@ -1787,5 +1804,6 @@ for (@output){
 	s/&quot;/"/g;
 	s/&apos;/'/g;
 	s/&amp;/&/g;
+	s/&#0092;/\\\\/g;
 	print "$_\n";
 }

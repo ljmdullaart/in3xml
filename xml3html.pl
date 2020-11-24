@@ -43,7 +43,7 @@ sub progress {
 	elsif ($progresschar eq '8'){$progresschar='9';}
 	elsif ($progresschar eq '9'){$progresschar='0';}
 	elsif ($progresschar eq '0'){$progresschar='1';}
-	print STDERR "\r$progresschar";
+	print STDERR "\r$progres";
 	print STDERR "." x $progres;
 }
 
@@ -420,6 +420,9 @@ while ( $linenumber <= $#input){
 		elsif ($input[$linenumber] =~/<subtitle>/){
 			state_push('subtitle');
 		}
+		elsif ($input[$linenumber] =~/<page>/){
+			state_push('page');
+		}
 		elsif ($input[$linenumber] =~/<author>/){
 			state_push('author');
 		}
@@ -546,6 +549,8 @@ while ( $linenumber <= $#input){
 						$inside=0;
 					}
 					else {
+						chomp $input[$endpara];
+						$input[$endpara]=~s/_/ /;
 						push @sidenotes,$input[$endpara];
 					}
 				}
@@ -859,7 +864,7 @@ while ( $linenumber <= $#input){
 					system ("pic $blk.pic > $blk.groff 2> /dev/null");
 					system ("groff $blk.groff > $blk.ps 2> /dev/null");
 					system ("ps2pdf $blk.ps  $blk.pdf 2> /dev/null");
-					system ("convert -trim -density $density $blk.pdf  $blk.png 2> /dev/null");
+					system ("convert -trim -density $density $blk.pdf  $blk.png >/dev/null 2> /dev/null");
 					my $imgsize=` imageinfo --geom $blk.png`;
 					my $x; my $y; my $yn;
 					($x,$y)=split ('x',$imgsize);
@@ -903,7 +908,7 @@ while ( $linenumber <= $#input){
 					progress();
 					system ("cd block; lilypond --png  -dresolution=500  ../$blk.music 2>/dev/null" );
 					system ("mv $blk.png $blk.fs.png");
-					system ("convert -trim $blk.fs.png $blk.png 2>/dev/null");
+					system ("convert -trim $blk.fs.png $blk.png >/dev/null 2>/dev/null");
 
 					my $imgsize=` imageinfo --geom $blk.png`;
 					my $x; my $y; my $yn;
@@ -1417,6 +1422,14 @@ while ( $linenumber <= $#input){
 	elsif ($state  eq 'blank'){
 		if ($input[$linenumber] =~/<\/blank>/){
 			output('<br>&nbsp;<br>');
+			state_pop();
+		}
+		else {
+		}
+	}
+	elsif ($state  eq 'page'){
+		if ($input[$linenumber] =~/<\/page>/){
+			output('<hr>');
 			state_pop();
 		}
 		else {
