@@ -52,6 +52,19 @@ my @inlinenr;
 my @outlinenr;
 my $passname='none';
 my $inline=0;
+my @supercipher=('&#8304;','&#0185;','&#0178;','&#0179;','&#8308;','&#8309;','&#8310;','&#8311;','&#8312;','&#8313;');
+sub supernum{
+	(my $in)=@_;
+	my $retval='';
+	while ($in>0){
+		my $j=int($in/10);
+		my $i=$in-10*$j;
+		$retval=$supercipher[$i] . $retval;
+		$in=$j;
+	}
+	return $retval;
+}
+
 
 my $progchar='-';
 
@@ -304,6 +317,7 @@ sub xmlifypass {
 		s/>/&gt;/g;
 		s/"/&quot;/g;
 		s/'/&apos;/g;
+		s/\\/&#0092;/g;
 		pushout ($_);
 	}
 	endpass();
@@ -767,6 +781,10 @@ sub hrpass {
 			pushout("<hr>");
 			pushout("</hr>");
 		}
+		elsif (/^\.page/){
+			pushout("<page>");
+			pushout("</page>");
+		}
 		elsif (/^\.P/){
 			pushout("<blank>");
 			pushout("</blank>");
@@ -969,6 +987,7 @@ sub codefilepass {
 					s/>/&gt;/g;
 					s/"/&quot;/g;
 					s/'/&apos;/g;
+					s/\\/&#0092;/g;
 					pushout("\"$_\"");
 				}
 				pushout("</blocktext>");
@@ -1114,6 +1133,8 @@ sub parapass{
 							my $j=$i+1;
 							my $a=('a' .. 'z' )[$i];
 							my $A=('A' .. 'Z' )[$i];
+							my $J=supernum($j);
+							$ref=~s/%num/$J/;
 							$ref=~s/%NUM/$j/;
 							$ref=~s/%alpha/$a/;
 							$ref=~s/%ALPHA/$A/;
@@ -1132,6 +1153,8 @@ sub parapass{
 							my $ref=$variables{'sidechar'};
 							my $a=('a' .. 'z' )[$j-1];
 							my $A=('A' .. 'Z' )[$j-1];
+							my $J=supernum($j);
+							$ref=~s/%num/$J/;
 							$ref=~s/%NUM/$j/;
 							$ref=~s/%alpha/$a/;
 							$ref=~s/%ALPHA/$A/;
@@ -1341,6 +1364,7 @@ sub standalonepass {	# make images, videos or blocks that occupy a
 	my $intoc=0;
 	my $inimg=0;
 	my $inset=0;
+	my $inpage=0;
 	my $dontstrip=0;
 	my $line;
 	for (@passin){
@@ -1367,9 +1391,11 @@ sub standalonepass {	# make images, videos or blocks that occupy a
 					elsif (/^<.video>/){ $invideo=0; }
 					elsif (/^<set>/){ $inset=1; }
 					elsif (/^<.set>/){ $inset=0; }
+					elsif (/^<page>/){ $inset=1; }
+					elsif (/^<.page>/){ $inset=0; }
 					elsif (/^<toc>/){ $intoc=1; }
 					elsif (/^<.toc>/){ $intoc=0; }
-					elsif ($inimg+$inblk+$invideo+$intoc+$inset>0){ }
+					elsif ($inimg+$inblk+$invideo+$intoc+$inset+$inpage>0){ }
 					else {
 						$dontstrip=1;
 				   	}
@@ -1386,11 +1412,13 @@ sub standalonepass {	# make images, videos or blocks that occupy a
 						elsif (/^<.image>/){ $inimg=0; pushout($_);}
 						elsif (/^<set>/){ $inset=1; pushout($_);}
 						elsif (/^<.set>/){ $inset=0; pushout($_);}
+						elsif (/^<page>/){ $inset=1; pushout($_);}
+						elsif (/^<.page>/){ $inset=0; pushout($_);}
 						elsif (/^<toc>/){ $intoc=1; pushout($_);}
 						elsif (/^<.toc>/){ $intoc=0; pushout($_);}
 						elsif (/^<video>/){ $invideo=1; pushout($_);}
 						elsif (/^<.video>/){ $invideo=0; pushout($_);}
-						elsif ($inimg+$inblk+$invideo+$inset+$intoc>0){ pushout($_);}
+						elsif ($inimg+$inblk+$invideo+$inset+$intoc+$inpage>0){ pushout($_);}
 						else { $dontstrip=1; print STDERR "MEUH? dontstrip==0, but 1 anyway?\n";}
 					}
 				}
