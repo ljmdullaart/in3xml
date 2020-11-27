@@ -6,7 +6,25 @@ use File::Basename;
 my $DEBUG=0;
 my $trace=0;
 
-sub timesspace {
+my %fontmeasure;
+my $fontaverage;
+my $fontfile="/usr/local/share/in3/TI.measure";
+if (open ( my $FONT,'<',$fontfile)){
+	while (<$FONT>){
+		if(/^.\t[0-9]*/){
+			chomp;
+			(my $char,my $width)=split '	';
+			$fontmeasure{$char}=$width;
+		}
+	}
+	close $FONT;
+}
+else {
+	print STDERR "Cannot open font measure file $fontfile\n";
+}
+$fontmeasure{' '}=250;
+
+sub timesspace{
 	(my $text)=@_;
 	$text=~s/&lt;/</g;
 	$text=~s/&gt;/>/g;
@@ -14,11 +32,19 @@ sub timesspace {
 	$text=~s/&apos;/'/g;
 	$text=~s/&amp;/&/g;
 	$text=~s/&#0092;/\\/g;
-	my $retval= length( $text )/4.5;
-	return int($retval);
+	my @str=split (//,$text);
+	my $total=0;
+	for (@str){
+		if (defined($fontmeasure{$_})){
+			$total=$total+$fontmeasure{$_};
+		}
+		else {
+			$total=$total+350;
+		}
+	}
+	undef @str;
+	return $total/250;
 }
-
-
 
 my @output;
 sub output{
@@ -162,6 +188,7 @@ for (@ARGV){
 		elsif (/^--nocover/){$variables{"do_cover"}='no';}
 		elsif (/^--no_cover/){$variables{"do_cover"}='no';}
 		elsif (/^-+h/){ hellup(); }
+		elsif (/^-t/){ $trace=1;}
 		elsif (/^-p/){ $progressindicator=1;}
 		elsif (/^-/){ print STDERR "$_ is not known as a flag; ignored.\n";}
 		else {
@@ -211,12 +238,13 @@ if ($#input<0){
 		push @infile,"STDIN:$fileline";
 	}
 }
-
+if ($trace>0){ print STDERR "dots at start of line..";}
 for (@input){
 if (/^\./){s/^\./\\[char46]/;}
 if (/^ \./){s/^ \./\\[char46]/;}
 #if (/^\"./){s/^"/"\\[char46]/;}
 }
+if ($trace>0){ print STDERR "removed\n";}
 
 #      _        _         _                   _
 #  ___| |_ __ _| |_ ___  | | _____  ___ _ __ (_)_ __   __ _
@@ -388,9 +416,9 @@ sub outimage {
 		debug("Music SIZE $x $y");
 		if (($iformat=~/inline/)||($inline>0)){
 			my $up=$y/4;
-			output ("\\v'0.5'");
+			output ("\\v'0.3'");
 			output (".dospark block/$imagename $x $y");
-			output ("\\v'-0.5'");
+			output ("\\v'-0.3'");
 		}
 		else {
 			output ('.sp 1');
@@ -418,7 +446,7 @@ sub outimage {
 			output (".dospark block/$imagename $x $y");
 		}
 	}
-	else {
+	elsif ($type=~/pic/) {
 		my $imgsize=`imageinfo --geom block/$imagename`;
 		my $x; my $y; my $xn;
 		($x,$y)=split ('x',$imgsize);
@@ -428,6 +456,32 @@ sub outimage {
 		if ($y2>$variables{'imagey'}){$myscale=$variables{'imagey'}*$scale/$y;}
 		$y=$y*$myscale/500;
 		$x=$x*$myscale/500;
+		my $up=$y/100;
+		my $need=$y*5;
+		#output ("\\v'$up"."c'");
+		if (($iformat=~/inline/)|| ($inline>0)){
+			output ("\\v'$up".'v\'');
+			output (".dospark block/$imagename $x $y");
+			output ("\\v'-$up".'v\'');
+		}
+		else {
+			output (".ne $need".'p');
+			output ('.ce 1');
+			$x=$x*4; $y=$y*4;
+			output (".dospark block/$imagename $x $y");
+		}
+		#output (".PSPIC block/$imagename $x");
+	}
+	else {
+		my $imgsize=`imageinfo --geom block/$imagename`;
+		my $x; my $y; my $xn;
+		($x,$y)=split ('x',$imgsize);
+		my $myscale=$scale;
+		if ($x>$variables{'imagex'}){$myscale=$variables{'imagex'}*$scale/$x;}
+		my $y2=$y*$myscale/$variables{'imagey'};
+		if ($y2>$variables{'imagey'}){$myscale=$variables{'imagey'}*$scale/$y;}
+		$y=$y*$myscale/250;
+		$x=$x*$myscale/250;
 		my $up=$y/100;
 		my $need=$y*5;
 		#output ("\\v'$up"."c'");
@@ -603,6 +657,8 @@ sub table_lookahead{
 # |_| |_| |_|\__,_|_|_| |_| |_|\___/ \___/| .__/
 #                                         |_|
 
+
+if ($trace>0){ print STDERR "Start mainloop\n";}
 $linenumber=0;
 while ( $linenumber <= $#input){
 	chomp $input[$linenumber];
@@ -1053,10 +1109,10 @@ while ( $linenumber <= $#input){
 					$mscale=$1;
 					$format=~s/scale=[0-9]+//;
 				}
-				$mscale=$mscale;   # CHECK  for inline scale!
+				$mscale=$mscale/2;   # CHECK  for inline scale!
 				my $density=1000;
 				if (open my $PLOT, '>',"$blk.gnuplot"){
-					print $PLOT 'set terminal postscript eps';
+					print $PLOT 'set terminal postscript eps 800 600';
 					print $PLOT "\nset output '$blk.eps'\n";
 					for (@blocktext){
 						chomp;
@@ -1506,8 +1562,8 @@ while ( $linenumber <= $#input){
 		else {
 			$type=$input[$linenumber];
 			chomp $type;
-			$type=~s/^[ 	]*"//;
-			$type=~s/"$//;
+			$type=~s/^[ 	]*" *//;
+			$type=~s/ *"$//;
 		}
 	}
 	elsif ($state  eq 'target'){
@@ -1742,7 +1798,7 @@ close_paratable();
 
 if ($trace > 0){
 	for my $k (keys %variables){
-		print "# Variable $k = $variables{$k}\n";
+		print STDERR "# Variable $k = $variables{$k}\n";
 	}
 }
 
