@@ -61,7 +61,7 @@ been rewritten, then they are still using her.
 	<rs=4>block	eqn	.inline eqn x sub i = y sub i * i sub y
 	pic	.inline pic box; arrow; box;
 	texeqn	.inline texeqn L' = {L}{\sqrt{1-\frac{v^2}{c^2}}}
-	music	.block music%\n%\n\version "2.18.2"%\n\relative c'' {%\n\new PianoStaff <<%\n\new Staff { \time 2/4 c4 e | g g, | }%\n>>%\n}%\n.block
+	music	.block music %n%%n%\version "2.18.2"%n%\relative c'' {%n%\new PianoStaff <<%n%\new Staff { \time 2/4 c4 e | g g, | }%n%>>%n%}%n%.block
 	nothing	text	bla bla bla
 
 Far far away, behind the word mountains, far from the countries Vokalia
@@ -118,3 +118,4 @@ Even the all-powerful Pointing has no control about the blind
 texts; it is an almost unorthographic life One day however a small line of
 blind text by the name of Lorem Ipsum decided to leave for the far World
 of Grammar.
+
