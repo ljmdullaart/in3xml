@@ -712,16 +712,21 @@ sub inlinepass {
 		$lineindex++;
 		chomp;
 		if (/^\.inline ([a-z]+) (.*)/){
+			my $content=$2;
+			my $inlinetype=$1;
 			$variables{'blocknumber'}=$variables{'blocknumber'}+1;
 			my $blockname="$variables{'filename'}.$variables{'blocknumber'}";
 			progress();
 			pushout("<block>");
 			pushout("<name>"); pushout("\"$blockname\""); pushout("</name>");
 			pushout("<type>");
-			pushout("\"$1\"");
+			pushout("\"$inlinetype\"");
 			pushout("</type>");
 			pushout("<blocktext>");
-			pushout("\"$2\"");
+			my @contlines=split ('%n%',$content);
+			for (@contlines){
+				pushout("\"$_\"");
+			}
 			pushout("</blocktext>");
 			pushout("</block>");
 		}
@@ -861,7 +866,8 @@ sub listpass {
 			}
 			pushout("<item>");
 			if ($content=~/%\\n/){
-				my @cellines=split /%\\n/ , $content;
+				$content=~s/\%\&\#0092;n/%\\n/g;
+				my @cellines=split /%n%/ , $content;
 				for (@cellines){pushout($_);}
 				undef @cellines;
 			}
@@ -884,7 +890,7 @@ sub listpass {
 				pop @passout;
 				$inline=1;
 				if ($content=~/%\\n/){
-					my @cellines=split /%\\n/ , $content;
+					my @cellines=split /%n%/ , $content;
 					for (@cellines){pushout($_);}
 					undef @cellines;
 				}
@@ -938,8 +944,8 @@ sub tablepass {
 				}
 				$content=~s/&lt;[rc]s=[0-9]+&gt;//;
 				pushout ("$cellopen>");
-				if ($content=~/%\\n/){
-					my @cellines=split /%\\n/ , $content;
+				if ($content=~/%n%/){
+					my @cellines=split /%n%/ , $content;
 					for (@cellines){pushout($_);}
 					undef @cellines;
 				}
@@ -1321,8 +1327,8 @@ sub footnotepass {
 			pushout('<ref>'); pushout($ref); pushout('</ref>');
 			pushout('<seq>'); pushout($variables{'notenumber'});pushout('</seq>');
 			pushout('<notetext>');
-			if ($content=~/%\\n/){
-				my @cellines=split /%\\n/ , $content;
+			if ($content=~/%n%/){
+				my @cellines=split /%n%/ , $content;
 				for (@cellines){pushout($_);}
 				undef @cellines;
 			}
