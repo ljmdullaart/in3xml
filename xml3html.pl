@@ -104,10 +104,12 @@ my $video;
 my $fileline=0;
 my $inline=0;
 my $lastline='';
+my $currentline='';
 my $listlevel=0;
 my $noteatend=0;
 my $progressindicator=0;
 my $ptableopen=0;		# Paragraph table is open. This allows using the same table for different paragraphs
+my $state;
 my $xmlclose=0;
 my @blocktext='';
 my @leftnotes;
@@ -259,15 +261,20 @@ for $linenumber (0 .. $#input){
 
 sub formatrequest {
 	(my $input)=@_;
-	if ($input=~/======*&gt;/){
+	if ($input=~/=====*&gt;(.*)/){
 		output ('<span style="visibility: hidden">');
 		output ($lastline);
 		output ('</span>');
-		$input=~s/======*&gt;//;
-		$lastline="$lastline $input";
+		if ($currentline eq ''){
+			$currentline="$lastline $1";
+		}
+		else {
+			$currentline="$currentline $1";
+		}
+		$input=$1;
 	}
-	elsif (!($input=~/<.*>/) && !($input=~/\(.*\)/)) {
-		$lastline=$input;
+	else {
+		$currentline="$currentline $input";
 	}
 
 	if ($input =~/<underline>/){
@@ -377,7 +384,7 @@ sub outimage {
 	}
 	else {
 		output ('<div style="text-align: center">');
-		output ("<img src=\"$baseimg\" alt=\"$img\" width=\"$width\" height=\"$height\" align='center'>");
+		output ("<img src=\"$baseimg\" alt=\"$img\" width=\"$width\" height=\"$height;\">");
 		output ('</div>');
 	}
 	progress();
@@ -396,7 +403,7 @@ $linenumber=0;
 while ( $linenumber <= $#input){
 	chomp $input[$linenumber];
 	$input[$linenumber]=~s/^[ 	]*//;
-	my $state=state_tos();
+	$state=state_tos();
 	debug ("$state $linenumber | $input[$linenumber]");
 	if ($trace>0){printf STDERR "# %10.10s - %8.8d : %s\n",($state,$linenumber,$input[$linenumber]);}
 	if ($input[$linenumber] =~/<!--.*-->/){}
@@ -524,6 +531,8 @@ while ( $linenumber <= $#input){
 			state_push('lst');
 		}
 		elsif ($input[$linenumber] =~/<paragraph>/){
+			$lastline=$currentline;
+			$currentline='';
 			my @paratext;
 			undef @sidenotes;
 			undef @leftnotes;
@@ -709,6 +718,7 @@ while ( $linenumber <= $#input){
 				s/&quot;/"/g;
 				s/&apos;/'/g;
 				s/&amp;/&/g;
+				s/&#0092;/\\/g;
 			}
 			if ($type eq 'pre'){
 				if ($ptableopen>0){ output('</table>');$ptableopen=0;}
@@ -717,6 +727,7 @@ while ( $linenumber <= $#input){
 					s/ /&nbsp;/g;
 					s/^"//;
 					s/"$//;
+					s/&#0092;/\\/g;
 					output($_);
 				}
 				output ('</pre>');
@@ -728,6 +739,7 @@ while ( $linenumber <= $#input){
 					s/	/&nbsp;&nbsp;&nbsp;&nbsp;/g;
 					s/^"//;
 					s/"$//;
+					s/&#0092;/\\/g;
 					output("<br><span class=\"lst\">$_</span>");
 				}
 				output ('</pre>');
@@ -761,6 +773,7 @@ while ( $linenumber <= $#input){
 						if (/^".*"$/){
 							s/^"//;
 							s/"$//;
+							s/&#0092;/\\/g;
 						}
 						print $PLOT "$_\n";
 					}
@@ -768,7 +781,9 @@ while ( $linenumber <= $#input){
 					progress();
 					system("gnuplot $blk.gnuplot >/dev/null 2>/dev/null");
 					#system ("eps2eps -B1  $blk.ps $blk.eps");
+					output ('<div style="text-align: center">');
 					output("<img src=\"$blk.svg\"  width=\"$x\">");
+					output ('</div>');
 				}
 				else {
 					error ("Cannot open $blk.gnuplot"); 
@@ -793,6 +808,7 @@ while ( $linenumber <= $#input){
 						if (/^".*"$/){
 							s/^"//;
 							s/"$//;
+							s/&#0092;/\\/g;
 						}
 						print $TEXEQN "$_\n";
 					}
@@ -804,7 +820,9 @@ while ( $linenumber <= $#input){
             		system("cd block; echo '' | latex ../$blk.tex > /dev/null 2>/dev/null");
 					#system("convert  -trim  -density $density  $blk.dvi  $blk.png");
             		system("dvisvgm -n -c1.5 -m $dvifontpath $blk.dvi -o $blk.svg >/dev/null 2>/dev/null");
-					output("<img src=\"$blk.svg\" alt=\"$blk\" style=\"vertical-align:middle;\">");
+					output ('<div style="text-align: center">');
+					output("<img src=\"$blk.svg\" alt=\"$blk\">");
+					output ('</div>');
 				}
 				else {
 					print STDERR "in3html cannot open $blk\n";
@@ -823,6 +841,7 @@ while ( $linenumber <= $#input){
 						if (/^".*"$/){
 							s/^"//;
 							s/"$//;
+							s/&#0092;/\\/g;
 						}
 						print $EQN "$_\n";
 					}
@@ -838,7 +857,9 @@ while ( $linenumber <= $#input){
 					($x,$y)=split ('x',$imgsize);
 					$yn=$y*$mscale/10000;
 					my $ysize=$yn.'em';
-					output("<img src=\"$blk.png\" alt=\"$blk\" style=\"height:$ysize;vertical-align:bottom;\">");
+					output ('<div style="text-align: center">');
+					output("<img src=\"$blk.png\" alt=\"$blk\" style=\"height:$ysize;\">");
+					output ('</div>');
 				}
 				else { error ("Cannot open $blk.eqn");}
 			}
@@ -855,6 +876,7 @@ while ( $linenumber <= $#input){
 						if (/^".*"$/){
 							s/^"//;
 							s/"$//;
+							s/&#0092;/\\/g;
 						}
 						print $PIC "$_\n";
 					}
@@ -871,7 +893,9 @@ while ( $linenumber <= $#input){
 					$yn=$y*$mscale/10000;
 					if ($inline>0){$yn=$yn/3;}
 					my $ysize=$yn.'em';
-					output("<img src=\"$blk.png\" alt=\"$blk\" style=\"height:$ysize;vertical-align:middle\">");
+					output ('<div style="text-align: center">');
+					output("<img src=\"$blk.png\" alt=\"$blk\" style=\"height:$ysize;\">");
+					output ('</div>');
 				}
 				else { error ("Cannot open $blk.pic");}
 			}
@@ -900,6 +924,7 @@ while ( $linenumber <= $#input){
 						if (/^".*"$/){
 							s/^"//;
 							s/"$//;
+							s/&#0092;/\\/g;
 						}
 						print $MUSIC "$_\n";
 					}
@@ -915,7 +940,10 @@ while ( $linenumber <= $#input){
 					($x,$y)=split ('x',$imgsize);
 					$yn=$y*$mscale/10000;
 					my $ysize=$yn.'em';
-					output("<img src=\"$blk.png\" alt=\"$blk\" style=\"height:$ysize;vertical-align:middle\">");
+
+					output ('<div style="text-align: center">');
+					output("<img src=\"$blk.png\" alt=\"$blk\" style=\"height:$ysize;\">");
+					output ('</div>');
 				}
 				else { error ("Cannot open $blk.pic");}
 			}
