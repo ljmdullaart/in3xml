@@ -1112,7 +1112,7 @@ while ( $linenumber <= $#input){
 				$mscale=$mscale/2;   # CHECK  for inline scale!
 				my $density=1000;
 				if (open my $PLOT, '>',"$blk.gnuplot"){
-					print $PLOT 'set terminal postscript eps 800 600';
+					print $PLOT 'set terminal postscript eps';
 					print $PLOT "\nset output '$blk.eps'\n";
 					for (@blocktext){
 						chomp;
