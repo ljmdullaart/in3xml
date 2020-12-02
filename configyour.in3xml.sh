@@ -48,11 +48,18 @@ if [ ! -d block ] ; then
 	mkdir block
 fi
 if [ -d $WWW ] ; then
+
 	if [ ! -L $WWW/block ] ; then
-		ln -s $(realpath block) $WWW
+		ln -s $(realpath block) $WWW/block
+		echo "Linked block"
 	fi
 fi
 
+echo " WWW=$WWW" >>$LOG
+echo " PDF=$PDF" >>$LOG
+echo " HTM=$HTM" >>$LOG
+echo " XML=$XML" >>$LOG
+echo " EPUB=$EPUb" >>$LOG
 
 #                  _         _                       _
 #  _ __ ___   __ _(_)_ __   | |_ __ _ _ __ __ _  ___| |_ ___
@@ -65,22 +72,22 @@ echo -n 'tag/in3xml: tag/in3xml.xml' >> Makefile
 if [ -d $WWW ] ; then
 	echo -n " tag/in3xml.$WWW" >> Makefile
 else
-	echo "No $WWW"
+	echo "No $WWW" >>$LOG
 fi
 if [ -d $PDF ] ; then
 	echo -n " tag/in3xml.$PDF" >> Makefile
 else
-	echo "No $PDF"
+	echo "No $PDF" >>$LOG
 fi
 if [ -d $HTM ] ; then
 	echo -n " tag/in3xml.$HTM" >> Makefile
 else
-	echo "No $HTM"
+	echo "No $HTM" >>$LOG
 fi
 if [ -d $EPUB ] ; then
 	echo -n " tag/in3xml.$EPUB" >> Makefile
 else
-	echo "No $EPUB"
+	echo "No $EPUB" >>$LOG
 fi
 echo " |tag" >> Makefile
 echo "	touch tag/in3xml" >> Makefile
@@ -90,7 +97,7 @@ echo "	rm -f $WWW/*"  >> Makefile
 echo "	rm -f $PDF/*"  >> Makefile
 echo "	rm -f $HTM/*"  >> Makefile
 echo "	rm -f $EPUB/*"  >> Makefile
-echo "	rm -f $WWW/*"  >> Makefile
+echo "	rm -f $XML/*"  >> Makefile
 echo "	touch tag/clean.in3xml" >> Makefile
 
 #                            _      _         _
@@ -118,6 +125,9 @@ for infile in *.in ; do
 done
 echo >> Makefile
 touch "complete.in"
+echo -n "complete.in:" >>$LOG
+
+echo  "	rm -f complete.in">> Makefile
 echo -n "	grep -vh '^\.header' ">> Makefile
 for infile in $(ls *.in| sort -n) ; do
 	stem=${infile%.in}
@@ -131,12 +141,13 @@ for infile in $(ls *.in| sort -n) ; do
 		:
 	else
 		echo -n " $infile" >> Makefile
-		cat $infile > complete.in
+		echo -n " $infile" >> $LOG
+		cat $infile >> complete.in
 		
 	fi
 done
 echo ' > complete.in' >> Makefile
-
+echo '' >>$LOG
 
 #                 _   _                       _
 # __  ___ __ ___ | | | |_ __ _ _ __ __ _  ___| |_ ___
@@ -145,6 +156,7 @@ echo ' > complete.in' >> Makefile
 # /_/\_\_| |_| |_|_|  \__\__,_|_|  \__, |\___|\__|___/
 #                                  |___/
 
+echo "XML targets:">>$LOG
 echo -n "tag/in3xml.xml:" >> Makefile
 for infile in *.in ; do
 	stem=${infile%.in}
@@ -170,6 +182,7 @@ for infile in *.in ; do
 		fi
 		echo "	in3multipass $infile > $XML/$stem.xml" >> Makefile
 		echo "	xmllint --postvalid $XML/$stem.xml > /dev/null" >> Makefile
+		echo "    $XML/$stem.xml" >> $LOG
 	fi
 done
 echo >> Makefile
@@ -182,6 +195,7 @@ echo >> Makefile
 #                                       |___/
 
 if [ -d $WWW ] ; then
+	echo "WWW targets in $WWW:" >> $LOG
 	echo -n "tag/in3xml.$WWW: tag/in3xml.xml" >> Makefile
 	for infile in *.in ; do		# the *.in are the only guaranteed availables
 		stem=${infile%.in}
@@ -201,12 +215,14 @@ if [ -d $WWW ] ; then
 		else
 			echo "$WWW/$stem.html: $XML/$stem.xml " >> Makefile
 			echo "	xml3html $XML/$stem.xml > $WWW/$stem.html" >> Makefile
+			echo "    $WWW/$stem.html" >>$LOG
 		fi
 	done
 	echo >> Makefile
 fi
 
 if [ -d $HTM ] ; then
+	echo "HTM Targets in $HTM:">>$LOG
 	echo -n "tag/in3xml.$HTM: tag/in3xml.xml" >> Makefile
 	for infile in *.in ; do		# the *.in are the only guaranteed availables
 		stem=${infile%.in}
@@ -226,12 +242,50 @@ if [ -d $HTM ] ; then
 		else
 			echo "$HTM/$stem.htm: $XML/$stem.xml " >> Makefile
 			echo "	xml3html --no-headers $XML/$stem.xml > $HTM/$stem.htm" >> Makefile
+			echo "    $HTM/$stem.htm" >>$LOG
 		fi
 	done
 	echo >> Makefile
 fi
-	
 
+if [ ! -f stylesheet.css ] ; then
+	echo "Created empty stylesheet">>$LOG
+cat > stylesheet.css <<EOF
+h1,h2,h3,h4 {
+    font-family:"arial";
+}
+.toc {
+    font-family:"Times";
+}
+p {
+    font-family:"Times";
+}
+.lst {
+    font-family:"Courier New";
+}
+.fixed {
+    font-family:"Courier New";
+}
+table.table {
+}
+td.table {
+}
+.cell {
+}
+table.paragraph {
+}
+td.leftnote{
+}
+td.paragraph {
+    font-family:"Times";
+}
+.list {
+}
+EOF
+else 
+	echo "stylesheet exists">>$LOG	
+	
+fi
 #  ____  ____  _____   _                       _
 # |  _ \|  _ \|  ___| | |_ __ _ _ __ __ _  ___| |_ ___
 # | |_) | | | | |_    | __/ _` | '__/ _` |/ _ \ __/ __|
@@ -239,8 +293,12 @@ fi
 # |_|   |____/|_|      \__\__,_|_|  \__, |\___|\__|___/
 #                                   |___/
 
+pwd >>$LOG
+
+ls -ld |grep $PDF >>$LOG
 
 if [ -d $PDF ] ; then
+	echo "PDF Targets in $PDF:">>$LOG
 	echo -n "tag/in3xml.$PDF: tag/in3xml.xml" >> Makefile
 	for infile in *.in ; do		# the *.in are the only guaranteed availables
 		stem=${infile%.in}
@@ -264,13 +322,15 @@ if [ -d $PDF ] ; then
 			echo "	cat $PDF/$stem.roff |preconv|pic|eqn|tbl|groff -min -Kutf8 > $PDF/$stem.ps" >> Makefile
 			echo "$PDF/$stem.roff: $XML/$stem.xml " >> Makefile
 			echo "	xml3roff $XML/$stem.xml > $PDF/$stem.roff" >> Makefile
+			echo "    $PDF/$stem.roff" >>$LOG
 		fi
 	done
 	echo >> Makefile
 fi
 
 
+rm -f complete.in
 
-echo "Configyour.feature finnished" >> $LOG
+echo "Configyour.in3xml finnished" >> $LOG
 
 
