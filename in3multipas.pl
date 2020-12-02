@@ -279,6 +279,7 @@ sub varpush{
 #            |_|
 sub depricatepass{
 	$passname='depricatepass';
+	my $prevline='';
 	foreach (@passin){
 		$lineindex++;
 		$_='' unless defined $_;
@@ -287,16 +288,22 @@ sub depricatepass{
 		if (/^\.$/){	#deprecated . to separate paragraphs
 			pushout ('.P');
 		}
-		#	elsif (/^\.[Pp]$/){	#deprecated .p to separate paragraphs
-		#pushout ('');
-		#}
-		elsif (/^\.h[0-9]$/){	#deprecated header without blankline before
-			pushout ('');
+		elsif (/^\.head/){	#deprecated header without blankline before
+			if ($prevline ne ''){
+				pushout ('');
+			}
+			pushout ($_);
+		}
+		elsif (/^\.h[0-9]/){	#deprecated header without blankline before
+			if ($prevline ne ''){
+				pushout ('');
+			}
 			pushout ($_);
 		}
 		else {
 			pushout ($_);
 		}
+		$prevline=$_;
 	}
 	endpass();
 }
@@ -747,7 +754,41 @@ sub headingpass {
 	for (@passin){
 		varset($_);
 		$lineindex++;
-		if (/^\.h([0-9]) (.*)/){
+		if (/^\.hu (.*)/){
+			my $level=0;
+			my $text=$1;
+			my $seq='';
+			pushout("<heading>");
+			pushout("<level>");
+			pushout("\"$level\"");
+			pushout("</level>");
+			pushout("<seq>");
+			pushout("\"$seq\"");
+			pushout("</seq>");
+			pushout("<text>");
+			pushout("\"$text\"");
+			pushout("</text>");
+			pushout("</heading>");
+			pushout("");
+		}
+		elsif (/^\.hu([0-9]) (.*)/){
+			my $level=$1;
+			my $text=$2;
+			my $seq='';
+			pushout("<heading>");
+			pushout("<level>");
+			pushout("\"$level\"");
+			pushout("</level>");
+			pushout("<seq>");
+			pushout("\"$seq\"");
+			pushout("</seq>");
+			pushout("<text>");
+			pushout("\"$text\"");
+			pushout("</text>");
+			pushout("</heading>");
+			pushout("");
+		}
+		elsif (/^\.h([0-9]) (.*)/){
 			my $level=$1;
 			my $text=$2;
 			$variables{"H$level"}++;

@@ -1447,10 +1447,15 @@ while ( $linenumber <= $#input){
 	}
 	elsif ($state  eq 'heading'){
 		if ($input[$linenumber] =~/<\/heading>/){
-			if ($level==0){$level=1;}
-			my $v=3*$level;
-			output (".ne $v".'v');
-			output (".H $level \"$text\"");
+			if ($level==0){
+				output (".ne 10v");
+				output (".HU \"$text\"");
+			}
+			else {
+				my $v=5*$level;
+				output (".ne $v".'v');
+				output (".H $level \"$text\"");
+			}
 			$level=0;
 			$seq='';
 			$text='';

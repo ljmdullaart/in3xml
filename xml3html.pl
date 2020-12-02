@@ -1131,8 +1131,13 @@ while ( $linenumber <= $#input){
 	elsif ($state  eq 'heading'){
 		if ($input[$linenumber] =~/<\/heading>/){
 			if ($level==0){$level=1;}
-			output ("<h$level>");
-			if ($seq ne ''){ output($seq);}
+			if ($seq ne ''){
+				output ("<h$level id=\"$seq\">");
+				output($seq);
+			}
+			else {
+				output ("<h$level>");
+			}
 			if ($text ne ''){ output($text);}
 			output ("</h$level>");
 			$level=0;
