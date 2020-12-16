@@ -316,10 +316,14 @@ if [ -d $PDF ] ; then
 		if [ "$infile" = "meta.in" ] ; then
 			:
 		else
-			echo "$PDF/$stem.pdf: $PDF/$stem.ps " >> Makefile
-			echo "	cat $PDF/$stem.ps | ps2pdf - - > $PDF/$stem.pdf" >> Makefile
-			echo "$PDF/$stem.ps: $PDF/$stem.roff " >> Makefile
-			echo "	cat $PDF/$stem.roff |preconv|pic|eqn|tbl|groff -min -Kutf8 > $PDF/$stem.ps" >> Makefile
+			echo "$PDF/$stem.pdf: $PDF/$stem.roff " >> Makefile
+			echo "	cat $PDF/$stem.roff |preconv> $PDF/$stem.tbl" >> Makefile
+			echo "	cat $PDF/$stem.tbl |tbl > $PDF/$stem.pic" >> Makefile
+			echo "	cat $PDF/$stem.pic |pic > $PDF/$stem.eqn" >> Makefile
+			echo "	cat $PDF/$stem.eqn |eqn > $PDF/$stem.rof" >> Makefile
+			#echo "	cat $PDF/$stem.rof |groff -min -Kutf8 -Tpdf -pdfmark > $PDF/$stem.pdf" >> Makefile
+			echo "	cat $PDF/$stem.rof |groff -min -Kutf8  > $PDF/$stem.ps" >> Makefile
+			echo "	cat $PDF/$stem.ps  | ps2pdf - - > $PDF/$stem.pdf" >> Makefile
 			echo "$PDF/$stem.roff: $XML/$stem.xml " >> Makefile
 			echo "	xml3roff $XML/$stem.xml > $PDF/$stem.roff" >> Makefile
 			echo "    $PDF/$stem.roff" >>$LOG
