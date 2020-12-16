@@ -3598,6 +3598,7 @@ in=\\n[.i] fi=\\n[.u] .d=\\n[.d] nl=\\n[nl] pg=\\n[%]
 .nr wd0 \\n[urx]-\\n[llx]
 .nr deswd (\\n[.ps]/\\n[ht0])*\\n[wd0]
 .if \\$2&(\\$2>0) .nr deswd (u; \\$2p)
+.if (\\n[desdw]>\\n[.l]) .nr deswd \\n[.l]/2
 .nr desht \\n[.ps]
 .if \\$3 .nr desht (u; \\$3p)
 .nr xht 0
