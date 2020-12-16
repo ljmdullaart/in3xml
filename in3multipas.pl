@@ -40,6 +40,9 @@ my %variables;
 	$variables{'H7'}=0;
 	$variables{'H8'}=0;
 	$variables{'H9'}=0;
+	$variables{'TOC'}=0;
+	$variables{'COVER'}=0;
+	$variables{'FIRST'}=0;
 	$variables{'markdown'}=0;
 	$variables{'inlineemp'}=0;
 	$variables{'filename'}='stdin';
@@ -257,6 +260,12 @@ sub varset{
 	elsif ($line=~/^\.side  *separator  *(.*)/){
 		$variables{'sidesep'}=$1;
 	}
+	elsif ($line=~/^\.TOC$/){
+		$variables{'TOC'}=1;
+	}
+	elsif ($line=~/^\.contents/){
+		$variables{'TOC'}=1;
+	}
 	if ($inlinenr[$lineindex]=~/(.*):/){$variables{'filename'}=$1;}
 }
 sub varpush{
@@ -348,6 +357,10 @@ sub varpass{
 		elsif (/^\.author *(.*)/){ varpush('author',$1); }
 		elsif (/^\.appendix *(.*)/){ varpush('appendix',1); }
 		elsif (/^\.back *(.*)/){ varpush('back',1); }
+		elsif (/^\.TOC$/){ varpush('TOC',1); }
+		elsif (/^\.COVER$/){ varpush('COVER',1); }
+		elsif (/^\.FIRST$/){ varpush('FIRST',1); }
+		elsif (/^\.contents/){ varpush('TOC',1); }
 		elsif (/^\.side *separator *(.*)/){varpush('sidesep',$1);}
 		elsif (/^\.side *char *(.*)/){varpush('sidechar',$1);}
 		elsif (/^\.set *([\w]+) *(.*)/){ varpush($1,$2); }
@@ -1266,6 +1279,14 @@ sub commentpass {
 # | | | | |_____| |_| |_| | |_) |  __/ |  _| (_) | |  | | | | | | (_| | |_ 
 # |_|_| |_|      \__|\__, | .__/ \___| |_|  \___/|_|  |_| |_| |_|\__,_|\__|
 #                    |___/|_| 
+#
+
+sub imgconvert{
+	(my $image)=@_;
+	my $retval=$image;
+	return $retval;
+}
+
 sub formatpass {
 	$passname='formatpass';
 	for (@passin){
@@ -1302,29 +1323,32 @@ sub formatpass {
 			pushout('</link>');
 		}
 		elsif ($line=~/^\.img *LEFT *([^ ]*)/){
+			my $imgname=imgconvert($1);
 			pushout('<image>');
 			pushout('<format>');
 			pushout('left');
 			pushout('</format>');
 			pushout('<file>');
-			pushout("\"$1\"");
+			pushout("\"$imgname\"");
 			pushout('</file>');
 			pushout('</image>');
 		}
 		elsif ($line=~/^\.img *RIGHT *([^ ]*)/){
+			my $imgname=imgconvert($1);
 			pushout('<image>');
 			pushout('<format>');
 			pushout('right');
 			pushout('</format>');
 			pushout('<file>');
-			pushout("\"$1\"");
+			pushout("\"$imgname\"");
 			pushout('</file>');
 			pushout('</image>');
 		}
 		elsif ($line=~/^\.img ([^ ]*)/){
+			my $imgname=imgconvert($1);
 			pushout('<image>');
 			pushout('<file>');
-			pushout("\"$1\"");
+			pushout("\"$imgname\"");
 			pushout('</file>');
 			pushout('</image>');
 		}
