@@ -8,7 +8,7 @@ chomp $dvifontpath;
 $dvifontpath=dirname($dvifontpath);
 
 
-my $trace=0;
+my $trace=1;
 my $DEBUG=0;
 my @output;
 sub output{
@@ -274,7 +274,10 @@ sub formatrequest {
 		$input=$1;
 	}
 	else {
-		$currentline="$currentline $input";
+		if ($input=~/^\(.*\)$/){}
+		else {
+			$currentline="$currentline $input";
+		}
 	}
 
 	if ($input =~/<underline>/){
@@ -531,7 +534,7 @@ while ( $linenumber <= $#input){
 			state_push('lst');
 		}
 		elsif ($input[$linenumber] =~/<paragraph>/){
-			$lastline=$currentline;
+			if ($currentline ne ''){$lastline=$currentline;}
 			$currentline='';
 			my @paratext;
 			undef @sidenotes;
@@ -587,6 +590,7 @@ while ( $linenumber <= $#input){
 			if ($prevnotes != $variables{'notes'}){
 				if ($ptableopen>0){ output('</table>');$ptableopen=0;}
 			}
+			output ("<! -- paragraph type $variables{'notes'} -->");
 			if ($variables{'notes'}==0){
 				output ('<p>');
 				if ( $variables{'parastartdelay'} ne ''){
@@ -781,9 +785,13 @@ while ( $linenumber <= $#input){
 					progress();
 					system("gnuplot $blk.gnuplot >/dev/null 2>/dev/null");
 					#system ("eps2eps -B1  $blk.ps $blk.eps");
-					output ('<div style="text-align: center">');
+					if ($inline==0){
+						output ('<div style="text-align: center">');
+					}
 					output("<img src=\"$blk.svg\"  width=\"$x\">");
-					output ('</div>');
+					if ($inline==0){
+						output ('</div>');
+					}
 				}
 				else {
 					error ("Cannot open $blk.gnuplot"); 
@@ -820,9 +828,13 @@ while ( $linenumber <= $#input){
             		system("cd block; echo '' | latex ../$blk.tex > /dev/null 2>/dev/null");
 					#system("convert  -trim  -density $density  $blk.dvi  $blk.png");
             		system("dvisvgm -n -c1.5 -m $dvifontpath $blk.dvi -o $blk.svg >/dev/null 2>/dev/null");
-					output ('<div style="text-align: center">');
+					if ($inline==0){
+						output ('<div style="text-align: center">');
+					}
 					output("<img src=\"$blk.svg\" alt=\"$blk\">");
-					output ('</div>');
+					if ($inline==0){
+						output ('</div>');
+					}
 				}
 				else {
 					print STDERR "in3html cannot open $blk\n";
@@ -857,9 +869,13 @@ while ( $linenumber <= $#input){
 					($x,$y)=split ('x',$imgsize);
 					$yn=$y*$mscale/10000;
 					my $ysize=$yn.'em';
-					output ('<div style="text-align: center">');
+					if ($inline==0){
+						output ('<div style="text-align: center">');
+					}
 					output("<img src=\"$blk.png\" alt=\"$blk\" style=\"height:$ysize;\">");
-					output ('</div>');
+					if ($inline==0){
+						output ('</div>');
+					}
 				}
 				else { error ("Cannot open $blk.eqn");}
 			}
@@ -893,9 +909,13 @@ while ( $linenumber <= $#input){
 					$yn=$y*$mscale/10000;
 					if ($inline>0){$yn=$yn/3;}
 					my $ysize=$yn.'em';
-					output ('<div style="text-align: center">');
+					if ($inline==0){
+						output ('<div style="text-align: center">');
+					}
 					output("<img src=\"$blk.png\" alt=\"$blk\" style=\"height:$ysize;\">");
-					output ('</div>');
+					if ($inline==0){
+						output ('</div>');
+					}
 				}
 				else { error ("Cannot open $blk.pic");}
 			}
@@ -941,9 +961,13 @@ while ( $linenumber <= $#input){
 					$yn=$y*$mscale/10000;
 					my $ysize=$yn.'em';
 
-					output ('<div style="text-align: center">');
+					if ($inline==0){
+						output ('<div style="text-align: center">');
+					}
 					output("<img src=\"$blk.png\" alt=\"$blk\" style=\"height:$ysize;\">");
-					output ('</div>');
+					if ($inline==0){
+						output ('</div>');
+					}
 				}
 				else { error ("Cannot open $blk.pic");}
 			}
@@ -1241,12 +1265,16 @@ while ( $linenumber <= $#input){
 			if ($file ne ''){
 				if ($text eq ''){ $text=$file;}
 				my $basefile=basename($file);
-				output ('<div style="text-align: center">');
+				if ($inline==0){
+					output ('<div style="text-align: center">');
+				}
 				output ("<img src=\"$basefile\" alt=\"$file\" usemap=#map$variables{'mapnumber'}>");
 				output ("<map name=map$variables{'mapnumber'}>");
 				for (@mapfields){ output ($_);}
 				output ('</map>');
-				output ('</div>');
+				if ($inline==0){
+					output ('</div>');
+				}
 				system("cp $file web/$basefile");
 				$text='';
 				$file='';
@@ -1515,13 +1543,9 @@ while ( $linenumber <= $#input){
 	}
 	elsif ($state  eq 'set'){
 		if ($input[$linenumber] =~/<\/set>/){
-			state_pop();
-		}
-	}
-	elsif ($state  eq 'set'){
-		if ($input[$linenumber] =~/<\/set>/){
 			if ($varname ne ''){
 				$variables{$varname}=$value;
+				output ("<! -- variables{$varname}=$value -->");
 				$value='';
 				$varname='';
 			}
