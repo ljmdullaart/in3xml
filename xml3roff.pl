@@ -96,6 +96,9 @@ my %variables;
     $variables{"H7"}=0;
     $variables{"H8"}=0;
     $variables{"H9"}=0;
+    $variables{"TOC"}=0;
+    $variables{"COVER"}=0;
+    $variables{"FIRST"}=0;
     $variables{"appendix"}=-1;
     $variables{"author"}='';
     $variables{"blockcnt"}=0;
@@ -389,7 +392,7 @@ sub outimage {
 	if ($img=~/\.eps$/){
 		debug ("img=eps");
 		if ($img ne  "block/$imagename"){
-			system ("rm block/$imagename");
+			system ("rm -f  block/$imagename");
 			system ("eps2eps -B1 $img block/$imagename");
 		}
 	}
@@ -397,6 +400,17 @@ sub outimage {
 		debug ("img=dvi");
 		debug ("DVI block $imgstem.dvi");
 		system ("dvips -E  $img -o block/$imagename");
+	}
+	elsif ($img=~/\.dia$/){
+		debug ("img=dia");
+		debug ("DIA block $imgstem.dia");
+		system ("in3fileconv $img block/$imagename");
+	}
+	elsif ($img=~/\.svg$/){
+		debug ("img=svg");
+		debug ("SVG block $imgstem.svg");
+		system ("cairosvg -f ps --width 800  $img -o block/i$imagename");
+		system ("eps2eps block/i$imagename block/$imagename");
 	}
 	else {
 		debug ("img=other");
@@ -454,6 +468,7 @@ sub outimage {
 		if ($x>$variables{'imagex'}){$myscale=$variables{'imagex'}*$scale/$x;}
 		my $y2=$y*$myscale/$variables{'imagey'};
 		if ($y2>$variables{'imagey'}){$myscale=$variables{'imagey'}*$scale/$y;}
+
 		$y=$y*$myscale/500;
 		$x=$x*$myscale/500;
 		my $up=$y/100;
@@ -468,11 +483,34 @@ sub outimage {
 			output (".ne $need".'p');
 			output ('.ce 1');
 			$x=$x*4; $y=$y*4;
-			output (".dospark block/$imagename $x $y");
+			output (".PSPIC block/$imagename $x $y");
 		}
 		#output (".PSPIC block/$imagename $x");
 	}
+	elsif ($img=~/\.dia$/) {
+		debug ("IMAGE TYPE=dia");
+		print STDERR "dia --export $img block/$imagename\n\n";
+		system("in3fileconv $img block/$imagename");
+		my $imgsize=`imageinfo --geom block/$imagename`;
+		my $x; my $y; my $xn;
+		($x,$y)=split ('x',$imgsize);
+		$x=$x*$scale/250;
+		$y=$y*$scale/250;
+		debug("dia SIZE $x $y");
+		if (($iformat=~/inline/)||($inline>0)){
+			my $up=$y/4;
+			output ("\\v'0.2'");
+			output (".dospark block/$imagename $x $y");
+			output ("\\v'-0.2'");
+		}
+		else {
+			output ('.sp 1');
+			output ('.ce 1');
+			output (".dospark block/$imagename $x $y");
+		}
+	}
 	else {
+		system ("in3fileconv $img block/$imagename");
 		my $imgsize=`imageinfo --geom block/$imagename`;
 		my $x; my $y; my $xn;
 		($x,$y)=split ('x',$imgsize);
@@ -501,7 +539,12 @@ sub outimage {
 		else {
 			output (".ne $need".'p');
 			output ('.ce 1');
-			$x=$x*4; $y=$y*4;
+			if ($img=~/\.svg$/){
+				$x=$x*2; $y=$y*2;
+			}
+			else {
+				$x=$x*4; $y=$y*4;
+			}
 			output (".dospark block/$imagename $x $y");
 		}
 		#output (".PSPIC block/$imagename $x");
@@ -809,7 +852,7 @@ while ( $linenumber <= $#input){
 			state_push('list');
 		}
 		elsif ($input[$linenumber] =~/<paragraph>/){
-			$lastline=$currentline;
+			if ($currentline ne ''){$lastline=$currentline;}
 			$currentline='';
 			my @paratext;
 			undef @sidenotes;
@@ -1138,7 +1181,7 @@ while ( $linenumber <= $#input){
 						$format=~s/scale=[0-9]+//;
 					}
 					$mscale=$mscale/2;
-					system ("rm $blk.eps");
+					system ("rm  -f $blk.eps");
 					if (open (my $MUSIC, '>',"$blk.ly")){
 						print $MUSIC "\\version \"2.18.2\"\n";
 						print $MUSIC "\\book {\n";
@@ -1184,7 +1227,7 @@ while ( $linenumber <= $#input){
 					$mscale=$1;
 					$format=~s/scale=[0-9]+//;
 				}
-				system ("rm $blk.dvi");
+				system ("rm  -f $blk.dvi");
 				if (open (my $TEXEQN, '>',"$blk.tex")){
 					print $TEXEQN "\\documentclass{article}\n";
 					print $TEXEQN "\\usepackage{amsmath}\n";
@@ -1518,6 +1561,7 @@ while ( $linenumber <= $#input){
 				outimage ($file);
 			}
 			$file='';
+			state_pop();
 		}
 		elsif ($input[$linenumber] =~/<file>/){
 			$file='';
@@ -1703,10 +1747,10 @@ while ( $linenumber <= $#input){
 	elsif ($state  eq 'link'){
 		if ($input[$linenumber] =~/<\/link>/){
 			if ($target ne ''){
-				output ('.ft 6','.ps -2',"[$target]",'.ps','.ft');
-				if ($text ne ''){
-					output ("($text)");
+				if ($text eq ''){
+					$text=$target;
 				}
+				output (".pdfhref W -D $target $text");
 			}
 			else {
 				error ("Link without a target");
