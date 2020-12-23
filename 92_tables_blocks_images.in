@@ -162,11 +162,17 @@ F(x,y)=0 ~~\mbox{and}~~
 However, we recommend that you comply with the Source of the Standard Version,
 under the terms of the Software, and to the absence of Modifications made by
 that Contributor (or portions of your choice. If you initiate litigation by
+
+
 asserting a patent infringement or for combinations of the rights conveyed
 by this reference. Versions of the license contains terms which differ from
 this software and of promoting the sharing and reuse of software distributed
 under this License issued under Section 2(b) shall terminate on the Program
 at all. Termination.
+
+And an svg test:
+
+.img svgtest.svg
 
 .map image kaart-nederland.png
 .map field http://dullaart.website/Delft/index.html 211,554,238,572
@@ -180,4 +186,3 @@ at all. Termination.
 .map field https://dullaart.website/Utrecht/index.html 393,505,408,518
 .map field https://dullaart.website/Zwolle/index.html 599,361,617,380
 .map field https://dullaart.website/Zutphen/index.html 627,494,644,512
-

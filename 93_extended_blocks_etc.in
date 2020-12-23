@@ -1,5 +1,7 @@
 .h1 Additional block tests
 
+.set notes 0
+
 Far
 .inline eqn far sup really_far
 away, behind the word mountains, far from the countries Vokalia
