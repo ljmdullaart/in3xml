@@ -8,7 +8,7 @@ chomp $dvifontpath;
 $dvifontpath=dirname($dvifontpath);
 
 
-my $trace=1;
+my $trace=0;
 my $DEBUG=0;
 my @output;
 sub output{
@@ -62,6 +62,7 @@ my %variables;
     $variables{'H9'}=0;
     $variables{'appendix'}=-1;
     $variables{'author'}='';
+    $variables{'back'}=0;
     $variables{'blockcnt'}=0;
     $variables{'cover'}='';
     $variables{'DEBUG'}=$DEBUG;
@@ -132,6 +133,27 @@ sub error {
 	for (@_){
 		print STDERR "$_\n";
 	}
+}
+
+sub hellup {
+	print "
+	NAME: xml3html
+	SYNOPSYS:
+	    xml3html [ options ] [files..]
+	DESCRIPTION:
+	xml3html creates html pages and parts from an in3xml file.
+
+	OPTIONS:
+	-d [value]
+	--debug[value]   Produce debug--output
+	-c nr
+	--chapter nr     Use nr as the first chapter-number
+    --doheaders      Do HTML headers (default)
+	--noheaders      Supress HTML headers; create includable
+	                 parts only
+	--docover        Create cover sheets
+	--nocover        Do not create cover sheets
+	";
 }
 
 my $what='';
@@ -331,6 +353,9 @@ sub formatrequest {
 	}
 	elsif ($input =~/<link>/){
 		state_push('link');
+	}
+	elsif ($input =~/<break>/){
+		state_push('break');
 	}
 	elsif ($input =~/<set>/){
 		state_push('set');
@@ -547,6 +572,11 @@ while ( $linenumber <= $#input){
 			my $prevnotes=$variables{'notes'};
 			my $endpara=$linenumber;
 			# Collect all side notes
+			if ($variables{'back'}>0){
+				if ($ptableopen>0){ output('</table>');$ptableopen=0;}
+				$variables{'back'}=0;
+				$variables{'notes'}=$variables{'notes'}&2;
+			}
 			while (($endpara<=$#input) && !($input[$endpara] =~/<\/paragraph>/)){
 				if ($intext>0){
 					if ($input[$endpara] =~/<\/text>/){
@@ -1156,7 +1186,7 @@ while ( $linenumber <= $#input){
 		if ($input[$linenumber] =~/<\/heading>/){
 			if ($level==0){$level=1;}
 			if ($seq ne ''){
-				output ("<h$level id=\"$seq\">");
+				output ("<h$level id=\"a$seq\">");
 				output($seq);
 			}
 			else {
@@ -1585,6 +1615,15 @@ while ( $linenumber <= $#input){
 			output ('<h1 class="toc">');
 			output ($input[$linenumber]);
 			output ('</h1>');
+		}
+	}
+	elsif ($state  eq 'break'){
+		if ($input[$linenumber] =~/<\/break>/){
+			output('<br>');
+			state_pop();
+		}
+		else {
+			$type=$input[$linenumber];
 		}
 	}
 	elsif ($state  eq 'file'){
