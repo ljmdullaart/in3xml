@@ -87,6 +87,8 @@ sub error {
 
 # Variables for overall use
 my %variables;
+    $variables{"COVER"}=0;
+    $variables{"FIRST"}=0;
     $variables{"H1"}=0;
     $variables{"H2"}=0;
     $variables{"H3"}=0;
@@ -97,10 +99,9 @@ my %variables;
     $variables{"H8"}=0;
     $variables{"H9"}=0;
     $variables{"TOC"}=0;
-    $variables{"COVER"}=0;
-    $variables{"FIRST"}=0;
     $variables{"appendix"}=-1;
     $variables{"author"}='';
+    $variables{"back"}=0;
     $variables{"blockcnt"}=0;
     $variables{"cover"}='';
     $variables{"do_cover"}='no';
@@ -114,6 +115,7 @@ my %variables;
     $variables{'interpret'}=1;
     $variables{'markdown'}=0;
     $variables{'notes'}=0;
+    $variables{'preauthor'}=0;
     $variables{'sidechar'}='*';
     $variables{'sidesep'}=';';
 
@@ -177,8 +179,12 @@ for (@ARGV){
 		elsif (/^--chapter$/){$what='chapter';$variables{"do_cover"}='no';}
 		elsif (/^--doheaders/){$variables{"do_headers"}='yes';}
 		elsif (/^--do_headers/){$variables{"do_headers"}='yes';}
+		elsif (/^--cover/){$variables{"do_cover"}='yes';}
+		elsif (/^-cover/){$variables{"do_cover"}='yes';}
 		elsif (/^--docover/){$variables{"do_cover"}='yes';}
+		elsif (/^-docover/){$variables{"do_cover"}='yes';}
 		elsif (/^--do_cover/){$variables{"do_cover"}='yes';}
+		elsif (/^-do_cover/){$variables{"do_cover"}='yes';}
 		elsif (/^-i([0-9]+)/){ $variables{"interpret"}=$1;}
 		elsif (/^--interpret([0-9]+)/){ $variables{"interpret"}=$1;}
 		elsif (/^--interpret=([0-9]+)/){ $variables{"interpret"}=$1;}
@@ -528,6 +534,11 @@ sub outimage {
 			output (".dospark block/$imagename $x $y");
 			output ("\\v'-$up".'v\'');
 		}
+		elsif ($iformat=~/cover/){
+			output ("\\v'$up".'v\'');
+			output (".dospark block/$imagename $x $y");
+			output ("\\v'-$up".'v\'');
+		}
 		elsif($format =~/left/){
 			output (".ne $need".'p');
 			output (".lfloat block/$imagename");
@@ -864,6 +875,10 @@ while ( $linenumber <= $#input){
 			my $prevnotes=$variables{'notes'};
 			$inline=1;
 			my $endpara=$linenumber;
+			if ($variables{'back'}>0){
+				$variables{'back'}=0;
+				$variables{'notes'}=$variables{'notes'}&2;
+			}
 			# Collect all side and left notes
 			while (($endpara<=$#input) && !($input[$endpara] =~/<\/paragraph>/)){
 				if ($intext>0){
@@ -1750,7 +1765,7 @@ while ( $linenumber <= $#input){
 				if ($text eq ''){
 					$text=$target;
 				}
-				output (".pdfhref W -D $target $text");
+				output ('.ft 6','.ps -2',$text,'.ps','.ft');
 			}
 			else {
 				error ("Link without a target");
@@ -1873,6 +1888,32 @@ if ( open (my $CHARMAP,'<',$charmapfile)){
 }
 else { print STDERR "in3tbl Cannot open in3charmap\n"; }
 
+sub unxmlstr {
+	(my $str)=@_;
+	$str=~s/&lt;/</g;
+	$str=~s/&gt;/>/g;
+	$str=~s/&quot;/"/g;
+	$str=~s/&apos;/'/g;
+	$str=~s/&amp;/&/g;
+	$str=~s/&#0092;/\\\\/g;
+	for (@charmap){
+		chomp;
+		my $char;
+		my $groff;
+		my $html;
+		($char,$groff,$html)=split '	';
+		$char='UNDEFINED_CHAR' unless defined $char;
+		$groff=$char unless defined $groff;
+		$html=$char unless defined $html;
+		if ($str=~/$char/){
+			$str=~s/$char/$groff/g;
+		}
+		if ($str=~/$html/){
+			$str=~s/$html/$groff/g;
+		}
+	}
+	return $str;
+}
 
 for (@charmap){
 	chomp;
@@ -1902,6 +1943,68 @@ if ( -f "stylesheet.mm" ) {
 		print STDERR "Cannot read stylesheet.mm\n";
 	}
 }
+print STDERR "variables{'do_cover'}=$variables{'do_cover'}\n";
+print STDERR "variables{'cover'}=$variables{'cover'}\n";
+print STDERR "variables{'title'}=$variables{'title'}\n";
+
+if ($variables{'do_cover'} eq 'yes'){
+	print ".nr NOFOOT 1\n";
+	if ($variables{'cover'} ne ''){
+		my $cover=$variables{'cover'};
+		$cover=~s/\.[^\.]+$/.eps/;
+		if (! -f  "block/$cover"){
+			system("in3fileconv $variables{'cover'} $cover");
+		}
+		print ".PSPIC -L  block/$cover 6.25\n";
+		print ".PGNG\n";
+		print ".SK\n";
+	}
+	print "\\&\n";
+	print ".if e .SK\n";
+
+	if ($variables{'title'}  eq '' ){
+		print ".SK\n";
+	}
+	else {
+		$variables{'title'}=unxmlstr($variables{'title'});
+		$variables{'subtitle'}=unxmlstr($variables{'subtitle'});
+		$variables{'author'}=unxmlstr($variables{'author'});
+		print ".NOHEAD\n";
+		print ".SK\n";
+		print ".sp 10c\n";
+		print ".ps +10\n";
+		print ".ls 2\n";
+		print ".ce 1\n";
+		print "$variables{'title'}\n";
+		print ".ps\n";
+		print ".P\n";
+		print ".ls 1\n";
+		print ".sp 2c\n";
+		print ".ps +8\n";
+		print ".ls 2\n";
+		print ".ce 1\n";
+		print "$variables{'subtitle'}\n";
+		print ".ps\n";
+		print ".P\n";
+		print ".ls 1\n";
+		print ".sp 8c\n";
+		print ".sp 1c\n";
+		print ".ps +8\n";
+		print ".ls 2\n";
+		print ".ce 1\n";
+		print "$variables{'author'}\n";
+		print ".ps\n";
+		print ".P\n";
+		print ".ls 1\n";
+		print ".PGNH\n";
+		print ".SK\n";
+		print ".DOHEAD\n";
+		print ".nr P 0\n";
+		print ".SK\n";
+	}
+	print ".nr NOFOOT 0\n";
+}
+
 
 for (@output){
 	s/&lt;/</g;
@@ -1911,4 +2014,8 @@ for (@output){
 	s/&amp;/&/g;
 	s/&#0092;/\\\\/g;
 	print "$_\n";
+}
+
+if ($variables{'TOC'}>0){
+	print ".TC\n";
 }
