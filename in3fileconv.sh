@@ -84,6 +84,23 @@ case $fromext in
 				>&2 echo "Sorry, no conversion from $fromext to $toext known."
 				;;
 		esac ;;
+	(jpg)
+		case $toext in
+			(eps)
+				convert  "$fromfile"  pnm:- | convert -density 300 -trim - "block/$tobase"
+				;;
+			(png)
+				convert "$fromfile" "block/$tobase"
+				;;
+			(pdf)
+				convert  "$fromfile"  pnm:- | convert -density 300 -trim - $TMP.pdf
+			 	pdfcrop $TMP.pdf "block/$tobase"
+				rm -f $TMP.pdf
+				;;
+			(*)
+				>&2 echo "Sorry, no conversion from $fromext to $toext known."
+				;;
+		esac ;;
 	(png)
 		case $toext in
 			(eps)
@@ -104,18 +121,18 @@ case $fromext in
 	(dia)
 		case $toext in
 			(eps)
-				dia -t eps "$fromfile"  -e "block/$tobase"
+				dia -t eps "$fromfile"  -e "block/$tobase" > /dev/null 2>/dev/null
 				;;
 			(png)
-				dia -t png "$fromfile"  -e "block/$tobase"
+				dia -t png "$fromfile"  -e "block/$tobase" > /dev/null 2>/dev/null
 				;;
 			(svg)
-				dia -t svg "$fromfile"  -e "block/$tobase"
+				dia -t svg "$fromfile"  -e "block/$tobase" > /dev/null 2>/dev/null
 				;;
 			(pdf)
-				dia -t eps "$fromfile"  -e $TMP.ps
-				ps2pdf $TMP.ps $TMP.pdf
-				pdfcrop $TMP "block/$tostem.pdf"
+				dia -t eps "$fromfile"  -e $TMP.ps > /dev/null 2>/dev/null
+				ps2pdf $TMP.ps $TMP.pdf > /dev/null 2>/dev/null
+				pdfcrop $TMP "block/$tostem.pdf" > /dev/null 2>/dev/null
 				rm -f $TMP.ps $TMP.pdf
 				;;
 			(*)
