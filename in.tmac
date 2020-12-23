@@ -1203,6 +1203,13 @@ in=\\n[.i] fi=\\n[.u] .d=\\n[.d] nl=\\n[nl] pg=\\n[%]
 .de PGNH
 .nr pg*top-enabled (-1)
 ..
+.de NOHEAD
+.nr pg*top-enabled 0
+..
+.de DOHEAD
+.nr pg*top-enabled 1
+..
+.nr NOFOOT 0
 .\" set first trap for pagefooter
 .pg@enable-top-trap
 .pg@set-new-trap
@@ -1234,68 +1241,68 @@ in=\\n[.i] fi=\\n[.u] .d=\\n[.d] nl=\\n[nl] pg=\\n[%]
 .de pg@header
 .\" Disable in HTML mode
 .if !'\*[.T]'html' \{\
-.if \\n[D]>1 .tm Page# \\n[%] (\\n[.F]:\\n[c.])
-.\" check if Hy has been changed
-.ie \\n[Hy] 'hy 14
-.el 'nh
-.if \\n[Idxf] \{\
-.tl '<pagenr\ \\n[%]>'''
-.\}
+.	if \\n[D]>1 .tm Page# \\n[%] (\\n[.F]:\\n[c.])
+.	\" check if Hy has been changed
+.	ie \\n[Hy] 'hy 14
+.	el 'nh
+.	if \\n[Idxf] \{\
+.		tl '<pagenr\ \\n[%]>'''
+.	\}
 .\" assign current page-number to P
-.hd@set-page
-.\" reset spacing
-.nr line*lp\\n[.z] 0
-.nr line*ac\\n[.z] 0
-.\"
-.\" suppress pageheader if pagenumber == 1 and N == [124]
-.if \\n[pg*top-enabled] \{\
-.\"	must be fixed!!
-.\".	pg@disable-top-trap
-.	if \\n[pg*extra-header-size] 'sp \\n[pg*extra-header-size]u
-.	if \\n[pg*top-margin] 'sp \\n[pg*top-margin]u
-.	ev pg*tl-ev
-.	pg@set-env
-.	ie d let@header .let@header
-.	el \{\
-.		ie d TP .TP
-.		el \{\
-'			sp 3
-.			ds hd*format \\g[P]
-.			af P 0
-.			ie ((\\n[P]=1)&((\\n[N]=1):(\\n[N]=2))) .sp
-.			el .tl \\*[pg*header]
-.			af P \\*[hd*format]
-.			ie o .tl \\*[pg*odd-header]
-.			el .tl \\*[pg*even-header]
-'			sp 2
-.		\}
-.	\}
-.	ev
-.	\" why no-space??
-.	if d PX \{\
-.		ns
-.		PX
-.		rs
-.	\}
-.	\" check for pending footnotes 
-.	ft@check-old
+.	hd@set-page
+.	\" reset spacing
+.	nr line*lp\\n[.z] 0
+.	nr line*ac\\n[.z] 0
 .	\"
-.	\" back to normal text processing
-.	pg@enable-trap
-.	\" mark for multicolumn
-.	nr pg*head-mark \\n[nl]u
-.	\" reset NCOL pointer at each new page.
-.	nr pg*last-ncol 0
-.	\" set multicolumn
-.	\" 
-.	pg@set-po
-.	\" print floating displays
-.	df@print-float 4
-.	tbl@top-hook
-.	ns
-.\}
-.if \\n[pg*top-enabled]<0 .nr pg*top-enabled 1
-.nr hd*cur-bline \\n[nl]	\" .H needs to know if output has occured
+.	\" suppress pageheader if pagenumber == 1 and N == [124]
+.	if (\\n[pg*top-enabled] \{\
+.	\"	must be fixed!!
+.	\".	pg@disable-top-trap
+.		if \\n[pg*extra-header-size] 'sp \\n[pg*extra-header-size]u
+.		if \\n[pg*top-margin] 'sp \\n[pg*top-margin]u
+.		ev pg*tl-ev
+.		pg@set-env
+.		ie d let@header .let@header
+.		el \{\
+.			ie d TP .TP
+.			el \{\
+'				sp 3
+.				ds hd*format \\g[P]
+.				af P 0
+.				ie ((\\n[P]=1)&((\\n[N]=1):(\\n[N]=2))) .sp
+.				el .tl \\*[pg*header]
+.				af P \\*[hd*format]
+.				ie o .tl \\*[pg*odd-header]
+.				el .tl \\*[pg*even-header]
+'				sp 2
+.			\}
+.		\}
+.		ev
+.		\" why no-space??
+.		if d PX \{\
+.			ns
+.			PX
+.			rs
+.		\}
+.		\" check for pending footnotes 
+.		ft@check-old
+.		\"
+.		\" back to normal text processing
+.		pg@enable-trap
+.		\" mark for multicolumn
+.		nr pg*head-mark \\n[nl]u
+.		\" reset NCOL pointer at each new page.
+.		nr pg*last-ncol 0
+.		\" set multicolumn
+.		\" 
+.		pg@set-po
+.		\" print floating displays
+.		df@print-float 4
+.		tbl@top-hook
+.		ns
+.	\}
+.	if \\n[pg*top-enabled]<1 .nr pg*top-enabled 1
+.	nr hd*cur-bline \\n[nl]	\" .H needs to know if output has occured
 .\}
 ..
 .\"---------------------------------------------------------
@@ -1337,14 +1344,16 @@ in=\\n[.i] fi=\\n[.u] .d=\\n[.d] nl=\\n[nl] pg=\\n[%]
 .ie d EOP .EOP
 .el \{\
 .	ie \\n[P]>0 \{\
-.		ie o .tl \\*[pg*odd-footer]
-.		el .tl \\*[pg*even-footer]
-.		ds hd*format \\g[P]
-.		af P 0
-.		ie (\\n[P]=1)&(\\n[N]=1) .tl \\*[pg*header]
-.		el .tl \\*[pg*footer]
-.		af P \\*[hd*format]
-.		tl ''\\*[Pg_type!\\n[@copy_type]]''
+.		ie \\n[NOFOOT]=0 \{\
+.			ie o .tl \\*[pg*odd-footer]
+.			el .tl \\*[pg*even-footer]
+.			ds hd*format \\g[P]
+.			af P 0
+.			ie (\\n[P]=1)&(\\n[N]=1) .tl \\*[pg*header]
+.			el .tl \\*[pg*footer]
+.			af P \\*[hd*format]
+.			tl ''\\*[Pg_type!\\n[@copy_type]]''
+.		\}
 .	\}
 .\}
 .vpt 1
@@ -2428,6 +2437,7 @@ in=\\n[.i] fi=\\n[.u] .d=\\n[.d] nl=\\n[nl] pg=\\n[%]
 .\"-----------
 .\" Table of contents with friends (module lix)
 .de TC
+.nr pg*top-enabled 1
 .br
 .\" print any pending displays and references
 .df@print-float 3
@@ -3749,3 +3759,6 @@ in=\\n[.i] fi=\\n[.u] .d=\\n[.d] nl=\\n[nl] pg=\\n[%]
 .  wh (\\n[lfloat-end]u - 2v) lfloat-endll-trap
 ..
 .ds SIDE \v'-.5m'\s-3\\$1\s0\v'.5m'
+.de y-from-top-down
+.  sp |\\$1-\\n[.v]u
+..
