@@ -92,6 +92,23 @@ sub progress {
 my @input;
 my @realin;
 my $lineindex=0;
+if ( -f "meta.in" ){
+	my $file="meta.in";
+	if (open(my $IN,'<',$file)){
+		while (<$IN>){
+			chomp;
+			push @realin,$_;
+			push @passin,$_;
+			push @inlinenr,"$variables{'filename'}:$lineindex";
+			if ($otrace>0){ print "READ LINE FROM $file: $_\n";}
+			$lineindex++;
+		}
+		push @realin,'';
+		push @passin,$_;
+		push @inlinenr,"$variables{'filename'}:$lineindex";
+		close $IN;
+	}
+}
 if ($#ARGV<0){
 	$variables{'filename'}='stdin';
 	while (<>){
@@ -1434,6 +1451,7 @@ sub standalonepass {	# make images, videos or blocks that occupy a
 	my $invideo=0;
 	my $intoc=0;
 	my $inimg=0;
+	my $inmap=0;
 	my $inset=0;
 	my $inpage=0;
 	my $dontstrip=0;
@@ -1457,6 +1475,8 @@ sub standalonepass {	# make images, videos or blocks that occupy a
 					elsif (/^<block>/){ $inblk=1; }
 					elsif (/^<.block>/){ $inblk=0; }
 					elsif (/^<image>/){ $inimg=1; }
+					elsif (/^<.map>/){ $inmap=0; }
+					elsif (/^<map>/){ $inmap=1; }
 					elsif (/^<.image>/){ $inimg=0; }
 					elsif (/^<video>/){ $invideo=1; }
 					elsif (/^<.video>/){ $invideo=0; }
@@ -1466,7 +1486,7 @@ sub standalonepass {	# make images, videos or blocks that occupy a
 					elsif (/^<.page>/){ $inset=0; }
 					elsif (/^<toc>/){ $intoc=1; }
 					elsif (/^<.toc>/){ $intoc=0; }
-					elsif ($inimg+$inblk+$invideo+$intoc+$inset+$inpage>0){ }
+					elsif ($inmap+$inimg+$inblk+$invideo+$intoc+$inset+$inpage>0){ }
 					else {
 						$dontstrip=1;
 				   	}
@@ -1481,6 +1501,8 @@ sub standalonepass {	# make images, videos or blocks that occupy a
 						elsif (/^<.block>/){ $inblk=0; pushout($_);}
 						elsif (/^<image>/){ $inimg=1; pushout($_);}
 						elsif (/^<.image>/){ $inimg=0; pushout($_);}
+						elsif (/^<map>/){ $inimg=1; pushout($_);}
+						elsif (/^<.map>/){ $inmap=0; pushout($_);}
 						elsif (/^<set>/){ $inset=1; pushout($_);}
 						elsif (/^<.set>/){ $inset=0; pushout($_);}
 						elsif (/^<page>/){ $inset=1; pushout($_);}
@@ -1489,7 +1511,7 @@ sub standalonepass {	# make images, videos or blocks that occupy a
 						elsif (/^<.toc>/){ $intoc=0; pushout($_);}
 						elsif (/^<video>/){ $invideo=1; pushout($_);}
 						elsif (/^<.video>/){ $invideo=0; pushout($_);}
-						elsif ($inimg+$inblk+$invideo+$inset+$intoc+$inpage>0){ pushout($_);}
+						elsif ($inmap+$inimg+$inblk+$invideo+$inset+$intoc+$inpage>0){ pushout($_);}
 						else { $dontstrip=1; print STDERR "MEUH? dontstrip==0, but 1 anyway?\n";}
 					}
 				}
