@@ -100,6 +100,45 @@ echo "	rm -f $EPUB/*"  >> Makefile
 echo "	rm -f $XML/*"  >> Makefile
 echo "	touch tag/clean.in3xml" >> Makefile
 
+#  _           _                __  _                    _
+# (_)_ __   __| | _____  __    / / | |__   ___  __ _  __| | ___ _ __
+# | | '_ \ / _` |/ _ \ \/ /   / /  | '_ \ / _ \/ _` |/ _` |/ _ \ '__|
+# | | | | | (_| |  __/>  <   / /   | | | |  __/ (_| | (_| |  __/ |
+# |_|_| |_|\__,_|\___/_/\_\ /_/    |_| |_|\___|\__,_|\__,_|\___|_|
+#
+
+index_top_bottom=' '
+if [ -f index.top ] ; then
+	index_top_bottom=index.top
+fi
+if [ -f index.bottom ] ; then
+	index_top_bottom="$index_top_bottom index.bottom"
+fi
+
+if grep 'index.in:' Makefile ; then
+	echo -n "Someone else already made index/headers" >>$LOG
+else
+	echo  "index.in:">> $LOG
+	echo  -n "index.in: $index_top_bottom" >> Makefile
+	for infile in *.in ; do
+		stem=${infile%.in}
+		if [ "$infile" = "total.in" ] ; then
+			:
+		elif [ "$infile" = "index.in" ] ; then
+			:
+		elif [ "$infile" = "meta.in" ] ; then
+			:
+		else
+			echo -n " $infile" >> Makefile
+		fi
+	done
+	echo >> Makefile
+	echo "	mkinheader -i > index.in" >> Makefile
+	touch index.in
+fi
+
+
+
 #                            _      _         _
 #   ___ ___  _ __ ___  _ __ | | ___| |_ ___  (_)_ __
 #  / __/ _ \| '_ ` _ \| '_ \| |/ _ \ __/ _ \ | | '_ \
@@ -107,7 +146,7 @@ echo "	touch tag/clean.in3xml" >> Makefile
 #  \___\___/|_| |_| |_| .__/|_|\___|\__\___(_)_|_| |_|
 #                     |_|
 
-echo '# in3xml --- xml targets' >> Makefile
+echo  'complete.in:' >> $LOG
 echo  -n 'complete.in:' >> Makefile
 for infile in *.in ; do
 	stem=${infile%.in}
@@ -128,8 +167,10 @@ touch "complete.in"
 echo -n "complete.in:" >>$LOG
 
 echo  "	rm -f complete.in">> Makefile
-echo -n "	grep -vh '^\.header' ">> Makefile
+echo -n "	awk 'FNR==1{print \"\"}{print}' ">> Makefile
+i=0
 for infile in $(ls *.in| sort -n) ; do
+	i=$((i+1))
 	stem=${infile%.in}
 	if [ "$infile" = "complete.in" ] ; then
 		:
@@ -142,11 +183,15 @@ for infile in $(ls *.in| sort -n) ; do
 	else
 		echo -n " $infile" >> Makefile
 		echo -n " $infile" >> $LOG
-		cat $infile >> complete.in
+		if [ $i = 0 ] ; then
+			cat $infile >> complete.in
+		else
+			awk 'FNR==1{print ""}{print}' $infile >> complete.in
+		fi
 		
 	fi
 done
-echo ' > complete.in' >> Makefile
+echo ' | grep -vh '^\.header' > complete.in' >> Makefile
 echo '' >>$LOG
 
 #                 _   _                       _
@@ -162,6 +207,8 @@ for infile in *.in ; do
 	stem=${infile%.in}
 	if [ "$infile" = "meta.in" ] ; then
 		:
+	elif [ "$infile" = "total.in" ] ; then
+		:
 	else
 		echo -n " $XML/$stem.xml" >> Makefile
 	fi
@@ -172,6 +219,8 @@ echo "	touch tag/$XML.xml" >> Makefile
 for infile in *.in ; do
 	stem=${infile%.in}
 	if [ "$infile" = "meta.in" ] ; then
+		:
+	elif [ "$infile" = "total.in" ] ; then
 		:
 	else
 		echo -n "$XML/$stem.xml: $infile " >> Makefile
@@ -315,6 +364,8 @@ if [ -d $PDF ] ; then
 		stem=${infile%.in}
 		if [ "$infile" = "meta.in" ] ; then
 			:
+		elif [ "$infile" = "total.in" ] ; then
+			:
 		else
 			echo "$PDF/$stem.pdf: $PDF/$stem.roff " >> Makefile
 			echo "	cat $PDF/$stem.roff |preconv> $PDF/$stem.tbl" >> Makefile
@@ -322,10 +373,20 @@ if [ -d $PDF ] ; then
 			echo "	cat $PDF/$stem.pic |pic > $PDF/$stem.eqn" >> Makefile
 			echo "	cat $PDF/$stem.eqn |eqn > $PDF/$stem.rof" >> Makefile
 			#echo "	cat $PDF/$stem.rof |groff -min -Kutf8 -Tpdf -pdfmark > $PDF/$stem.pdf" >> Makefile
-			echo "	cat $PDF/$stem.rof |groff -min -Kutf8  > $PDF/$stem.ps" >> Makefile
+			if [ "$stem" = "complete" ] ; then
+				echo "	cat $PDF/$stem.rof |groff -min -rN=4 -Kutf8  > $PDF/$stem.ps" >> Makefile
+			elif [ "$stem" = "total" ] ; then
+				echo "	cat $PDF/$stem.rof |groff -min -rN=4 -Kutf8  > $PDF/$stem.ps" >> Makefile
+			else
+				echo "	cat $PDF/$stem.rof |groff -min -Kutf8  > $PDF/$stem.ps" >> Makefile
+			fi
 			echo "	cat $PDF/$stem.ps  | ps2pdf - - > $PDF/$stem.pdf" >> Makefile
 			echo "$PDF/$stem.roff: $XML/$stem.xml " >> Makefile
-			echo "	xml3roff $XML/$stem.xml > $PDF/$stem.roff" >> Makefile
+			if [ "$stem" = "complete" ] ; then
+				echo "	xml3roff --cover $XML/$stem.xml > $PDF/$stem.roff" >> Makefile
+			else
+				echo "	xml3roff $XML/$stem.xml > $PDF/$stem.roff" >> Makefile
+			fi
 			echo "    $PDF/$stem.roff" >>$LOG
 		fi
 	done
