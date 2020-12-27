@@ -857,7 +857,7 @@ while ( $linenumber <= $#input){
 					progress();
             		system("cd block; echo '' | latex ../$blk.tex > /dev/null 2>/dev/null");
 					#system("convert  -trim  -density $density  $blk.dvi  $blk.png");
-            		system("dvisvgm -n -c1.5 -m $dvifontpath $blk.dvi -o $blk.svg >/dev/null 2>/dev/null");
+            		system("in3fileconv $blk.dvi $blk.svg >/dev/null 2>/dev/null");
 					if ($inline==0){
 						output ('<div style="text-align: center">');
 					}
@@ -897,12 +897,14 @@ while ( $linenumber <= $#input){
 					my $imgsize=` imageinfo --geom $blk.png`;
 					my $x; my $y; my $yn;
 					($x,$y)=split ('x',$imgsize);
-					$yn=$y*$mscale/10000;
+					$yn=$y*$mscale/15000;
 					my $ysize=$yn.'em';
+					$yn=$yn/3;
+					my $yalign=$yn.'em';
 					if ($inline==0){
 						output ('<div style="text-align: center">');
 					}
-					output("<img src=\"$blk.png\" alt=\"$blk\" style=\"height:$ysize;\">");
+					output("<img src=\"$blk.png\" alt=\"$blk\" style=\"height:$ysize;vertical-align:-$yalign;\">");
 					if ($inline==0){
 						output ('</div>');
 					}
@@ -1058,15 +1060,22 @@ while ( $linenumber <= $#input){
 			my $rs=0;
 			my $cs=0;
 			my $tdstr='<td';
+			my $fmt="class=cell";
 			if ($input[$linenumber] =~/cs="*([0-9]+)/){$cs=$1;}
 			if ($input[$linenumber] =~/colspan="*([0-9]+)/){$cs=$1;}
 			if ($input[$linenumber] =~/rs="*([0-9]+)/){$rs=$1;}
 			if ($input[$linenumber] =~/rowspan="*([0-9]+)/){$rs=$1;}
+			if ($input[$linenumber] =~/format="([a-z]+)"/){
+				if ($1 eq 'center'){ $fmt='style="text-align:center;"';}
+				elsif ($1 eq 'left'){ $fmt='style="text-align:left;"';}
+				elsif ($1 eq 'right'){ $fmt='style="text-align:right;"';}
+				elsif ($1 eq 'num'){ $fmt='style="text-align:right;"';}
+			}
 			if ($rs>0){ $tdstr="$tdstr rowspan=\"$rs\"";}
 			if ($cs>0){ $tdstr="$tdstr colspan=\"$cs\"";}
 			$tdstr="$tdstr class=table>";
 			output ($tdstr);
-			output ('<div class=cel>');
+			output ("<div $fmt>");
 			state_push('cell');
 		}
 		else { error ("Table row: text outside cells $input[$linenumber]");}

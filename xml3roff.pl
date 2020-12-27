@@ -636,12 +636,15 @@ sub table_lookahead{
 				$substate='table';
 			}
 			elsif ($input[$localline] =~ /<cell.*>/){
+				my $txtf='text';
+				if ($input[$localline] =~ /format="([a-z]+)"/){$txtf=$1;}
+
 				$tablecol++;
 				while ($thistable[$tablerow][$tablecol]=~/[rc][owl]*s[pan]*/){
 					$tablecol++;
 				}
 				if ("$thistable[$tablerow][$tablecol]" eq ""){
-					$thistable[$tablerow][$tablecol]="text";
+					$thistable[$tablerow][$tablecol]="$txtf";
 				}
 				if ($input[$localline] =~ /<cell[^>]*c[ol]*s[pan]*="*([0-9]+)/){
 					my $span=$1;
@@ -656,7 +659,7 @@ sub table_lookahead{
 					}
 				}
 				if ("$thistable[$tablerow][$tablecol]" eq ""){
-					$thistable[$tablerow][$tablecol]="text";
+					$thistable[$tablerow][$tablecol]=$txtf;
 				}
 				if ($tablecol>$maxcol){$maxcol=$tablecol;}
 				$substate='cell';
@@ -691,7 +694,16 @@ sub table_lookahead{
 				$rowfmt="$rowfmt s";
 			}
 			else {
-				$rowfmt="$rowfmt l";
+				if ($thistable[$i][$j]=~/([a-z]+)/){
+					if ($1 eq 'center'){ $rowfmt="$rowfmt c";}
+					elsif ($1 eq 'left'){ $rowfmt="$rowfmt l";}
+					elsif ($1 eq 'text'){ $rowfmt="$rowfmt l";}
+					elsif ($1 eq 'right'){ $rowfmt="$rowfmt r";}
+					elsif ($1 eq 'num'){ $rowfmt="$rowfmt n";}
+				}
+				else {
+					$rowfmt="$rowfmt l";
+				}
 			}
 		}
 		$rowfmt=~s/^ //;

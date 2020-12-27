@@ -61,6 +61,7 @@ This is the in3 xml definition
 	<!ATTLIST cell
 		rowspan CDATA #IMPLIED
 		colspan CDATA #IMPLIED
+		format CDATA #IMPLIED
 	>
 <!-- Elements that may be stand-alone or part of paragraphs -->
 

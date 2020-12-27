@@ -37,9 +37,9 @@ of this License or Another License If for any purpose and without fee is charged
 for the Source form of the Licensed Program to a third party modifications of
 this test package and to charge a reasonable fashion, credit the author(s).
 
-	a	<cs=2>b	c
-	d	e	f	g
-	<rs=2>h	i	j	k
+	a	<cs=2><format=center>b	c
+	d	e	fffffff	gigggggg
+	<rs=2>h	<format=right>i	j	k
 	l	m	n
 
 Where such credit is commonly given through page histories (such as notifying

@@ -138,6 +138,8 @@ else {
 			elsif (/^--interpret=([0-9]+)/){ $variables{"interpret"}=$1;}
 			elsif (/^-i$/){$what='interpret';}
 			elsif (/^--interpret$/){$what='interpret';}
+			elsif (/^-t/){$otrace=1;}
+			elsif (/^--trace/){$otrace=1;}
 			elsif (/^-m/){$variables{"markdown"}=1;}
 			elsif (/^--markdown/){$variables{"markdown"}=1;}
 			elsif (/^-+h/){ hellup(); }
@@ -196,6 +198,7 @@ else {
 
 if ($otrace>0){
 	for (my $i=0; $i<+$#passin;$i++){
+		$passin[$i]='' unless defined $passin[$i];
 		print "INPUT: $inlinenr[$i] '$passin[$i]'\n";
 	}
 }
@@ -219,7 +222,7 @@ sub pushout {
 		my $t2=$txt;
 		$t1=~s/	/    /g;
 		$t2=~s/	/    /g;
-		printf("TRACE-%s-%s  %-50.50s | %-20.20s |%-50.50s\n",$variables{'filename'},$passname,$t1,$inlinenr[$i],$t2);
+		printf("TRACE-%s-%s  %-45.45s | %-20.20s |%-45.45s\n",$variables{'filename'},$passname,$t1,$inlinenr[$i],$t2);
 	}
 }
 
@@ -306,9 +309,15 @@ sub varpush{
 sub depricatepass{
 	$passname='depricatepass';
 	my $prevline='';
+	my $intable=0;
+	my $inlist=0;
 	foreach (@passin){
 		$lineindex++;
 		$_='' unless defined $_;
+		if (/^$/){
+			$intable=0;
+			$inlist=0;
+		}
 		varset($_);
 		chomp;
 		if (/^\.$/){	#deprecated . to separate paragraphs
@@ -320,10 +329,31 @@ sub depricatepass{
 			}
 			pushout ($_);
 		}
+		#elsif (/[	 ]*^[-#@] /){
+		#	if ($inlist==0){
+		#		if ($prevline ne ''){
+		#			pushout ('');
+		#		}
+		#	}
+		#	$inlist=1;
+		#	pushout ($_);
+		#}
+		#elsif (/^	/){	#deprecated table directly against text
+		#	if ($intable==0){
+		#		if ($prevline ne ''){
+		#			pushout ('');
+		#		}
+		#	}
+		#	$intable=1;
+		#	pushout ($_);
+		#}
 		elsif (/^\.h[0-9]/){	#deprecated header without blankline before
-			if ($prevline ne ''){
-				pushout ('');
+			if ($inlist==0){
+				if ($prevline ne ''){
+					pushout ('');
+				}
 			}
+			$inlist=1;
 			pushout ($_);
 		}
 		else {
@@ -415,7 +445,8 @@ sub includepass {
 		varset($_);
 		$lineindex++;
 		varset($_);
-		if (/^\.header/){
+		if (/^\.headerlink/){}
+		elsif (/^\.header/){
 			pushout('<header>');
 			pushout('</header>');
 		}
@@ -788,6 +819,7 @@ sub headingpass {
 			my $level=0;
 			my $text=$1;
 			my $seq='';
+			pushout("");
 			pushout("<heading>");
 			pushout("<level>");
 			pushout("\"$level\"");
@@ -805,6 +837,7 @@ sub headingpass {
 			my $level=$1;
 			my $text=$2;
 			my $seq='';
+			pushout("");
 			pushout("<heading>");
 			pushout("<level>");
 			pushout("\"$level\"");
@@ -825,6 +858,7 @@ sub headingpass {
 			my $seq='';
 			for (my $i=1;$i<=$level;$i++){$seq=$seq.$variables{"H$i"}.'.';}
 			for (my $i=$level+1;$i<10;$i++){$variables{"H$i"}=0;}
+			pushout("");
 			pushout("<heading>");
 			pushout("<level>");
 			pushout("\"$level\"");
@@ -1013,7 +1047,12 @@ sub tablepass {
 				if ($content=~/&lt;cs=([0-9]+)&gt;/){
 					$cellopen="$cellopen colspan=\"$1\"";
 				}
-				$content=~s/&lt;[rc]s=[0-9]+&gt;//;
+				if ($content=~/&lt;format=([a-z]+)&gt;/){
+					$cellopen="$cellopen format=\"$1\"";
+				}
+				$content=~s/&lt;rs=[0-9]+&gt;//;
+				$content=~s/&lt;cs=[0-9]+&gt;//;
+				$content=~s/&lt;format=[a-z]+&gt;//;
 				pushout ("$cellopen>");
 				if ($content=~/%n%/){
 					my @cellines=split /%n%/ , $content;
@@ -1183,7 +1222,8 @@ sub parapass{
 			}
 		}
 		else { 							# Inpara==1 ; we've detected a paragraph block 
-			if (/^[ 	]*$/){			# Empty line marks the end of a paragraph
+			if (/^[ 	]*$/){
+				# Empty line marks the end of a paragraph
 				if ($#parablock>=0){	# paragraph-block is not empty
 					# Collect all side and left notes from the paragraph block
 					for (@parablock){
