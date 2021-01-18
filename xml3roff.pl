@@ -47,17 +47,24 @@ sub timesspace{
 }
 
 my @output;
+my $outatol=0;
 sub output{
-	for (@_){
-		my $txt=$_;
-		#if (/^ \./){ s/^ \./\\&./; }
-		#if ($txt=~/[Ѐ-ӿ][Ѐ-ӿ][Ѐ-ӿ]/){
-		#$txt=~s/([Ѐ-ӿ ][Ѐ-ӿ][Ѐ-ӿ]+)/\\f[SFOR]$1\\f[]/g;
-		#}
-
-		push @output, $txt;
-		if ($trace > 0){print STDERR "#                                                               output: $_\n";}
+	if ($outatol==0){
+		for (@_){
+			my $txt=$_;
+			push @output, $txt;
+			if ($trace > 0){print STDERR "#                                                               output: $_\n";}
+		}
 	}
+	else {
+		for (@_){
+			my $txt=$_;
+			my $top=pop @output;
+			push @output, "$top$txt";
+			if ($trace > 0){print STDERR "#                                                               output: $_\n";}
+		}
+	}
+	$outatol=0;
 }
 sub outputreplace {
 	(my $replace)=@_;
@@ -326,6 +333,9 @@ sub formatrequest {
 	elsif ($input[$linenumber] =~/<lst>/){
 		state_push('lst');
 	}
+	elsif ($input[$linenumber] =~/<space>/){
+		state_push('space');
+	}
 	elsif ($input[$linenumber] =~/<hr>/){
 		state_push('hr');
 	}
@@ -334,6 +344,9 @@ sub formatrequest {
 	}
 	elsif ($input[$linenumber] =~/<blank>/){
 		state_push('blank');
+	}
+	elsif ($input[$linenumber] =~/<subscript>/){
+		state_push('subscript');
 	}
 	elsif ($input[$linenumber] =~/<fixed>/){
 		state_push('fixed');
@@ -1435,6 +1448,16 @@ while ( $linenumber <= $#input){
 			output ($input[$linenumber]);
 		}
 	}
+	elsif ($state  eq 'subscript'){
+		if ($input[$linenumber] =~/<\/subscript>/){
+			state_pop();
+		}
+		else {
+			$outatol=1;
+			output ('\\*<',$input[$linenumber],'\\*>');
+			$outatol=1;
+		}
+	}
 	elsif ($state  eq 'fixed'){
 		if ($input[$linenumber] =~/<\/fixed>/){
 			state_pop();
@@ -1462,6 +1485,12 @@ while ( $linenumber <= $#input){
 	elsif ($state  eq 'page'){
 		if ($input[$linenumber] =~/<\/page>/){
 			output ('.SK');
+			state_pop();
+		}
+	}
+	elsif ($state  eq 'space'){
+		if ($input[$linenumber] =~/<\/space>/){
+			output (' ');
 			state_pop();
 		}
 	}
@@ -1522,7 +1551,7 @@ while ( $linenumber <= $#input){
 				output (".HU \"$text\"");
 			}
 			else {
-				my $v=5*$level;
+				my $v=15/$level;
 				output (".ne $v".'v');
 				output (".H $level \"$text\"");
 			}
@@ -1961,6 +1990,7 @@ print STDERR "variables{'title'}=$variables{'title'}\n";
 
 if ($variables{'do_cover'} eq 'yes'){
 	print ".nr NOFOOT 1\n";
+	print ".NOHEAD\n";
 	if ($variables{'cover'} ne ''){
 		my $cover=$variables{'cover'};
 		$cover=~s/\.[^\.]+$/.eps/;
@@ -1981,9 +2011,8 @@ if ($variables{'do_cover'} eq 'yes'){
 		$variables{'title'}=unxmlstr($variables{'title'});
 		$variables{'subtitle'}=unxmlstr($variables{'subtitle'});
 		$variables{'author'}=unxmlstr($variables{'author'});
-		print ".NOHEAD\n";
-		print ".SK\n";
-		print ".sp 10c\n";
+		#print ".SK\n";
+		print ".sp 5\n";
 		print ".ps +10\n";
 		print ".ls 2\n";
 		print ".ce 1\n";
