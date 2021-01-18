@@ -16,21 +16,8 @@ my $DEBUG=0;
 #
 
 my %variables;
-	$variables{'leftnotechar'}='';
-	$variables{'sidesep'}=';';
-	$variables{'sideref'}='';
-	$variables{'sidechar'}='*';
-	$variables{'sidenumber'}=0;
-	$variables{'title'}='';
-	$variables{'subtitle'}='';
-	$variables{'cover'}='';
-	$variables{'author'}='';
-	$variables{'appendix'}=90;
-	$variables{'back'}=0;
-	$variables{'keywords'}='';
-	$variables{'notenumber'}=0;
-	$variables{'notestring'}='(%NUM)';
-	$variables{'blocknumber'}=0;
+	$variables{'COVER'}=0;
+	$variables{'FIRST'}=0;
 	$variables{'H1'}=0;
 	$variables{'H2'}=0;
 	$variables{'H3'}=0;
@@ -41,11 +28,26 @@ my %variables;
 	$variables{'H8'}=0;
 	$variables{'H9'}=0;
 	$variables{'TOC'}=0;
-	$variables{'COVER'}=0;
-	$variables{'FIRST'}=0;
-	$variables{'markdown'}=0;
-	$variables{'inlineemp'}=0;
+	$variables{'appendix'}=90;
+	$variables{'author'}='';
+	$variables{'back'}=0;
+	$variables{'blocknumber'}=0;
+	$variables{'cellalign'}='left';
+	$variables{'cover'}='';
 	$variables{'filename'}='stdin';
+	$variables{'inlineemp'}=0;
+	$variables{'keywords'}='';
+	$variables{'leftnotechar'}='';
+	$variables{'markdown'}=0;
+	$variables{'notenumber'}=0;
+	$variables{'notestring'}='(%NUM)';
+	$variables{'sidechar'}='*';
+	$variables{'sidenumber'}=0;
+	$variables{'sideref'}='';
+	$variables{'sidesep'}=';';
+	$variables{'subtitle'}='';
+	$variables{'title'}='';
+
 	$variables{'blockname'}=$variables{'filename'};
 
 
@@ -94,6 +96,7 @@ my @realin;
 my $lineindex=0;
 if ( -f "meta.in" ){
 	my $file="meta.in";
+	$variables{'filename'}='meta.in';
 	if (open(my $IN,'<',$file)){
 		while (<$IN>){
 			chomp;
@@ -318,6 +321,10 @@ sub depricatepass{
 			$intable=0;
 			$inlist=0;
 		}
+		elsif (/^[ 	]*$/){
+			print STDERR "Near $inlinenr[$lineindex] line with only tabs and spaces\n";
+		}
+
 		varset($_);
 		chomp;
 		if (/^\.$/){	#deprecated . to separate paragraphs
@@ -779,6 +786,7 @@ sub inlinepass {
 		varset($_);
 		$lineindex++;
 		chomp;
+		if (/^\.eqn /){ s/^\.eqn/.inline eqn/;}
 		if (/^\.inline ([a-z]+) (.*)/){
 			my $content=$2;
 			my $inlinetype=$1;
@@ -894,6 +902,10 @@ sub hrpass {
 		elsif (/^\.page/){
 			pushout("<page>");
 			pushout("</page>");
+		}
+		elsif (/^\.space/){
+			pushout("<space>");
+			pushout("</space>");
 		}
 		elsif (/^\.P/){
 			pushout("<blank>");
@@ -1050,6 +1062,10 @@ sub tablepass {
 				if ($content=~/&lt;format=([a-z]+)&gt;/){
 					$cellopen="$cellopen format=\"$1\"";
 				}
+				else {
+					$cellopen="$cellopen format=\"$variables{'cellalign'}\"";
+				}
+
 				$content=~s/&lt;rs=[0-9]+&gt;//;
 				$content=~s/&lt;cs=[0-9]+&gt;//;
 				$content=~s/&lt;format=[a-z]+&gt;//;
