@@ -113,6 +113,27 @@ case $fromext in
 				>&2 echo "Sorry, no conversion from $fromext to $toext known."
 				;;
 		esac ;;
+	(JPG)
+		case $toext in
+			(eps)
+				debug convert  "$fromfile"  pnm:- | convert -density 300 -trim - "block/$tobase"
+				convert  "$fromfile"  pnm:- | convert -density 300 -trim - "block/$tobase"
+				;;
+			(png)
+				debug convert "$fromfile" "block/$tobase"
+				convert "$fromfile" "block/$tobase"
+				;;
+			(pdf)
+				debug convert  "$fromfile"  pnm:- | convert -density 300 -trim - $TMP.pdf
+				convert  "$fromfile"  pnm:- | convert -density 300 -trim - $TMP.pdf
+			 	debug pdfcrop $TMP.pdf "block/$tobase"
+			 	pdfcrop $TMP.pdf "block/$tobase"
+				rm -f $TMP.pdf
+				;;
+			(*)
+				>&2 echo "Sorry, no conversion from $fromext to $toext known."
+				;;
+		esac ;;
 	(jpg)
 		case $toext in
 			(eps)
@@ -189,10 +210,8 @@ case $fromext in
 				dvips -E "$fromfile" -o "block/$tobase"
 				;;
 			(png)
-				debug dvipng  --bdpi 1000 -Q 15 "$fromfile" -o "block/$tostem.untr.png"
-				dvipng  --bdpi 1000 -Q 15 "$fromfile" -o "block/$tostem.untr.png"
-				debug convert -trim "block/$tostem.untr.png" "block/$tobase"
-				convert -trim "block/$tostem.untr.png" "block/$tobase"
+				echo "convert -trim -density 500 $fromfile block/$tobase"
+				convert -trim -density 750 "$fromfile" "block/$tobase" > /dev/null 2>/dev/null
 				;;
 			(svg)
 				debug dvipdf "$fromfile"  "block/$tostem.pdf"
@@ -220,13 +239,13 @@ case $fromext in
 				;;
 			(png)
 				debug eqn $fromfile > block/$tostem.groff
-				eqn $fromfile > block/$tostem.groff
+				eqn $fromfile > block/$tostem.groff > /dev/null 2>/dev/null
 				debug groff block/$tostem.groff > block/$tostem.ps
-				groff block/$tostem.groff > block/$tostem.ps
+				groff block/$tostem.groff > block/$tostem.ps > /dev/null 2>/dev/null
 				debug gs -o "block/$tostem.eps" -sDEVICE=eps2write "block/$tostem.ps"
-				gs -o "block/$tostem.eps" -sDEVICE=eps2write "block/$tostem.ps"
-				debug convert -density 300 "block/$tostem.eps" "block/$tostem.png"
-				convert -density 300 "block/$tostem.eps" "block/$tostem.png"
+				gs -o "block/$tostem.eps" -sDEVICE=eps2write "block/$tostem.ps" > /dev/null 2>/dev/null
+				debug convert -density 1000 "block/$tostem.eps" "block/$tostem.png"
+				convert -density 1000 -trim "block/$tostem.eps" "block/$tostem.png" > /dev/null 2>/dev/null
 				;;
 			(svg)
 				debug dvifontpath=$(find /usr/share -name 'ps2pk.map' -exec dirname {} \; 2>&1 | grep -v 'Permission denied' | tail -1)
