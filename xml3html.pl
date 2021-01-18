@@ -11,12 +11,25 @@ $dvifontpath=dirname($dvifontpath);
 my $trace=0;
 my $DEBUG=0;
 my @output;
+my $outatol=0;
 sub output{
-	for (@_){
-		push @output, $_;
-		if ($trace > 0){print STDERR "#                                                               output: $_\n";}
+	if ($outatol==0){
+		for (@_){
+			push @output, $_;
+			if ($trace > 0){print STDERR "#                                                               output: $_\n";}
+		}
+	}
+	else {
+		my $top;
+		for (@_){
+			my $txt=$_;
+			$top=pop@output;
+			push @output, "$top$txt";
+			if ($trace > 0){print STDERR "#                                                               output: $_\n";}
+		}
 	}
 }
+
 sub outputreplace {
 	(my $replace)=@_;
 	pop @output;
@@ -324,12 +337,21 @@ sub formatrequest {
 	elsif ($input =~/<blank>/){
 		state_push('blank');
 	}
+	elsif ($input =~/<space>/){
+		state_push('space');
+	}
 	elsif ($input =~/<hr>/){
 		state_push('hr');
 	}
 	elsif ($input =~/<fixed>/){
 		output('<tt>');
 		state_push('fixed');
+	}
+	elsif ($input =~/<subscript>/){
+		$outatol=1;
+		output('<sub>');
+		$outatol=1;
+		state_push('subscript');
 	}
 	elsif ($input =~/<video>/){
 		$video='';
@@ -665,6 +687,10 @@ while ( $linenumber <= $#input){
 			if ($ptableopen>0){ output('</table>');$ptableopen=0;}
 			state_push('blank');
 		}
+		elsif ($input[$linenumber] =~/<space>/){
+			if ($ptableopen>0){ output('</table>');$ptableopen=0;}
+			state_push('space');
+		}
 		elsif ($input[$linenumber] =~/<hr>/){
 			if ($ptableopen>0){ output('</table>');$ptableopen=0;}
 			state_push('hr');
@@ -858,10 +884,17 @@ while ( $linenumber <= $#input){
             		system("cd block; echo '' | latex ../$blk.tex > /dev/null 2>/dev/null");
 					#system("convert  -trim  -density $density  $blk.dvi  $blk.png");
             		system("in3fileconv $blk.dvi $blk.svg >/dev/null 2>/dev/null");
+					my $imgsize=` imageinfo --geom $blk.svg`;
+					my $x; my $y; my $yn;
+					($x,$y)=split ('x',$imgsize);
+					$yn=$y*$mscale/1300;
+					my $ysize=$yn.'em';
+					$yn=$yn/8;
+					my $yalign=$yn.'em';
 					if ($inline==0){
 						output ('<div style="text-align: center">');
 					}
-					output("<img src=\"$blk.svg\" alt=\"$blk\">");
+					output("<img src=\"$blk.svg\" alt=\"$blk\" style=\"height:$ysize;vertical-align:-$yalign;\">");
 					if ($inline==0){
 						output ('</div>');
 					}
@@ -890,21 +923,18 @@ while ( $linenumber <= $#input){
 					print $EQN ".EN\n";
 					close $EQN;
 					progress();
-					system ("eqn $blk.eqn > $blk.groff 2>/dev/null");
-					system ("groff $blk.groff > $blk.ps 2>/dev/null");
-					system ("ps2pdf $blk.ps  $blk.pdf 2>/dev/null");
-					system ("convert -trim -density $density $blk.pdf  $blk.png >/dev/null 2>/dev/null");
-					my $imgsize=` imageinfo --geom $blk.png`;
+					system ("in3fileconv $blk.eqn $blk.svg >/dev/null 2>/dev/null");
+					my $imgsize=` imageinfo --geom $blk.svg`;
 					my $x; my $y; my $yn;
 					($x,$y)=split ('x',$imgsize);
-					$yn=$y*$mscale/15000;
+					$yn=$y*$mscale/2000;
 					my $ysize=$yn.'em';
-					$yn=$yn/3;
+					$yn=$yn/8;
 					my $yalign=$yn.'em';
 					if ($inline==0){
 						output ('<div style="text-align: center">');
 					}
-					output("<img src=\"$blk.png\" alt=\"$blk\" style=\"height:$ysize;vertical-align:-$yalign;\">");
+					output("<img src=\"$blk.svg\" alt=\"$blk\" style=\"height:$ysize;vertical-align:-$yalign;\">");
 					if ($inline==0){
 						output ('</div>');
 					}
@@ -1149,6 +1179,19 @@ while ( $linenumber <= $#input){
 		}
 		else {
 			output ($input[$linenumber]);
+		}
+	}
+	elsif ($state  eq 'subscript'){
+		if ($input[$linenumber] =~/<\/subscript>/){
+			$outatol=1;
+			output ('</sub>');
+			$outatol=1;
+			state_pop();
+		}
+		else {
+			$outatol=1;
+			output ($input[$linenumber]);
+			$outatol=1;
 		}
 	}
 	elsif ($state  eq 'fixed'){
@@ -1530,6 +1573,14 @@ while ( $linenumber <= $#input){
 	elsif ($state  eq 'page'){
 		if ($input[$linenumber] =~/<\/page>/){
 			output('<hr>');
+			state_pop();
+		}
+		else {
+		}
+	}
+	elsif ($state  eq 'space'){
+		if ($input[$linenumber] =~/<\/space>/){
+			output(' ');
 			state_pop();
 		}
 		else {
