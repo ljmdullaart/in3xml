@@ -250,6 +250,8 @@ if [ -d $WWW ] ; then
 		stem=${infile%.in}
 		if [ "$infile" = "meta.in" ] ; then
 			:
+		elif [ "$infile" = "total.in" ] ; then
+			:
 		else
 			echo -n " $WWW/$stem.html" >> Makefile
 		fi
@@ -352,6 +354,8 @@ if [ -d $PDF ] ; then
 	for infile in *.in ; do		# the *.in are the only guaranteed availables
 		stem=${infile%.in}
 		if [ "$infile" = "meta.in" ] ; then
+			:
+		elif [ "$infile" = "total.in" ] ; then
 			:
 		else
 			echo -n " $PDF/$stem.pdf" >> Makefile
