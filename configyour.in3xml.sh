@@ -263,6 +263,8 @@ if [ -d $WWW ] ; then
 		stem=${infile%.in}
 		if [ "$infile" = "meta.in" ] ; then
 			:
+		elif [ "$infile" = "total.in" ] ; then
+			:
 		else
 			echo "$WWW/$stem.html: $XML/$stem.xml " >> Makefile
 			echo "	xml3html $XML/$stem.xml > $WWW/$stem.html" >> Makefile
@@ -274,10 +276,12 @@ fi
 
 if [ -d $HTM ] ; then
 	echo "HTM Targets in $HTM:">>$LOG
-	echo -n "tag/in3xml.$HTM: tag/in3xml.xml" >> Makefile
+	echo -n "tag/in3xml.$HTM: tag/in3xml.xml $HTM/header.htm" >> Makefile
 	for infile in *.in ; do		# the *.in are the only guaranteed availables
 		stem=${infile%.in}
 		if [ "$infile" = "meta.in" ] ; then
+			:
+		elif [ "$infile" = "total.in" ] ; then
 			:
 		else
 			echo -n " $HTM/$stem.htm" >> Makefile
@@ -286,9 +290,14 @@ if [ -d $HTM ] ; then
 	echo ' |tag'>> Makefile
 	echo "	touch tag/in3xml.$HTM" >> Makefile
 
+	echo "$HTM/header.htm: complete.in" >> Makefile
+	echo "	mkinheader > $HTM/header.htm" >> Makefile
+
 	for infile in *.in ; do
 		stem=${infile%.in}
 		if [ "$infile" = "meta.in" ] ; then
+			:
+		elif [ "$infile" = "total.in" ] ; then
 			:
 		else
 			echo "$HTM/$stem.htm: $XML/$stem.xml " >> Makefile
