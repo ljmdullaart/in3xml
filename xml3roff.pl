@@ -469,9 +469,9 @@ sub outimage {
 		debug("Techeqn SIZE $x $y");
 		if (($iformat=~/inline/)||($inline>0)){
 			my $up=$y/4;
-			output ("\\v'0.2'");
+			output ("\\v'0.1'");
 			output (".dospark block/$imagename $x $y");
-			output ("\\v'-0.2'");
+			output ("\\v'-0.1'");
 		}
 		else {
 			output ('.sp 1');
@@ -1469,8 +1469,6 @@ while ( $linenumber <= $#input){
 	elsif ($state  eq 'break'){
 		if ($input[$linenumber] =~/<\/break>/){
 			output ('.br');
-			output (' ');
-			output ('.br');
 			state_pop();
 		}
 	}
@@ -1916,6 +1914,7 @@ else {
 	$charmapfile="in3charmap$variables{'interpret'}";
 }
 
+
 my @charmap;
 if ( open (my $CHARMAP,'<',$charmapfile)){
 	while (<$CHARMAP>){
@@ -1969,9 +1968,9 @@ for (@charmap){
 		if ($output[$i]=~/$char/){
 			$output[$i]=~s/$char/$groff/g;
 		}
-		if ($output[$i]=~/$html/){
-			$output[$i]=~s/$html/$groff/g;
-		}
+		#if ($output[$i]=~/$html/){
+		#$output[$i]=~s/$html/$groff/g;
+		#}
 	}
 }
 
@@ -1984,9 +1983,9 @@ if ( -f "stylesheet.mm" ) {
 		print STDERR "Cannot read stylesheet.mm\n";
 	}
 }
-print STDERR "variables{'do_cover'}=$variables{'do_cover'}\n";
-print STDERR "variables{'cover'}=$variables{'cover'}\n";
-print STDERR "variables{'title'}=$variables{'title'}\n";
+debug("variables{'do_cover'}=$variables{'do_cover'}\n");
+debug("variables{'cover'}=$variables{'cover'}\n");
+debug("variables{'title'}=$variables{'title'}\n");
 
 if ($variables{'do_cover'} eq 'yes'){
 	print ".nr NOFOOT 1\n";
