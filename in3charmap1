@@ -60,7 +60,7 @@
 %deg;	\f[dejavu]°\f[]	&deg;
 %delta;	\[*d]	&delta;
 %divide;	\f[dejavu]÷\f[]	&divide;
-%empty;	\f[dejavu]∅\f[]	&empty;
+%empty;	Ø	&empty;
 %epsilon;	\[*e]	&epsilon;
 %equiv;	\f[dejavu]≡\f[]	&equiv;
 %eta;	\[*y]	&eta;
@@ -439,7 +439,7 @@
 ∀	\[fa]	&forall;
 ∂	\[pd]	&part;
 ∃	\[te]	&exist;
-∅	\[es]	&empty;
+∅	Ø	&empty;
 ∆	\f[dejavu]∆\f[]	&#8710;
 ∇	\[gr]	&nabla;
 ∈	\[mo]	&isin;
