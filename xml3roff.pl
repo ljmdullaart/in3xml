@@ -669,6 +669,12 @@ sub table_lookahead{
 					my $span=$1;
 					for (my $i=1; $i<$span; $i++){
 						$thistable[$tablerow+$i][$tablecol]="rowspan";
+						if ($input[$localline] =~ /<cell[^>]*c[ol]*s[pan]*="*([0-9]+)/){
+							my $subspan=$1;
+							for (my $j=1; $j<$subspan; $j++){
+								$thistable[$tablerow+$i][$tablecol+$j]="colspan";
+							}
+						}
 					}
 				}
 				if ("$thistable[$tablerow][$tablecol]" eq ""){
