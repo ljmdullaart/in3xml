@@ -244,6 +244,8 @@ echo >> Makefile
 #                                       |___/
 
 if [ -d $WWW ] ; then
+	echo "$WWW/block: |block">> Makefile
+	echo "	ln -s $(realpath block) $WWW" >> Makefile
 	echo "WWW targets in $WWW:" >> $LOG
 	echo -n "tag/in3xml.$WWW: tag/in3xml.xml" >> Makefile
 	for infile in *.in ; do		# the *.in are the only guaranteed availables
@@ -266,7 +268,7 @@ if [ -d $WWW ] ; then
 		elif [ "$infile" = "total.in" ] ; then
 			:
 		else
-			echo "$WWW/$stem.html: $XML/$stem.xml " >> Makefile
+			echo "$WWW/$stem.html: $XML/$stem.xml | $WWW/block" >> Makefile
 			echo "	xml3html $XML/$stem.xml > $WWW/$stem.html" >> Makefile
 			echo "    $WWW/$stem.html" >>$LOG
 		fi
