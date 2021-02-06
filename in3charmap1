@@ -2,6 +2,7 @@
 #INSTALL@ /usr/local/share/in3/in3charmap1
 #char	groff	html
 %%;	%	%
+%.;	\&.	.
 %8X;	\f[Zapf]$\f[]	&#9988;
 %8x;	\f[Zapf]"\f[]	&#9986;
 %ALPHA;	\[*A]	&Alpha;
