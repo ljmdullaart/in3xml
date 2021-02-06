@@ -122,6 +122,7 @@ my %variables;
     $variables{'interpret'}=1;
     $variables{'markdown'}=0;
     $variables{'notes'}=0;
+	$variables{'picheight'}=5;
     $variables{'preauthor'}=0;
     $variables{'sidechar'}='*';
     $variables{'sidesep'}=';';
@@ -610,12 +611,15 @@ my $maxrow=0;
 my $maxcol=0;
 my $tablerow=0;
 my $tablecol=0;
+my @colwidth;
+my $cellstring;
 # tbl needs a definition before a table can be created.
 sub table_lookahead{
 	(my $start)=@_;
 	my $localline=$start;
 	my $substate='none';
 	undef @thistable;
+	undef @colwidth;
 	while ($substate ne 'end'){
 		chomp $input[$localline];
 		if ($localline >$#input){
@@ -650,6 +654,7 @@ sub table_lookahead{
 			}
 			elsif ($input[$localline] =~ /<cell.*>/){
 				my $txtf='text';
+				$cellstring='';
 				if ($input[$localline] =~ /format="([a-z]+)"/){$txtf=$1;}
 
 				$tablecol++;
@@ -682,11 +687,13 @@ sub table_lookahead{
 				}
 				if ($tablecol>$maxcol){$maxcol=$tablecol;}
 				$substate='cell';
+				$cellstring='';
 			}
 		}
 		elsif ($substate eq 'cell'){
 			if ($input[$localline] =~ /<\/cell>/){
 				$substate='row';
+				$cellstring='';
 			}
 			elsif ($input[$localline] =~ /<\/row>/){
 				$substate='table';
@@ -695,14 +702,25 @@ sub table_lookahead{
 				$substate='end';
 			}
 			else {
+				$cellstring="$cellstring$input[$localline]";
+				if ($colwidth[$tablecol] < length($cellstring)){$colwidth[$tablecol] =length($cellstring);}
+
 			}
 		}
 		$localline++;
 	}
 	my $vspace=$maxrow;
+	my $largestcol=0;
+	my $largestcolval=0;
+	for (my $i=0; $i<=$maxcol; $i++){
+		if ($largestcolval<$colwidth[$i]){
+			$largestcol=$i;
+			$largestcolval=$colwidth[$i];
+		}
+	}
 	nodupoutput (".ne $vspace".'v');
 	output ('.TS');
-	output ('expand,allbox,center;');
+	output ('allbox,center;');
 	for (my $i=0; $i<=$maxrow; $i++){
 		my $rowfmt='';
 		for (my $j=0; $j<=$maxcol; $j++){
@@ -719,9 +737,11 @@ sub table_lookahead{
 					elsif ($1 eq 'text'){ $rowfmt="$rowfmt l";}
 					elsif ($1 eq 'right'){ $rowfmt="$rowfmt r";}
 					elsif ($1 eq 'num'){ $rowfmt="$rowfmt n";}
+					if (($i==1)&&($j==$largestcol)){$rowfmt=$rowfmt . 'x';}
 				}
 				else {
 					$rowfmt="$rowfmt l";
+					if (($i==1)&&($j+1==$largestcol)){$rowfmt=$rowfmt . 'x';}
 				}
 			}
 		}
@@ -734,6 +754,7 @@ sub table_lookahead{
 }
 
 
+my @thiscell;
 
 #                  _         _
 #  _ __ ___   __ _(_)_ __   | | ___   ___  _ __
@@ -773,6 +794,7 @@ while ( $linenumber <= $#input){
 			$type='pre';
 			$image='';
 			$class='';
+			$inline=0;
 			undef@blocktext;
 			state_push('block');
 		}
@@ -959,11 +981,12 @@ while ( $linenumber <= $#input){
 				output ('.P');
 			}
 			elsif ($ptableopen==0){    
-				output ('.TS');
+				output ('.TS H');
 				output ('tab(@);');
 				if ($variables{'notes'}==1) { output ('lw(2c) lw(12.4c).');}
 				if ($variables{'notes'}==2) { output ('lw(12.4c) lp6w(2c)v-5.');}
 				if ($variables{'notes'}==3) { output ('lw(2c) lw(10.1c) lp6w(2c)v-5.');}
+				output ('.TH');
 				output ('T{');
 				if (($variables{'notes'}&1)>0){
 					for (@leftnotes){ output ($_);}
@@ -1136,7 +1159,7 @@ while ( $linenumber <= $#input){
 			}
 			elsif ($type eq 'pic'){
 				if ($inline==0){
-					output ('.PS');
+					output (".PS $variables{'picheight'}");
 					for (@blocktext){
 						s/^"//;
 						s/"$//;
@@ -1366,6 +1389,7 @@ while ( $linenumber <= $#input){
 			state_pop();
 		}
 		elsif ($input[$linenumber] =~/<cell/){
+			undef @thiscell;
 			if ($tablecol==0){
 				output ('T{');
 			}
