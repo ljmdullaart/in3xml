@@ -1,0 +1,172 @@
+.header
+.set markdown 1
+
+.h1 Intro
+
+.h2 My personal itch
+
+Writing this kind of software is considered as "scratching your personal itch".
+My personal itches for this project were threefold.
+
+First, I needed something that produces consistent results for both PDF and 
+HTML without too much manual intervention. Libreoffice does this, but delivered
+just not exactly the type of web pages that I wanted. Dumping web pages to PDF
+consistently gave half lines on the bottom and top. Groff's web pages are just
+not good enough for me.
+
+Secondly, I needed something that allows me to have notes in the right margin
+of the text.
+.side Like this
+This is something that you commonly see in school books. I did not
+find anything that could do that in an easy way. Publishing software require
+too many mouse clicks to get the work done.
+
+For the latest version, I needed to test some programming concepts, like XML,
+Finite State Machine with stack, multi-pass parsing.
+
+And, of course MY MOUSETRAP IS BETTER!!!
+
+
+.h2 Downloading
+At this moment, there is not a neatly packaged 
+in3. You can download the code from github
+.link https://github.com/ljmdullaart/in3xml
+or do 
+.fix git clone https://github.com/ljmdullaart/in3xml
+to get a clone of the source code.
+
+.set notes 0
+
+.h2 History
+In was a run-off format for web-pages. It was meant to create web pages 
+of different formats. It worked quite well as long as the text was kept simple.
+
+At some point, formatting requirements elaborate, using side-notes, tables and left-notes.
+There was also the requirement of getting a PDF document, which was produced using tbl
+and groff. I called this in2, having the nice pun in2html, in2groff etc.
+
+By now, the code got quite complex. The difference between tables in HTML and tables in 
+tbl made it necessary to duplicate a lot of code. Adding features became quite a 
+challenge.
+
+I also picked up a book called 'Clean Code' by Robert Martin. That described 
+exactly the problem I was having; dirty code. 
+
+So a major rewrite became necessary. And it also became necessary to create a
+sort of architecture document that describes the way in looks at formatting 
+a document. It also describes the in input language, the in3 intermediate language
+and what in does or doesn't do. In general, the real formatting is left to the
+output-processor (either the formatting of the web page or Groff).
+
+Although a self-invented intermediate language is quite flexible, it also
+introduced convoluted thinking. Therefore, the latest re-write now uses standard 
+XML as intermediate language. This includes a DTD.
+
+I have used the latest rewrite also as a test for some programming principles. That
+means that I have written my own XML-parser. It also means that the in-language is
+now parsed in multiple passes.
+
+.h2 Requirements
+
+To run in3, you must have on your system:
+
+- perl
+- groff
+- tbl
+- ghostscript
+- ps2pdf
+- imagemagic
+- xmllint
+
+To use all the features, you should also have
+
+- Dia
+- Gnuplot
+- Tex
+- Lillypond
+- Configyour
+
+.h2 Running in3xml
+
+In3xml is designed to run with
+.fix configyour
+to create a Makefile. However, you can easily run it by hand, use your own Makefile or create 
+a shellscript.
+
+Configyour will scan for the pescence of the directory
+.fix in3xml
+to determine if it is applicable. If the directory
+.fix roff
+is present,
+.fix groff
+will be used to generate a PDF in that directory. All the intermediate files 
+will be in the directory
+.fix roff
+too. If there is a directory
+.fix web
+then configyour will put HTML versions of the document there. A complete list of the 
+directories that
+.fix configyour
+uses is in the table below.
+
+	block	Put all pictures and blocks as picture in here
+	htm	If this directory exist, put HTML versions wthout headers in this directory
+	in3xml	Generate the rules for in3xml if this directtory exists; put the XML files in here
+	roff	Put PDF, PS and intermediate files in this directory
+	tag	General configyour directory for tagging and dependencies
+	web	Put HTML versions of the document in here.
+
+
+The image below can be used to determine the process flow.
+
+	.b label	.b type	.b explanation
+	%.;in	file	This is the input text. If configyour is used, the extension is used to determine what the input files are.
+	meta.in	file	Meta.in is, if it exists, included before the input text
+	in3multipass	program	Program that converts the .in file to XML
+	%.;xml	file	XML version of the document
+	xml3roff	program	Convertor from in3 XML to input for groff/
+	xml3html	program	convertor from in3 XML to HTML
+	%.;roff	file	Input file for groff
+	%.;html	file	HTML output file
+	%.;htm	file	HTML file, but without headers
+	groff+	programs	Groff and its pre-processors. It is advised to always use tbl, pic and eqn, and use the in macroset (-min)
+	%.;ps	file	Postscript output
+	ps2pdf	program	Convertor for postscript to PDF
+	stylesheet.mm	file	A style-sheet for groff.
+	stylesheet.css	file	Stylesheet that is refered to in the .html file(s)
+
+.page
+
+.block pic
+define filter {box ht 0.25 rad 0.125}
+A: box ".in"
+M: filter "in3multipass"  at A +(0,-1)
+B: box "meta.in"          at M +(-1,0)
+C: box ".xml"             at M +(0,-1)
+N: filter "xml3roff"      at C +(-1,-1)
+O: filter "xml3html"      at C +(1,-1)
+D: box ".roff"            at N +(0,-1)
+E: box ".html"            at O +(0.5,-1)
+F: box ".htm"             at O +(-0.5,-1)
+P: filter "groff+"        at D +(0,-1)
+G: box ".ps"              at P +(0,-1)
+Q: filter "ps2pdf"        at G +(0,-1)
+H: box ".pdf"             at Q +(0,-1)
+I: box "stylesheet.mm"    at P +(-1,0) width .9
+J: box "stylesheet.css"   at E +(1,0) width .9
+
+arrow at A.s to M.n
+arrow at B.e to M.w
+arrow at M.s to C.n
+arrow at C.s to N.n
+arrow at C.s to O.n
+arrow at N.s to D.n
+arrow at D.s to P.n
+arrow at I.e to P.w
+arrow at P.s to G.n
+arrow at G.s to Q.n
+arrow at Q.s to H.n
+arrow at O.s to E.n
+arrow at O.s to F.n
+.block
+
