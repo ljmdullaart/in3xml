@@ -113,6 +113,7 @@ my %variables;
     $variables{"cover"}='';
     $variables{"do_cover"}='no';
     $variables{"do_headers"}='yes';
+    $variables{"tableexpand"}='no';
     $variables{"imagex"}=800;
     $variables{"imagey"}=800;
     $variables{"subtitle"}='';
@@ -737,11 +738,11 @@ sub table_lookahead{
 					elsif ($1 eq 'text'){ $rowfmt="$rowfmt l";}
 					elsif ($1 eq 'right'){ $rowfmt="$rowfmt r";}
 					elsif ($1 eq 'num'){ $rowfmt="$rowfmt n";}
-					if (($i==1)&&($j==$largestcol)){$rowfmt=$rowfmt . 'x';}
+					if (($i==1)&&($j==$largestcol)&&($variables{'tableexpand'} eq 'yes')){$rowfmt=$rowfmt . 'x';}
 				}
 				else {
 					$rowfmt="$rowfmt l";
-					if (($i==1)&&($j+1==$largestcol)){$rowfmt=$rowfmt . 'x';}
+					if (($i==1)&&($j+1==$largestcol)&&($variables{'tableexpand'} eq 'yes')){$rowfmt=$rowfmt . 'x';}
 				}
 			}
 		}
@@ -1127,7 +1128,7 @@ while ( $linenumber <= $#input){
 			my $blk="block/$name";
 			if ($type eq 'pre'){
 				close_paratable();
-				output ('.ne 4v','.sp 1','.B1','.ft 6','.ps -4','.nf','.eo');
+				output ('.ne 4v','.sp 1','.B1','.ft 6','.ps -4','.vs -4','.nf','.sp 1');
 				for (@blocktext){
 					s/^"//;
 					s/"$//;
@@ -1139,11 +1140,11 @@ while ( $linenumber <= $#input){
 					s/&#0092;/\\/g;
 					output('.br',$_);
 				}
-				output ('.sp 1',,'.ps','.ft','.ec','.fi','.B2');
+				output ('.sp 1',,'.ps','.vs','.ft','.fi','.B2');
 			}
 			elsif ($type eq 'lst'){
 				close_paratable();
-				output ('.ne 4v','.ft 6','.ps -4','.nf','.eo','.vs -4');
+				output ('.ne 4v','.ft 6','.ps -4','.nf','.vs -4');
 				for (@blocktext){
 					s/^"//;
 					s/"$//;
@@ -1155,7 +1156,7 @@ while ( $linenumber <= $#input){
 					s/&#0092;/\\/g;
 					output('.br',$_);
 				}
-				output ('.vs','.ps','.ft','.ec','.fi');
+				output ('.vs','.ps','.ft','.fi');
 			}
 			elsif ($type eq 'pic'){
 				if ($inline==0){
@@ -1578,6 +1579,14 @@ while ( $linenumber <= $#input){
 				output (".ne 10v");
 				output (".HU \"$text\"");
 			}
+			elsif ($seq eq ''){
+				if ($level>0){
+					output (".nr Hu $level");
+				}
+				my $room=10-$level+5;
+				output (".ne $room"."v");
+				output (".HU \"$text\"");
+			}
 			else {
 				my $v=15/$level;
 				output (".ne $v".'v');
@@ -1998,9 +2007,9 @@ for (@charmap){
 		if ($output[$i]=~/$char/){
 			$output[$i]=~s/$char/$groff/g;
 		}
-		#if ($output[$i]=~/$html/){
-		#$output[$i]=~s/$html/$groff/g;
-		#}
+		if ($output[$i]=~/$html/){
+			$output[$i]=~s/$html/$groff/g;
+		}
 	}
 }
 
@@ -2083,6 +2092,7 @@ for (@output){
 	s/&apos;/'/g;
 	s/&amp;/&/g;
 	s/&#0092;/\\\\/g;
+	s/^%\.;/\\&./;
 	print "$_\n";
 }
 
