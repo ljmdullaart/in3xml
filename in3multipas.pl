@@ -303,6 +303,135 @@ sub varpush{
 	pushout('</set>');
 }
 
+#        _            _        _     _      
+#  _ __ (_)_ __   ___| |_ __ _| |__ | | ___ 
+# | '_ \| | '_ \ / _ \ __/ _` | '_ \| |/ _ \
+# | |_) | | |_) |  __/ || (_| | |_) | |  __/
+# | .__/|_| .__/ \___|\__\__,_|_.__/|_|\___|
+# |_|     |_|              
+my @pipetable;
+my $ptMAX=4096;
+sub pipetablepass{
+	$passname='pipetablepass';
+	my $prevline='';
+	my $intable=0;
+	my $inlist=0;
+	my $inblock=0;
+	my $inpre=0;
+	my $inptable=0;
+	foreach (@passin){
+		varset($_);
+		chomp;
+		$lineindex++;
+		$_='' unless defined $_;
+		if ($inpre==1){
+			pushout ($_);
+			if (/^\.pre/){ $inpre=0;}
+		}
+		elsif ($inblock==1){
+			pushout ($_);
+			if (/^\.block/){ $inblock=0;}
+		}
+		elsif (/^$/){
+			if ($inptable == 1){
+				my $cols=' ' x $ptMAX;
+				for (@pipetable){
+					my $line=$_;
+					for (my $i=0; $i<length($line); $i++){
+						if (substr($line,$i,1) eq '|'){
+							substr($cols,$i,1)='|';
+						}
+					}
+				}
+				$cols=~s/ *$//;
+				my $rows=' ' x $ptMAX;
+				for (my $i=0;$i<=$#pipetable;$i++){
+					if ($pipetable[$i]=~/----/){
+						substr($rows,$i,1)='-';
+					}
+				}
+				$rows=~s/ *$//;
+
+				my $celltext='';
+				my $tableline='';
+				for (my $i=0;  $i<$#pipetable;$i++){
+					if ($pipetable[$i]=~/^[-|]*$/){}   # drop all lines that are just drawing characters
+					else {
+						my $j=0;
+						while ($j<length($cols)-1){
+							my $chr=substr($pipetable[$i],$j,1);
+							if ($chr=~/[|-]/){}
+							else {
+								my $celltext='';
+								my $top=$i;
+								my $bottom=$i;
+								my $left=$j;
+								my $right=$j;
+								while (($right < length ($cols)) && !(substr($pipetable[$i],$right,1)=~/[-|]/)){
+									$right++;
+								}
+								my $hlen=$right-$left;
+								while (($bottom < length ($rows)) && !(substr($pipetable[$bottom],$left,1)=~/[-|]/)){
+									$bottom++;
+								}
+								my $vlen=$bottom-$top;
+								for (my $l=$top; $l<$bottom;$l++){
+									if ($celltext eq ''){
+										$celltext= substr($pipetable[$l],$left,$hlen);
+									}
+									else {
+										$celltext=$celltext . '%n%' .  substr($pipetable[$l],$left,$hlen);
+									}
+								}
+								$celltext=~s/^ *//;
+								$celltext=~s/ *$//;
+								$celltext=~s/ *%n% */%n%/g;
+								while ($celltext=~/^%n%/){$celltext=~s/^%n%//;}
+								while ($celltext=~/%n%$/){$celltext=~s/%n%$//;}
+								my $cs=(substr($cols,$left,$hlen)=~tr/|//)+1;
+								my $rs=(substr($rows,$top,$vlen)=~tr/-//)+1;
+								$tableline=$tableline .  "	";
+								if ($cs>1){$tableline=$tableline .  "&lt;cs=$cs&gt;&lt;format=center&gt;";}
+								if ($rs>1){$tableline=$tableline .  "&lt;rs=$rs&gt;";}
+								$tableline=$tableline .  $celltext;
+								for (my $l=$top; $l<$bottom;$l++){
+									for (my $m=$left; $m<$right;$m++){
+										substr($pipetable[$l],$m,1)='|';
+									}
+								}
+								$j=$j+$hlen;
+							}
+							$j++;
+						}
+						pushout ($tableline);
+						$tableline='';
+					}
+				}
+				$inptable=0;
+				undef my @pipetable;
+			}
+			else {
+				pushout ($_);
+			}
+		}
+		elsif (/^\|-/){
+			$inptable=1;
+			push @pipetable,$_;
+		}
+		elsif ($inptable == 1){
+
+			push @pipetable,$_;
+		}
+		else {
+			if (/^\.pre/){$inpre=1;}
+			if (/^\.block /){$inblock =1;}
+			pushout ($_);
+		}
+		$prevline=$_;
+	}
+	endpass();
+}
+
 #      _                               _   _
 #   __| | ___ _ __  _ __ ___  ___ __ _| |_(_) ___  _ __  ___
 #  / _` |/ _ \ '_ \| '__/ _ \/ __/ _` | __| |/ _ \| '_ \/ __|
@@ -845,6 +974,8 @@ sub headingpass {
 			my $level=$1;
 			my $text=$2;
 			my $seq='';
+			$variables{"H$level"}++;
+			for (my $i=$level+1;$i<10;$i++){$variables{"H$i"}=0;}
 			pushout("");
 			pushout("<heading>");
 			pushout("<level>");
@@ -1834,6 +1965,7 @@ markdownpass(); progress;
 blockpass(); progress;
 inlinepass(); progress;
 listpass(); progress;
+pipetablepass();
 tablepass(); progress;
 blockpass(); progress;
 inlinepass(); progress;
