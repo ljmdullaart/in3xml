@@ -400,11 +400,18 @@ sub outimage {
 	chomp $img;
 	$img=~s/ *$//;
 	my $baseimg=basename($img);
+	my $blockimg="block/$baseimg";
 	if ($baseimg=~/(.*)\.xcf/){
 		$baseimg="$1.png";
+		$blockimg="block/$baseimg";
 		progress();
 		system ("convert $img $baseimg >/dev/null 2>/dev/null");
+		system ("cp $baseimg block/$baseimg");
 	}
+	else {
+		system ("cp $img web/$blockimg >/dev/null 2>/dev/null");
+	}
+
 	my $imgsize=` imageinfo --geom $img`;
 	chomp $imgsize;
 	my $scale=100; #percent
@@ -422,23 +429,22 @@ sub outimage {
 	my $height=($y*$scale)/200;
 	my $align=$y/10;
 	if ($inline>0){
-		output ("<img src=\"$baseimg\" alt=\"$img\" width=\"$width\" height=\"$height\" style=\"vertical-align:-$align%;\">");
+		output ("<img src=\"$blockimg\" alt=\"$img\" width=\"$width\" height=\"$height\" style=\"vertical-align:-$align%;\">");
 	}
 	elsif ($format=~/left/){
-		output ("<img src=\"$baseimg\" alt=\"$img\" width=\"$width\" height=\"$height\" align='left' style=\"margin:10px 10px;vertical-align:-10;\">");
+		output ("<img src=\"$blockimg\" alt=\"$img\" width=\"$width\" height=\"$height\" align='left' style=\"margin:10px 10px;vertical-align:-10;\">");
 		$variables{'parastartdelay'}='<hr style="height:1px; visibility:hidden;">';
 
 	}
 	elsif ($format=~/right/){
-		output ("<img src=\"$baseimg\" alt=\"$img\" width=\"$width\" height=\"$height\" align='right' style=\"margin:10px 10px;vertical-align:-10;\">");
+		output ("<img src=\"$blockimg\" alt=\"$img\" width=\"$width\" height=\"$height\" align='right' style=\"margin:10px 10px;vertical-align:-10;\">");
 	}
 	else {
 		output ('<div style="text-align: center">');
-		output ("<img src=\"$baseimg\" alt=\"$img\" width=\"$width\" height=\"$height;\">");
+		output ("<img src=\"$blockimg\" alt=\"$img\" width=\"$width\" height=\"$height;\">");
 		output ('</div>');
 	}
 	progress();
-	system ("cp $img web/$baseimg >/dev/null 2>/dev/null");
 
 }
 
