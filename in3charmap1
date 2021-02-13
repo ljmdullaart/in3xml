@@ -2,15 +2,15 @@
 #INSTALL@ /usr/local/share/in3/in3charmap1
 #char	groff	html
 %%;	%	%
-%.;	\&.	.
-%8X;	\f[Zapf]$\f[]	&#9988;
-%8x;	\f[Zapf]"\f[]	&#9986;
+%=;	=	=
+%8X;	\f[dejavu]✀\f[]	&#9988;
+%8x;	\f[dejavu]✂\f[]	&#9986;
 %ALPHA;	\[*A]	&Alpha;
 %BETHA;	\[*B]	&Beta;
-%CHECK;	\f[Zapf]4\f[]	&#10004;
+%CHECK;	\f[dejavu]✓\f[]	&#10004;
 %CHI;	\[*C]	&Xi;
 %CHI;	\[*X]	&Chi;
-%CROSS;	\f[Zapf]>\f[]	&#10014;
+%CROSS;	\f[dejavu]✞\f[]	&#10014;
 %Colon;	\f[dejavu]∷\f[]	&Colon;
 %Cset;	\f[dejavu]ℂ\f[]	&Copf;
 %DELTA;	\[*D]	&Delta;
@@ -39,7 +39,7 @@
 %TAU;	\[*T]	&Tau;
 %THETA;	\[*H]	&Theta;
 %UPSILION;	\[*U]	&Upsilon;
-%WRONG;	\f[Zapf]8\f[]	&#10008;
+%WRONG;	\f[dejavu]✘\f[]	&#10008;
 %YPSILION;	\[*U]	&Upsilon;
 %ZETA;	\[*Z]	&Zeta;
 %Zset;	\f[dejavu]ℤ\f[]	&Zopf;
@@ -50,7 +50,7 @@
 %because;	\f[dejavu]∵\f[]	&because;
 %beta;	\[*b]	&beta;
 %cap;	\f[dejavu]∩\f[]	&cap;
-%check;	\f[Zapf]3\f[]	&#10003;
+%check;	\f[dejavu]✓\f[]	&#10003;
 %chi;	\[*x]	&chi;
 %cong;	\f[dejavu]≅\f[]	&cong;
 %conint;	\f[dejavu]∮\f[]	&conint;
@@ -311,13 +311,13 @@
 ϕ	\[*f]	&#981
 ϖ	\[+p]	&piv;
 ϵ	\[mo]	&#1013;
-Ё	\f[SFOR]Ё\f[]	Ё
-А	\f[SFOR]А\f[]	А
-Б	\f[SFOR]Б\f[]	Б
-В	\f[SFOR]В\f[]	В
-Г	\f[SFOR]Г\f[]	Г
-Д	\f[SFOR]Д\f[]	Д
-Е	\f[SFOR]Е\f[]	Е
+Ё	\f[dejavu]Ё\f[]	Ё
+А	\f[dejavu]А\f[]	А
+Б	\f[dejavu]Б\f[]	Б
+В	\f[dejavu]В\f[]	В
+Г	\f[dejavu]Г\f[]	Г
+Д	\f[dejavu]Д\f[]	Д
+Е	\f[dejavu]Е\f[]	Е
 Ж	\f[SFOR]Ж\f[]	Ж
 З	\f[SFOR]З\f[]	З
 И	\f[SFOR]И\f[]	И
@@ -508,4 +508,4 @@
 ♣	\[CL]	&clubs;
 ♥	\[HE]	&hearts;
 ♦	\[DI]	&diams;
-✓	\[OK]	&#10003;
+✓	\f[dejavu]\[OK]\f	&#10003;
