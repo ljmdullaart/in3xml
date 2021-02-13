@@ -26,6 +26,19 @@ Finite State Machine with stack, multi-pass parsing.
 
 And, of course MY MOUSETRAP IS BETTER!!!
 
+From the syntax in the input files, you will 
+understand that I like
+.fixed troff
+and I do not care much about Tex. Indeed, I find Tex extremely 
+cumbersome and it requires too much complex commands that have nothing
+to do with the text.
+
+Unlike
+.fixed troff
+or a macroset, In3 completely transforms the intput text. In, for example,
+.fixed pic
+it is possible to use \fB to embolden text. In In3, this  does not work.
+
 
 .h2 Downloading
 At this moment, there is not a neatly packaged 
