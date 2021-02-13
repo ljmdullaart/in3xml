@@ -1,0 +1,347 @@
+.header
+.set tableexpand yes
+.h1 Some details
+
+
+.h2 Concepts
+
+An input text consists of constructs. A construct is (in general) separated 
+from other constructs by blank lines. Some constructs are one-line only,
+and after a one-line construct, the trailing blank line may be ommitted.
+In the previous chapter, we saw the constructs paragraph, table and list.
+A list of the constructs is in the table below:
+
+	.b Construct	.b Recognized by	.b Ends with	.b Usage
+	author	%.;author	End of line	Defines the author of the document
+	block	%.;block <type>	%.;block	Defines different type of blocks
+	cover	%.;cover	End of line	Defines an image for the cover page
+	heading	%.;h<level>	End of line	Defines a Chapter, section etc. title
+	headerlink	%.;headerlink	End of line	Defines a link for external scripts
+	header	%.;header	End of line	Includes a header-file if deemed appropriate
+	hr	%.;hr	End of line	Draws a horizontal line
+	image	%.;img	End of line	Includes an image
+	list	tab(s) with -,@ or #	blank line	Lists
+	lst	%.;lst	blank line	Listings
+	map	%.;map	blank line	Clickable map in HTML, an image in PS
+	note	%.;note	End of line	Defines a footnote
+	page	%.;page	End of line	Ejects a page
+	paragraph	other text	Blank line	Paragraphs of text
+	set	%.;set	End of line	Sets a variable
+	subtitle	%.;subtitle	End of line	Sets the document's subtitle
+	table	Tab 	Blank line	Tables
+	title	%.;title	End of line	Sets the title for the document
+	toc	%.;toc	End of line	Some sort of intermediate title
+	video	%.;video	End of line	In HTML, include a video here, in PS, take an image from a video
+
+Within constructs, requests can be made. For example, within a paragraph, some
+text may be requested as bold. These are format requests. Some are not really used
+for formatting, but they are called that anyway. You may notice that, for example
+.fixed .image
+is both a construct and a format request. If it is a format request, the image is
+presented as in-line with the text, whereas if it is used as a construct,
+the image is placed on it's own.
+
+Most format requests are terminated by the end of line (except for example the
+.fixed .block
+request)
+
+.set tableexpand no
+
+	.b Format request	.b Request	.b Used for
+	note	%.;note	footnotes
+	blank	%.;blank	blank line
+	break	%.;br	line break
+	space	%.;space	spacing
+	underline	%.;u	underlined text
+	italic	%.;i	italic text
+	bold	%.;b	bold text
+	center	%.;center	centered text
+	fixed	%.;fixed	fixed font
+	lst	%.;lst	listings
+	subscript	%.;sub	subscripts
+	superscript	%.;sup	superscripts
+	video	%.;video	include a video
+	image	%.;img	include an image
+	block	%.;block	include a block
+	link	%.;link	include a link
+	set	%.;set	set a variable
+	equation	%.;eqn	create an in-line equation
+	side note	%.;side	create a side note
+	left note	text<tab>	create a left note
+	stop indent	%.;back	stop indenting for left notes
+	indent after	%=;===>	Indent so the line appears to follow the line above
+
+.set tableexpand yes
+
+.h2 Left notes and side notes
+
+Left notes are short scribbles in the left margin. They are, for example, used 
+when typesetting theater plays:
+
+Comte:	Enfin, vous l'emportez et la faveur du Roi
+
+Vous élève en un rang qui n’était dû qu'a moi:
+
+Il vous fait gouverneur du prince de Castille
+
+Diege:	Cette marque
+d'honneur qu'il met dans ma famille
+
+Montre à tous qu'il est juste, et fait connaître assez
+
+Qu'il sait récompenser
+les services passés.
+
+.back
+
+A 
+.fixed %.;back
+request, a table, a list
+or a heading at any level stops the hanging indenting.
+
+Side notes may be more elaborate. They are placed in a column
+on the right side of the paragraph. Normally, when a side note
+appears somewhere in the text, the column on the right is reserved
+in the whole document.
+
+Whether the column is reserved is detemined by the variable
+.fixed notes.
+
+.set tableexpand no
+
+	.b Value	.b Left note	.b Side note
+	0	no	no
+	1	yes	no
+	2	no	yes
+	3	yes	yes
+
+.set tableexpand yes
+
+This means, that it is possible to supress the side note
+column by setting
+.fixed notes
+to 0.
+
+Left and side notes are collected per paragraph and put in coluns to the right and left.
+Numbering of the side notes is restarted at the beginning of each paragraph.
+
+Where a left note is a simple scriple in the left margin, a side note can have an actual
+referral. The formatting of the sidenote is determined by the following variables:
+
+	.b Variable	.b Initial value	.b Meaning
+	.fixed notes	0	Whether or not there are notes
+	.fixed sidechar	*	Character (or string) to be used for referral in the paragraph
+	.fixed sidenumber	0	Number of the last note that was used for referral
+	.fixed sideref	(empty)	Referral used in the side note column
+	.fixed sidesep	;	Character to separate side notes
+
+The variables
+.fixed sidechar
+and
+.fixed sideref
+can have a referral to the value of
+.fixed sidenumber. 
+
+.set tableexpand no
+
+	.b Referral	.b Meaning	
+	.fixed %num	superscript numbering
+	.fixed %NUM	normal number
+	.fixed %alpha	lowercase letter
+	.fixed %ALPHA	uppercase letter
+
+.set tableexpand yes
+
+.set sidechar %num
+.set sideref %NUM:
+
+.h2 Indent after
+
+A special formatting request is the indent after
+.fixed =========>
+It is there for very specific cases: plays in rhyme.
+
+.lst
+.lst Comte:  Ne le méritait pas! Moi?
+.lst
+.lst Diegue: ========================>Vous!
+.lst
+.lst Comte:  ==============================>Ton impudence
+.lst %.;side irrespect
+.lst
+.lst Téméraire
+.lst %.;side imprudent
+.lst vieillard, aura sa récompense
+.lst %.;side ici: punition
+
+
+
+Comte:	Ne le méritait pas! Moi?
+
+Diegue:	========================>Vous!
+
+Comte:	==============================>Ton impudence
+.side irrespect
+
+Téméraire
+.side imprudent
+vieillard, aura sa récompense
+.side ici: punition
+
+.set notes 0
+
+.h2 Tables
+
+We've already touched upon the tables. We've seen:
+
+- Tables are created of tab-separated fields
+- A cell can span columns if it contains <cs=...>
+- A cell can span rows if it contains <rs=...>
+- Format requests can be made in a cell (e.g.
+.fixed %.;b
+for
+.b bold
+)
+
+In addition, a cell may contain
+.fixed <format=x>
+to set the alignment. X can be:
+
+.set tableexpand no
+
+	.b X	.b Meaning
+	center	Center the cell content
+	left	Left justify the content
+	right	Right justify the content
+
+.set tableexpand yes
+
+We also saw, that requests are possible in table cells. However, 
+some requests require a new line (think of blocks). A combination of
+.fixed %n%
+replaces a newline in a cell. This allows us to create a table with:
+
+.pre
+    normal%n%.b bold%n%normal   norm%n%.u under%n%norm
+    normal text%n%.b bold       and%n%.i italic%n%text
+.pre
+
+which gives:
+
+	normal%n%.b bold%n%normal	norm%n%.u under%n%norm
+	normal text%n%.b bold	and%n%.i italic%n%text
+
+Tables tend to expand to the complete width of the page. In3 will try to 
+guess which column should be expanded. However, sometimes that is not a good idea.
+The variable
+.fixed tableexpand
+can be set to 
+.fixed no
+to prevent table expansion, or to
+.fixed yes
+to enable it. 
+As an example: the previous example table with 
+.fixed %.;set tableexpand no
+gives:
+
+.set tableexpand no
+
+	normal%n%.b bold%n%normal	norm%n%.u under%n%norm
+	normal text%n%.b bold	and%n%.i italic%n%text
+
+The effect is mainly for the PS and PDF output. In html,
+no specific change will be visible.
+
+.h2 Pipe tables
+There is another way, perhaps more intiutive to enter a table.
+You can draw a table with
+.fixed |
+and 
+.fixed -
+symbols.
+There are a number of limitations; for example: you cannot use a
+.fixed |
+in the table text. Also,
+.fixed <format=xxx>
+is not supported. But, on the otherhand, it is much easier to 
+include formatting commands.
+
+
+.pre
+|---------------------|
+|  head               |
+|---------------------|
+| col 1  | col 2 +  3 |
+|--------|------------|
+|        | col  | col |
+| col 1  | .b 2 |.u 3 |
+|        |------|-----|
+|        |  a   |  b  |
+|---------------------|
+| .block eqn          |
+| r sup 2 over n sup 2|
+| .block              |
+|---------------------|
+.pre
+
+|---------------------|
+|   head              |
+|---------------------|
+| col 1  | col 2 +  3 |
+|--------|------------|
+|        | col  | col |
+| col 1  | .b 2 |.u 3 |
+|        |------|-----|
+|        |  a   |  b  |
+|---------------------|
+| .block eqn          |
+| r sup 2 over n sup 2|
+| .block              |
+|---------------------|
+
+Some rules:
+
+- A pipe table starts with
+.fixed |-
+in the first column of the input text
+- The first and last column must be a
+.fixed |
+symbol
+- A 
+.fixed |
+is a column separator. Always. So no 
+.fixed |
+symbols are allowed in the text.
+- A horizontal separation between two cells must be at least 4 dashes (
+.fixed ----
+)
+- Leading and trailing spaces in a cell are deleted
+- No allignment hints are allowed
+
+.h2 Chapter, sections et cetera
+
+Text is normally divided into chapters, sections et cetera. In3 uses
+the request
+.fixed %.; .H1
+.i Chapter title
+for chapter titles,
+.fixed %.; .H2
+.i Section title
+for section titles
+and so on until 
+.fixed %.;H9.
+If you think you need more levels, than you should rethink your approach
+to the subject. Or maybe In3 is just not for you.
+
+Unnumbered headings can also be used using
+.fixed $.;hu
+followed by a number.
+The following sequence is an example with
+.fixed %.;h3, .hu3, .h3.
+Note how the numbering continues, eventhough the number is not printed.
+
+.h3 H3 heading with number
+
+.hu3 Unnumbered heading at level 3
+
+.h3 H3 heading with number

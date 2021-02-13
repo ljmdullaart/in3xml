@@ -1,0 +1,85 @@
+.header
+.h1 Images and others
+
+.h2 Images
+
+The simplest form of putting an image in the text is as a separate
+construct:
+
+.pre
+
+ .img plaatje.png
+
+.pre
+
+.img plaatje.png
+
+.img LEFT I.xcf
+
+t is also possible to create an image on the left or the right
+side and have text float around it. An example is this paragraph, which 
+floats around a picture 
+.fixed I.xcf
+which seeks to imitate the nice capitalizations that you sometimes see
+in medieval handwritings. The picture is included with
+.fixed %.;img LEFT I.xcf.
+Of course, in stead of LEFT, you may also opt 
+to use RIGHT, and then the image is placed on the right side of the text.
+Beware though: left and right floating pictures are not supported in combination
+with left or side notes.
+
+An in-line picture is also possible, and it is not limited to
+.img IMG_0364.xcf
+guinea pigs like this.
+
+.h2 Maps
+
+In3 was originally written for web pages. On web pages, it is possible
+to create a clickable map, with an area corresponding to a link. For
+PS and PDF documents, In3 just includes the picture.
+
+.pre
+ .map image heap.png
+ .map field top.html 0,0,95,95
+ .map field http://dullaart.website/familie/index.html 125,125,250,250
+ .map field http://dullaart.website/Winter/index.html 300,125,400,250
+ .map field http://dullaart.website/borden/index.html 500,125,600,250
+ .map field http://dullaart.website/paddestoel/index.html 697,130,827,245
+.pre
+
+will produce:
+
+.map image heap.png
+.map field top.html 0,0,95,95
+.map field http://dullaart.website/familie/index.html 125,125,250,250
+.map field http://dullaart.website/Winter/index.html 300,125,400,250
+.map field http://dullaart.website/borden/index.html 500,125,600,250
+.map field http://dullaart.website/paddestoel/index.html 697,130,827,245
+
+.h2 Video
+
+A video can be embedded in the text.
+
+.video MVI_2308.MOV
+
+In a web page, the video will play. On paper, that is a bit difficult,
+so a picture of a frame in the video is used instead.
+
+
+.h2 As part of other constructs
+
+Images and video can be used in other constructs.
+
+	<cs=2>In a table
+	A video	.video MVI_2308.MOV
+	An image	.img IMG_0364.xcf
+
+
+And in a list:
+
+- video
+.video MVI_2308.MOV
+- image
+.img IMG_0364.xcf
+
+

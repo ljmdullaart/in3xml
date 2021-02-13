@@ -1,0 +1,293 @@
+.header
+.h1 Normal usage
+
+.set tableexpand no
+
+.h2 Basics
+
+In3 is a processor that compiles texts with requests in something displayable, Postscript,
+HTML or PDF. 
+The first thing to realize is, that the text will not be formatted exactly. For HTML
+output, the exact format may depend on browser settings, additional stylesheets et cetera.
+Sure, CSS adepts may ensure that the web page looks exactly as you intended, making it 
+unreadable on mobile phones or a nuisance when resizing the browser window. 
+
+For In3, you should expect the same for PDF and PS output. If you really want to 
+create something exactly like you want it, use DTP software. Also, for the PS and PDF
+variant, there are some fine-tuning possibilities with a stylesheet, but that 
+will be discussed later.
+
+In3 allows requests on a line starting with a ".". For example: 
+.fixed .b example
+will produce
+.b example.
+The request
+.fixed .b
+means: print this text in bold. Other requests are available for headers, notes,
+images et cetera.
+Tables and lists are produced with other starting  characters, @, # and - for lists,
+a tab for tables.
+
+.h2 A first run
+
+As a first run, and probably to test the installation too, create a directory 
+with sub-directories 
+.fixed in3xml, roff, block
+and
+.fixed web.
+If you run
+.fixed configyour
+then this is enough. If you run In3 by hand, you should put a link to
+.fixed block
+in web
+
+.pre
+ln -s $(realpath block) web/block
+.pre
+
+Next, create a file
+.fixed first_example.in
+with the following content:
+
+.pre
+Lorem! Ipsum! What a geat words! 
+.pre
+
+If you have
+.fixed configyour
+on your system, run it now. Otherwise, do
+
+.pre
+	in3multipass first_text.in > in3xml/first_text.xml
+	xml3roff in3xml/first_text.xml > roff/first_text.roff
+	cat roff/first_text.roff |preconv> roff/first_text.tbl
+	cat roff/first_text.tbl |tbl > roff/first_text.pic
+	cat roff/first_text.pic |pic > roff/first_text.eqn
+	cat roff/first_text.eqn |eqn > roff/first_text.rof
+	cat roff/first_text.rof |groff -min -Kutf8  > roff/first_text.ps
+	cat roff/first_text.ps  | ps2pdf - - > roff/first_text.pdf
+	xml3html in3xml/first_text.xml > web/first_text.html
+.pre
+
+If you now view the file
+.fixed roff/first_text.pdf
+in your PDF viewer, you will get
+
+.img first_test.xcf
+
+Congratulations! you have now created your first PDF with In3.
+
+.h2 Basic features
+
+.h3 Paragraphs
+
+In the input text, a paragraph is a block of text that is delimited 
+by blank lines. Any text that is not specifically marked will be regarded 
+as a paragraph. Also, any requests within a paragraph will be treated as
+part of that paragraph.
+
+For example:
+
+.pre
+
+ This is a paragraph.
+ .b With a request
+ in it. 
+
+.pre
+
+will produce:
+
+This is a paragraph.
+.b With a request
+in it.
+
+.h3 Headers
+
+In3 uses headers for chapter, section et cetera. The requests are
+.fixed .h<level> <title>
+For example, This text contains:
+
+.pre
+ .h1 Getting started
+ .h2 Basics
+ .h2 A first run
+ .h2 Basic features
+ .h3 Paragraphs
+ .h3 Headers
+.pre
+
+Headers are automatically collected for a table of contents at the end. 
+
+.h3 Emphasis
+
+We already saw that it is possible to embolden text with the 
+.fixed .b
+request. 
+The character formatting can be done with:
+
+	.b Request	.b Meaning	.b Example
+	%.;b	bold	.b Bold text
+	%.;i	italic	.i Italic text
+	%.;u	underline	.u underlined text
+	%.;fixed	fixed font	.fixed Fixed font
+
+.h3 Some other requests
+
+The request
+.fixed .break
+forces a line-break, even
+.break
+if at that point it is not necessary.
+A
+.fixed .page
+forces a page break.
+The request
+.fixed .hr
+creates a horizontal line, like this:
+
+.hr
+
+
+
+.h2 Lists
+
+Lists are a separate construct from a paragraph. List cannot be part of
+a paragraph. They must be separated from other constructs with a blank line
+before and after the list.
+
+A list starts with a type-character, for example a
+.fixed -
+and a space or tab.
+An example would be
+
+.pre
+- first item
+- second item
+.pre
+
+which produces:
+
+- first item
+- second item
+
+There are 3 types of lists, and corresponding type-characters:
+
+	.b type	.b type char	.b Example
+	dashlist	-	- example
+	alpha list	@	a. example
+	numeric lists	#	1. example
+
+
+Lists can be nested, using different types:
+
+.pre
+- dash first
+- dash second
+	@ alpha first
+	@ aplha second
+- dash third
+	# num first
+	# num second
+.pre
+
+produces: 
+
+- dash first
+- dash second
+	@ alpha first
+	@ aplha second
+- dash third
+	# num first
+	# num second
+
+Note that the indent before the second level is a tab.
+
+Within a list, it is also possible to use the formating requests:
+
+.pre
+ - an item
+ - a
+ .b bold item
+ - an
+ .i italic
+ item
+.pre
+
+gives:
+
+- an item
+- a
+.b bold item
+- an
+.i italic
+item
+
+.h2 Tables
+
+The basic table is a set of lines that start with a tab and contains a tab-separated
+list of cells. Like a list, they must be separated with blank lines from other consructs.
+
+.pre
+	row 1, column1	row 1, column 2	row 1, column 3
+	row 2, column1	row 2, column 2	row 2, column 3
+.pre
+
+The columns are separated by tabs. It produces:
+
+	row 1, column1	row 1, column 2	row 1, column 3
+	row 2, column1	row 2, column 2	row 2, column 3
+
+Like in  the lists, formatting requests may appear:
+
+.pre
+	.b Column 1	.i Column 2	.u Column 3
+	row 1, column1	row 1, column 2	row 1, column 3
+	row 2, column1	row 2, column 2	row 2, column 3
+.pre
+
+gives:
+
+	.b Column 1	.i Column 2	.u Column 3
+	row 1, column1	row 1, column 2	row 1, column 3
+	row 2, column1	row 2, column 2	row 2, column 3
+
+It is also possible to make row- and colspans:
+
+.pre
+		<cs=3>Columns
+	Rows	.b Column 1	.i Column 2	.u Column 3
+	<rs=2>1 and 2	row 1, column1	row 1, column 2	row 1, column 3
+	row 2, column1	row 2, column 2	row 2, column 3
+.pre
+
+gives:
+
+		<cs=3>Columns
+	Rows	.b Column 1	.i Column 2	.u Column 3
+	<rs=2>1 and 2	row 1, column1	row 1, column 2	row 1, column 3
+	row 2, column1	row 2, column 2	row 2, column 3
+
+
+.h2 Variables
+
+In3 uses different variables. A variable is set with
+
+.pre
+ .set variable value
+.pre
+
+and variables may be retrieved with 
+
+.pre
+ .dumpvar variable
+.pre
+
+There are many predefined variables, which may also be altered.
+For example: the variable
+.fixed H2
+contains the section number. You can use this in your text as
+.fixed %.;dumpvar H2
+which will tell you
+.dumpvar H2
+for this text.

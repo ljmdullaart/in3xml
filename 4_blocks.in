@@ -1,0 +1,231 @@
+.header
+.h1 Blocks
+
+.h2 Function
+
+A block is a separate part of the text that must be treated in a 
+specific way.
+Blocks can be a separate consttruct or an inline version.
+for a separate construct, add a blank line above and below the
+block definition. For an in-line, keep the block within the 
+current construct.
+
+The following block-types exist:
+
+	.b Type	.b Description
+	pre	Preformatted text enclosed by a box
+	lst	Listing; preformatted, but without box
+	pic	Simple graphics with groff's pic
+	eqn	Simple equations with groff's eqn
+	gnuplot	Plots using gnuplot
+	music	Music format using Lilypond
+	texeqn	More elaborate equations using Tex
+
+
+.h2 Pre-formatted block
+
+A pre-formatted block is made with the
+.fixes %.;pre requests. A pre-formatted block should never be 
+in-line but always a separate construct. As an example:
+
+.pre
+ .pre
+  aaaaa
+   aa
+  aaaaa
+ .pre
+.pre
+
+gives:
+
+.pre
+ aaaaa
+  aa
+ aaaaa
+.pre
+
+A preformatted text that is longer (for example a listing) or a text
+that doesn't need the enclosing box can be handled as
+.fixed %.;lst
+block.
+
+.pre
+ .lst #include <stdio.h>
+ .lst int main() {
+ .lst    printf("Hello, World!");
+ .lst    return 0;
+ .lst }
+.pre
+
+gives:
+
+
+.lst #include <stdio.h>
+.lst int main() {
+.lst    printf("Hello, World!");
+.lst    return 0;
+.lst }
+
+.h2 Pic
+
+Pic is a language for drawing simple pictures. The pic block allows the
+use of these pictures. 
+
+.pre 
+ .block pic
+ circle
+ arrow
+ box
+ .block
+.pre
+
+gives:
+
+.block pic
+circle
+arrow
+box
+.block
+
+Contrary to groff's use of pic, pic blocks can also be used in-line
+.block pic
+circle
+arrow
+box
+.block
+like this.
+
+.h2 Eqn
+
+Like pic, eqn allows embedding equations in the text.
+
+.pre
+ .block eqn
+ pi r sup 2
+ .block
+.pre
+
+gives
+ 
+
+.block eqn
+pi r sup 2
+.block
+
+Eqn blocks can also be used in-line. For simple, in-line equations, the request
+.fixed %.;eqn
+is available. So,
+
+.pre
+ .eqn pi r sup 3
+.pre
+
+gives
+.eqn pi r sup 3
+as result.
+
+.h2 Gnuplot
+
+Gnuplot can be used to draw plots. Only the plot needs to be specified. In3 will automatically
+set display, papersize et cetera. As an example:
+
+.pre
+ .block gnuplot
+ $mydata <<EOD
+ 1 0-10  8   2.67
+ 2 10-15 14  4.67
+ 3 15-20 43  14.33
+ 4 20-25 106 35.33
+ 5 25-30 166 55.33
+ 6 30-35 240 80
+ 7 35-40 269 89.67
+ 8 40-45 283 94.33
+ 9 45-50 298 99.33
+ 10 >50  300 100.00
+ EOD
+ set yrange [0:110]
+ set title "Speed cumulative"
+ set arrow from 1,50 to 4.74,50 nohead
+ set arrow from 4.74,0 to 4.74,50 nohead
+ plot $mydata using 1:4:xtic(2) w lp notitle
+ .block
+.pre
+
+.block gnuplot
+$mydata <<EOD
+1 0-10  8   2.67
+2 10-15 14  4.67
+3 15-20 43  14.33
+4 20-25 106 35.33
+5 25-30 166 55.33
+6 30-35 240 80
+7 35-40 269 89.67
+8 40-45 283 94.33
+9 45-50 298 99.33
+10 >50  300 100.00
+EOD
+set yrange [0:110]
+set title "Speed cumulative"
+set arrow from 1,50 to 4.74,50 nohead
+set arrow from 4.74,0 to 4.74,50 nohead
+plot $mydata using 1:4:xtic(2) w lp notitle
+.block
+
+For the use of gnuplot blocks it is required that gnuplot is installed on the system.
+
+.h2 Music
+
+Like gnuplot, Lilypond can be used to create music staffs.
+
+.pre
+ .block music
+ \relative c'' {
+ \new PianoStaff <<
+ \new Staff { \time 2/4 c4 e | g g, | }
+ \new Staff { \clef "bass" c,,4 c' | e c | }
+ >>
+ }
+ .block
+.pre
+
+produces:
+
+.block music
+\version "2.18.2"
+\relative c'' {
+\new PianoStaff <<
+\new Staff { \time 2/4 c4 e | g g, | }
+\new Staff { \clef "bass" c,,4 c' | e c | }
+>>
+}
+.block
+
+Again, all the paper, display etc. options will be set by In3.
+
+.h2 Texeqn
+
+Some people dislike the eqn-formatting and/or need more complex equations.
+For those cases, the texeqn block can be used. Normally, Tex requires a lot
+of document definitions before anything can be written. In3 takes care of
+all that. So
+
+.pre
+ .block texeqn
+ \begin{align*}
+ S(\omega)
+ &= \frac{\alpha g^2}{\omega^5} e^{[ -0.74\bigl\{\frac{\omega U_\omega 19.5}{g}\bigr\}^{\!-4}\,]} \\
+ &= \frac{\alpha g^2}{\omega^5} \exp\Bigl[ -0.74\Bigl\{\frac{\omega U_\omega 19.5}{g}\Bigr\}^{\!-4}\,\Bigr]
+ \end{align*}
+ .block
+.pre
+
+becomes:
+
+
+.block texeqn
+\begin{align*}
+S(\omega)
+&= \frac{\alpha g^2}{\omega^5} e^{[ -0.74\bigl\{\frac{\omega U_\omega 19.5}{g}\bigr\}^{\!-4}\,]} \\
+&= \frac{\alpha g^2}{\omega^5} \exp\Bigl[ -0.74\Bigl\{\frac{\omega U_\omega 19.5}{g}\Bigr\}^{\!-4}\,\Bigr]
+\end{align*}
+.block
