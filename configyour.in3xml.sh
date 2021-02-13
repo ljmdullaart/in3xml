@@ -398,7 +398,7 @@ if [ -d $PDF ] ; then
 			echo "	cat $PDF/$stem.ps  | ps2pdf - - > $PDF/$stem.pdf" >> Makefile
 			echo "$PDF/$stem.roff: $XML/$stem.xml " >> Makefile
 			if [ "$stem" = "complete" ] ; then
-				echo "	xml3roff --cover $XML/$stem.xml > $PDF/$stem.roff" >> Makefile
+				echo "	xml3roff $XML/$stem.xml > $PDF/$stem.roff" >> Makefile
 			else
 				echo "	xml3roff $XML/$stem.xml > $PDF/$stem.roff" >> Makefile
 			fi
