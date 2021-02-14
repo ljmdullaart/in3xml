@@ -19,6 +19,7 @@ Always, the destination is placed in the subdir block.
 | from | eps | png | svg | pdf |
 |------+-----+-----+-----+-----+
 | svg  |  y  |  y  |  .  |     |
+| xcf  |  y  |  y  |  .  |     |
 | png  |  y  |  .  |  -  |     |
 | dia  |  y  |  y  |  y  |     |
 | eqn  |  y  |  y  |  y  |     |
@@ -35,15 +36,24 @@ note:
 EOF
 }
 
+DEBUG=1
 debug(){
 	if [ "$DEBUG" = "1" ] ; then
-		echo "$*"
+		echo "$*" >>/tmp/in3fileconv.log 
 	fi
 }
 
 if [ "$2" = "" ] ; then
 	helpme
 	exit 0
+fi
+
+touch /tmp/in3fileconv.log
+
+logsize=$(ls -s /tmp/in3fileconv.log | sed 's/ .*//')
+if [ $logsize -ge 500 ] ; then
+	mv /tmp/in3fileconv.log /tmp/in3fileconv.log.1
+	touch /tmp/in3fileconv.log
 fi
 
 fromfile="$1"
@@ -54,9 +64,27 @@ fromext=${frombase##*.}
 toext=${tobase##*.}
 fromstem=${frombase%.*}
 tostem=${tobase%.*}
-
 cat >> /tmp/in3fileconv.log <<EOF
 ------------------------
+EOF
+
+if [ ! -f "$fromfile" ] ; then
+	>&2 echo "File $fromfile does not exist; trying to correct..."
+	echo "File $fromfile does not exist; trying to correct..." >> /tmp/in3fileconv.log
+	if    [ -f "$fromstem.xcf" ] ; then fromfile="$fromstem.xcf"; fromext='xcf'
+	elif  [ -f "$fromstem.XCF" ] ; then fromfile="$fromstem.XCF"; fromext='XCF'
+	elif  [ -f "$fromstem.png" ] ; then fromfile="$fromstem.png"; fromext='png'
+	elif  [ -f "$fromstem.PNG" ] ; then fromfile="$fromstem.PNG"; fromext='PNG'
+	elif  [ -f "$fromstem.jpg" ] ; then fromfile="$fromstem.jpg"; fromext='jpg'
+	elif  [ -f "$fromstem.JPG" ] ; then fromfile="$fromstem.JPG"; fromext='JPG'
+	else 
+		>&2 echo "Giving it up"
+		echo "Giving it up">> /tmp/in3fileconv.log
+	fi
+fi
+
+cat >> /tmp/in3fileconv.log <<EOF
+
 fromfile=$fromfile
 tofile=$tofile
 frombase=$frombase
@@ -65,8 +93,9 @@ fromext=$fromext
 toext=$toext
 fromstem=$fromstem
 tostem=$tostem
-------------------------
+
 EOF
+
 
 
 if [ ! -d block ] ; then
@@ -78,7 +107,12 @@ if [ "$fromfile" = "block/$tobase" ] ; then
 	if [ "$tofile" = "block/$tobase" ] ; then
 	   >&2 echo "To-file $tofile is block/$tobase; no copy made."
    else
-	   cp "block/$tobase" "$tofile"
+	   if cp "block/$tobase" "$tofile" ; then 
+		   :
+	   else
+		   >&2 echo "cp block/$tobase $tofile failed misserably"
+	   fi
+
 	fi
 	exit 0
 fi
@@ -88,19 +122,23 @@ case $fromext in
 	(svg)
 		case $toext in
 			(eps)
-				debug cairosvg  -f ps "$fromfile" -o "block/$tobase"
+				debug "cairosvg  -f ps $fromfile -o block/$tobase"
 				cairosvg  -f ps "$fromfile" -o "block/$tobase"
 				;;
 			(png)
-				debug convert -density 1000 -scale 15% -trim "$fromfile" "block/$tobase"
-				convert -density 1000 -scale 15% -trim "$fromfile" "block/$tobase"
+				debug "convert -density 1000 -scale 15% -trim $fromfile block/$tobase"
+				convert -density 1000 -scale 15% -trim "$fromfile" "block/$tobase" 2>>/tmp/in3fileconv.log
 				;;
 			(svg)
-				debug cp "$fromfile" "block/$tobase"
-				cp "$fromfile" "block/$tobase"
+				debug "cp $fromfile block/$tobase"
+				if cp "$fromfile" "block/$tobase" ; then
+					:
+				else
+					>&2 echo "cp $fromfile block/$tobase failed miserably"
+				fi
 				;;
 			(pdf)
-				debug cairosvg  -f ps "$fromfile" -o $TMP.ps
+				debug "cairosvg  -f ps $fromfile -o $TMP.ps"
 				cairosvg  -f ps "$fromfile" -o $TMP.ps
 				debug ps2pdf $TMP.ps $TMP.pdf
 				ps2pdf $TMP.ps $TMP.pdf
@@ -113,18 +151,18 @@ case $fromext in
 				>&2 echo "Sorry, no conversion from $fromext to $toext known."
 				;;
 		esac ;;
-	(JPG)
+	(JPG|jpg|XCF|xcf)
 		case $toext in
 			(eps)
-				debug convert  "$fromfile"  pnm:- | convert -density 300 -trim - "block/$tobase"
-				convert  "$fromfile"  pnm:- | convert -density 300 -trim - "block/$tobase"
+				debug "convert  $fromfile  pnm:- | convert -density 300 -trim - block/$tobase"
+				convert  "$fromfile"  pnm:- | convert -density 300 -trim - "block/$tobase" 2>> /tmp/in3fileconv.log
 				;;
 			(png)
 				debug convert "$fromfile" "block/$tobase"
 				convert "$fromfile" "block/$tobase"
 				;;
 			(pdf)
-				debug convert  "$fromfile"  pnm:- | convert -density 300 -trim - $TMP.pdf
+				debug "convert  $fromfile  pnm:- | convert -density 300 -trim - $TMP.pdf"
 				convert  "$fromfile"  pnm:- | convert -density 300 -trim - $TMP.pdf
 			 	debug pdfcrop $TMP.pdf "block/$tobase"
 			 	pdfcrop $TMP.pdf "block/$tobase"
@@ -134,39 +172,22 @@ case $fromext in
 				>&2 echo "Sorry, no conversion from $fromext to $toext known."
 				;;
 		esac ;;
-	(jpg)
+	(PNG|png)
 		case $toext in
 			(eps)
-				debug convert  "$fromfile"  pnm:- | convert -density 300 -trim - "block/$tobase"
+				debug "convert  $fromfile  pnm:- | convert -density 300 -trim - block/$tobase"
 				convert  "$fromfile"  pnm:- | convert -density 300 -trim - "block/$tobase"
 				;;
 			(png)
-				debug convert "$fromfile" "block/$tobase"
-				convert "$fromfile" "block/$tobase"
+				debug " cp $fromfile block/$tobase"
+				if cp "$fromfile" "block/$tobase" ; then
+					:
+				else 
+					>&2 echo " cp $fromfile block/$tobase failed miserably"
+				fi
 				;;
 			(pdf)
-				debug convert  "$fromfile"  pnm:- | convert -density 300 -trim - $TMP.pdf
-				convert  "$fromfile"  pnm:- | convert -density 300 -trim - $TMP.pdf
-			 	debug pdfcrop $TMP.pdf "block/$tobase"
-			 	pdfcrop $TMP.pdf "block/$tobase"
-				rm -f $TMP.pdf
-				;;
-			(*)
-				>&2 echo "Sorry, no conversion from $fromext to $toext known."
-				;;
-		esac ;;
-	(png)
-		case $toext in
-			(eps)
-				debug convert  "$fromfile"  pnm:- | convert -density 300 -trim - "block/$tobase"
-				convert  "$fromfile"  pnm:- | convert -density 300 -trim - "block/$tobase"
-				;;
-			(png)
-				debug cp "$fromfile" "block/$tobase"
-				cp "$fromfile" "block/$tobase"
-				;;
-			(pdf)
-				debug convert  "$fromfile"  pnm:- | convert -density 300 -trim - $TMP.pdf
+				debug "convert  $fromfile  pnm:- | convert -density 300 -trim - $TMP.pdf"
 				convert  "$fromfile"  pnm:- | convert -density 300 -trim - $TMP.pdf
 			 	debug pdfcrop $TMP.pdf "block/$tobase"
 			 	pdfcrop $TMP.pdf "block/$tobase"
@@ -244,7 +265,7 @@ case $fromext in
 				groff block/$tostem.groff > block/$tostem.ps > /dev/null 2>/dev/null
 				debug gs -o "block/$tostem.eps" -sDEVICE=eps2write "block/$tostem.ps"
 				gs -o "block/$tostem.eps" -sDEVICE=eps2write "block/$tostem.ps" > /dev/null 2>/dev/null
-				debug convert -density 1000 "block/$tostem.eps" "block/$tostem.png"
+				debug "convert -density 1000 block/$tostem.eps block/$tostem.png"
 				convert -density 1000 -trim "block/$tostem.eps" "block/$tostem.png" > /dev/null 2>/dev/null
 				;;
 			(svg)
@@ -300,3 +321,7 @@ case $fromext in
 esac
 
 rm -f $TMP*
+
+cat >> /tmp/in3fileconv.log <<EOF
+------------------------
+EOF
