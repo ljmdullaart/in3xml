@@ -2,6 +2,7 @@
 .set tableexpand yes
 .h1 Some details
 
+.set notes 0
 
 .h2 Concepts
 
@@ -322,19 +323,19 @@ symbols are allowed in the text.
 
 Text is normally divided into chapters, sections et cetera. In3 uses
 the request
-.fixed %.; .H1
+.fixed %.; .h1
 .i Chapter title
 for chapter titles,
-.fixed %.; .H2
+.fixed %.;h2
 .i Section title
 for section titles
 and so on until 
-.fixed %.;H9.
+.fixed %.;h9.
 If you think you need more levels, than you should rethink your approach
 to the subject. Or maybe In3 is just not for you.
 
 Unnumbered headings can also be used using
-.fixed $.;hu
+.fixed %.;hu
 followed by a number.
 The following sequence is an example with
 .fixed %.;h3, .hu3, .h3.
