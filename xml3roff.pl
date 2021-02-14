@@ -435,7 +435,7 @@ sub outimage {
 	}
 	else {
 		debug ("img=other");
-		system("convert  $img  pnm:- | convert -density 300 -trim - block/$imagename");
+		system ("in3fileconv $img block/$imagename");
 	}
 	# We now have an image in block/$imagename as .eps
 	if ($iformat =~/inlinejhegfqewugfwueygfxqbugfquyfgxbqweuyfgbqeugfbqgefb/){
@@ -1130,6 +1130,7 @@ while ( $linenumber <= $#input){
 				close_paratable();
 				output ('.ne 4v','.sp 1','.B1','.ft 6','.ps -4','.vs -4','.nf','.sp 1');
 				for (@blocktext){
+					s/\\/%backslash;/g;
 					s/^"//;
 					s/"$//;
 					s/&/&amp;/g;		# change xml back because we're un-xmling at the end
@@ -1146,6 +1147,7 @@ while ( $linenumber <= $#input){
 				close_paratable();
 				output ('.ne 4v','.ft 6','.ps -4','.nf','.vs -4');
 				for (@blocktext){
+					s/\\/%backslash;/g;
 					s/^"//;
 					s/"$//;
 					s/&/&amp;/g;		# change xml back because we're un-xmling at the end
@@ -2093,6 +2095,7 @@ for (@output){
 	s/&amp;/&/g;
 	s/&#0092;/\\\\/g;
 	s/^%\.;/\\&./;
+	s/%backslash;/\\\\/g;
 	print "$_\n";
 }
 
