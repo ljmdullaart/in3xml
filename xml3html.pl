@@ -93,6 +93,7 @@ my %variables;
     $variables{'sidesep'}=';';
     $variables{'subtitle'}='';
     $variables{'title'}='';
+    $variables{'videoheight'}='300';
 
 my @input;
 my @infile;
@@ -401,18 +402,25 @@ sub outimage {
 	$img=~s/ *$//;
 	my $baseimg=basename($img);
 	my $blockimg="block/$baseimg";
-	if ($baseimg=~/(.*)\.xcf/){
-		$baseimg="$1.png";
-		$blockimg="block/$baseimg";
-		progress();
-		system ("convert $img $baseimg >/dev/null 2>/dev/null");
-		system ("cp $baseimg block/$baseimg");
-	}
+	if ($blockimg=~/(.*)\.png/){}
 	else {
-		system ("cp $img web/$blockimg >/dev/null 2>/dev/null");
+		$blockimg=~s/\.[^\.]*$/.png/;
 	}
+	system ("in3fileconv $img $blockimg");
+	#if ($baseimg=~/(.*)\.xcf/){
+	#$baseimg="$1.png";
+	#$blockimg="block/$baseimg";
+	#progress();
+	#system ("in3fileconv $img $blockimg");
+	##system ("convert $img $baseimg >/dev/null 2>/dev/null");
+	##system ("cp $baseimg block/$baseimg");
+	#}
+	#else {
+	#system ("in3fileconv $img $blockimg");
+	##system ("cp $img web/$blockimg >/dev/null 2>/dev/null");
+	#}
 
-	my $imgsize=` imageinfo --geom $img`;
+	my $imgsize=` imageinfo --geom $blockimg`;
 	chomp $imgsize;
 	my $scale=100; #percent
 	my $x; my $y;
@@ -441,7 +449,7 @@ sub outimage {
 	}
 	else {
 		output ('<div style="text-align: center">');
-		output ("<img src=\"$blockimg\" alt=\"$img\" width=\"$width\" height=\"$height;\">");
+		output ("<img src=\"$blockimg\" alt=\"$img\" width:90% >");
 		output ('</div>');
 	}
 	progress();
@@ -650,7 +658,7 @@ while ( $linenumber <= $#input){
 			}
 			output ("<! -- paragraph type $variables{'notes'} -->");
 			if ($variables{'notes'}==0){
-				output ('<p>');
+				output ('<p class="paragraph">');
 				if ( $variables{'parastartdelay'} ne ''){
 					output ($variables{'parastartdelay'});
 					$variables{'parastartdelay'}='';
@@ -1309,12 +1317,24 @@ while ( $linenumber <= $#input){
 			if ($file ne ''){
 				if ($text eq ''){ $text=$file;}
 				my $basefile=basename($file);
-				output ('<br>');
-				output('<div style="text-align: center;">');
-				output ("<video controls>","<source src=\"$basefile\">",$text,"</video>");
-				output ('<br>');
-				output ('</div>');
 				system ("cp $file web/$basefile");
+				my $size=`ffprobe -v error -select_streams v:0 -show_entries stream=width,height -of csv=s=x:p=0 $file`;
+				(my $x,my $y)=split('x',$size);
+				my $videoheight=$variables{'videoheight'};
+				my $videowidth=$variables{'videoheight'}*$x/$y;
+				if ($inline==0){
+					output ('<br>');
+					output("<div style=\"text-align: center;\">");
+				}
+				else {
+					$videoheight=$videoheight/4;
+					$videowidth=$videowidth/4;
+				}
+				output ("<video controls height=\"$videoheight"."px\" width=\"$videowidth"."px\">","<source src=\"$basefile\">",$text,"</video>");
+				if ($inline==0){
+					output ('<br>');
+					output ('</div>');
+				}
 				$text='';
 				$file='';
 			}
@@ -1356,14 +1376,14 @@ while ( $linenumber <= $#input){
 				if ($inline==0){
 					output ('<div style="text-align: center">');
 				}
-				output ("<img src=\"$basefile\" alt=\"$file\" usemap=#map$variables{'mapnumber'}>");
+				output ("<img src=\"block/$basefile\" alt=\"$file\" usemap=#map$variables{'mapnumber'}>");
 				output ("<map name=map$variables{'mapnumber'}>");
 				for (@mapfields){ output ($_);}
 				output ('</map>');
 				if ($inline==0){
 					output ('</div>');
 				}
-				system("cp $file web/$basefile");
+				system("in3fileconv $file block/$basefile");
 				$text='';
 				$file='';
 				$image='';
@@ -1784,8 +1804,17 @@ for (@charmap){
 	}
 }
 
-for (@output){print "$_\n";}
+for (@output){
+	s/^%\.;/./;
+	s/>%\.;/>./;
+	print "$_\n";
+}
 
 if ($variables{"do_headers"} eq 'yes'){
 	print "</body>\n";
 }
+
+if (-f "stylesheet.css"){
+	system('cp stylesheet.css web');
+}
+print STDERR "\n";
