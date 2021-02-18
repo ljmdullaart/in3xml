@@ -3671,7 +3671,7 @@ in=\\n[.i] fi=\\n[.u] .d=\\n[.d] nl=\\n[nl] pg=\\n[%]
 .  \" can safely return to the current position.
 .  nr rfloat-width \\n[dl]
 .  nr rfloat-start \\n[nl]
-.  nr rfloat-end (\\n[nl] + \\n[dn] + \\n[rfloat-in-par]v + 0.5v)
+.  nr rfloat-end (\\n[nl] + \\n[dn] + \\n[rfloat-in-par]v )
 .
 .  vpt 0
 .  mk
@@ -3695,11 +3695,11 @@ in=\\n[.i] fi=\\n[.u] .d=\\n[.d] nl=\\n[nl] pg=\\n[%]
 .  \" we position the trap one line higher.
 .  de rfloat-end-trap end
 .    ll
-.    wh (\\n[rfloat-end]u - 2v)
+.    wh (\\n[rfloat-end]u -1v )
 .  end
 .
 .  \" Set trap.
-.  wh (\\n[rfloat-end]u - 2v) rfloat-end-trap
+.  wh (\\n[rfloat-end]u -1v ) rfloat-end-trap
 ..
 .\" lfloat.tmac
 .\"
