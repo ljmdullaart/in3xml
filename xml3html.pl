@@ -820,12 +820,14 @@ while ( $linenumber <= $#input){
 			}
 			elsif ($type=~/^class(.*)/){
 				$class=$1;
+				output ('<br>');
 				output ("<div class=\"$class\">");
 				for (@blocktext){
 					s/^"//;
 					s/"$//;
 					output($_);
 				}
+				output ('<br>');
 				output ('</div>');
 			}
 			elsif ($type=~/gnuplot(.*)/){
