@@ -562,6 +562,11 @@ sub varpass{
 			pushout('</text>');
 			pushout('</block>');
 		}
+		elsif (/^\.merge (.*)/){
+			pushout('<merge>');
+			pushout("$1");
+			pushout('</merge>');
+		}
 		else { pushout($_); }
 	}
 	endpass();
