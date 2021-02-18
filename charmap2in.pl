@@ -29,8 +29,10 @@ print "\n\n";
 print ".page\n\n";
 print ".h2 Characterset\n\n";
 $i=3;
+print "	.b char	.b groff	.b html\n";
 for (@charmap){
 	if (/^%([^	]*)	/){}
+	elsif (/^[ 	]*$/){}
 	elsif (/^#/){}
 	else {
 		if ($i==0){
