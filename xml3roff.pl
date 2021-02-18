@@ -490,8 +490,8 @@ sub outimage {
 		my $y2=$y*$myscale/$variables{'imagey'};
 		if ($y2>$variables{'imagey'}){$myscale=$variables{'imagey'}*$scale/$y;}
 
-		$y=$y*$myscale/500;
-		$x=$x*$myscale/500;
+		$y=$y*$myscale/700;
+		$x=$x*$myscale/700;
 		my $up=$y/100;
 		my $need=$y*5;
 		#output ("\\v'$up"."c'");
@@ -1333,13 +1333,15 @@ while ( $linenumber <= $#input){
 
 			elsif ($type=~/^class(.*)/){ ######################LATER!
 				$class=$1;
-				output ("<div class=\"$class\">");
+				output ('.br');
+				output (".ev class$1");
 				for (@blocktext){
 					s/^"//;
 					s/"$//;
 					output($_);
 				}
-				output ('</div>');
+				output ('.br');
+				output ('.ev');
 			}
 			else {
 				if ($image ne '' ){
