@@ -165,15 +165,15 @@
 °	\f[dejavu]°\f[]	&deg;
 ±	\[+-]	&plusmn;
 ±	\f[dejavu]±\f[]	&plusmn;
-²	\*[SIDE 2]	&#0178;
+²	\[S2]	&#0178;
 ²	\[S2]	&sup2;
-³	\*[SIDE 3]	&#0179;
+³	\[S3]	&#0179;
 ³	\[S3]	&sup3;
 µ	\[*m]	&micro;
 ¶	\[ps]	&para;
 ·	\[bu]	&middot;
 ¸	\[ac]	&cedil;
-¹	\*[SIDE 1]	&#0185;
+¹	\[S1]	&#0185;
 ¹	\[S1]	&sup1;
 º	\[Om]	&ordm;
 »	\[Fc]	&raquo;
