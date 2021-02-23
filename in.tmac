@@ -1205,10 +1205,20 @@ in=\\n[.i] fi=\\n[.u] .d=\\n[.d] nl=\\n[nl] pg=\\n[%]
 ..
 .de NOHEAD
 .nr pg*top-enabled 0
+.ds NHpgh \\*[pg*header]
+.ds NHpge \\*[pg*even-header]
+.ds NHpgo \\*[pg*odd-header]
+.ds pg*header
+.ds pg*even-header
+.ds pg*odd-header
 ..
 .de DOHEAD
 .nr pg*top-enabled 1
+.ds pg*header \\*[NHpgh]
+.ds pg*even-header \\*[NHpge]
+.ds pg*odd-header \\*[NHpgo]
 ..
+.\"
 .nr NOFOOT 0
 .\" set first trap for pagefooter
 .pg@enable-top-trap
