@@ -908,7 +908,13 @@ while ( $linenumber <= $#input){
 				}
 				$i++;
 			}
-			
+print STDERR "List $listtype[$listlevel] notes $variables{'notes'}\n";
+			if (($variables{'notes'} &2)>0){
+				output ('.ll 12.5c');
+			}
+			else {
+				output ('.ll 6.5i');
+			}
 			if ($listtype[$listlevel]=~/dash/){ output ('.DL');}
 			elsif ($listtype[$listlevel]=~/num/){ output ('.AL 1');}
 			elsif ($listtype[$listlevel]=~/alpha/){ output ('.AL a');}
@@ -982,12 +988,11 @@ while ( $linenumber <= $#input){
 				output ('.P');
 			}
 			elsif ($ptableopen==0){    
-				output ('.TS H');
+				output ('.TS');
 				output ('tab(@);');
 				if ($variables{'notes'}==1) { output ('lw(2c) lw(12.4c).');}
 				if ($variables{'notes'}==2) { output ('lw(12.4c) lp6w(2c)v-5.');}
 				if ($variables{'notes'}==3) { output ('lw(2c) lw(10.1c) lp6w(2c)v-5.');}
-				output ('.TH');
 				output ('T{');
 				if (($variables{'notes'}&1)>0){
 					for (@leftnotes){ output ($_);}
@@ -1020,7 +1025,10 @@ while ( $linenumber <= $#input){
 			elsif ($listtype[$listlevel] eq 'alpha'){ output ('.LE 1');}
 			else { output ('.LE 1');}
 			$listlevel--;
-			if ($listlevel==0){ $inline=0;}
+			if ($listlevel==0){
+			   	$inline=0;
+				output ('.ll 6.5i');
+			}
 			state_pop;
 		}
 		elsif($input[$linenumber] =~/<list>/){
@@ -2050,12 +2058,14 @@ if ($variables{'do_cover'} eq 'yes'){
 		print ".SK\n";
 	}
 	else {
+		print ".PGNG\n";
 		$variables{'title'}=unxmlstr($variables{'title'});
 		$variables{'subtitle'}=unxmlstr($variables{'subtitle'});
 		$variables{'author'}=unxmlstr($variables{'author'});
-		#print ".SK\n";
-		print ".sp 5\n";
 		print ".ps +10\n";
+
+		print "\\~\n";
+		print ".sp 4c\n";
 		print ".ls 2\n";
 		print ".ce 1\n";
 		print "$variables{'title'}\n";
@@ -2085,6 +2095,7 @@ if ($variables{'do_cover'} eq 'yes'){
 		print ".nr P 0\n";
 		print ".SK\n";
 	}
+	print ".DOHEAD\n";
 	print ".nr NOFOOT 0\n";
 }
 
