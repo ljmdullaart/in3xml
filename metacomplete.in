@@ -12,8 +12,9 @@
 .headerlink https://dullaart.website/in3/index.html In-3 
 .headerlink https://dullaart.website/learning_python/index.html to learn Python.
 .headerlink http://dullaart.website/Salix/index.html Back to the Slack
+.TOC
 .author ljm
 .title In3
 .subtitle a better mousetrap
 .cover cover.png
-.set do_cover no
+.set do_cover yes

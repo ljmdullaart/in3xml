@@ -231,6 +231,22 @@ for infile in *.in ; do
 		:
 	elif [ "$infile" = "total.in" ] ; then
 		:
+	elif [ "$infile" = "complete.in" ] ; then
+		echo -n "$XML/$stem.xml: $infile " >> Makefile
+		if [ -f metacomplete.in ] ; then
+			echo " metacomplete.in " >> Makefile
+		elif [ -f meta.in ] ; then
+			echo " meta.in " >> Makefile
+		else
+			echo >> Makefile
+		fi
+		if [ -f metacomplete.in ] ; then
+			echo "	in3multipass --metacomplete.in  $infile > $XML/$stem.xml" >> Makefile
+		else
+			echo "	in3multipass $infile > $XML/$stem.xml" >> Makefile
+		fi
+		echo "	xmllint --postvalid $XML/$stem.xml > /dev/null" >> Makefile
+		echo "    $XML/$stem.xml" >> $LOG
 	else
 		echo -n "$XML/$stem.xml: $infile " >> Makefile
 		if [ $META = yes ] ; then
