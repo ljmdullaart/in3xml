@@ -39,6 +39,7 @@ my %variables;
 	$variables{'keywords'}='';
 	$variables{'leftnotechar'}='';
 	$variables{'markdown'}=0;
+	$variables{'metaname'}='meta.in';
 	$variables{'notenumber'}=0;
 	$variables{'notestring'}='(%NUM)';
 	$variables{'sidechar'}='*';
@@ -94,9 +95,19 @@ sub progress {
 my @input;
 my @realin;
 my $lineindex=0;
+for (@ARGV){
+	if (/^--(meta.*)/){$variables{"metaname"}=$1;}
+}
+
 if ( -f "meta.in" ){
-	my $file="meta.in";
-	$variables{'filename'}='meta.in';
+	my $file;
+	if (-f $variables{"metaname"}){
+		$file=$variables{"metaname"};
+	}
+	else {
+		$file="meta.in";
+	}
+	$variables{'filename'}=$file;
 	if (open(my $IN,'<',$file)){
 		while (<$IN>){
 			chomp;
@@ -145,6 +156,7 @@ else {
 			elsif (/^--trace/){$otrace=1;}
 			elsif (/^-m/){$variables{"markdown"}=1;}
 			elsif (/^--markdown/){$variables{"markdown"}=1;}
+			elsif (/^--(meta.*)/){$variables{"metaname"}=$1;}
 			elsif (/^-+h/){ hellup(); }
 			elsif (/^-p/){ $progressindicator=1;}
 			elsif (/^-/){ print STDERR "$_ is not known as a flag; ignored.\n";}
@@ -154,6 +166,22 @@ else {
 				if ($otrace>0){ print "Processing $file\n";}
 				my $ch;	# Chapter number from filename
 				if ($file=~/^([0-9]+)_/){$ch=$1-1;} else {$ch=0;}
+				if (-f "meta.$file"){
+					if (open(my $IN,'<',"meta.$file")){
+						while (<$IN>){
+							chomp;
+							push @realin,$_;
+							push @passin,$_;
+							push @inlinenr,"$variables{'filename'}:$lineindex";
+							if ($otrace>0){ print "READ LINE FROM meta.$file: $_\n";}
+							$lineindex++;
+						}
+						push @realin,'';
+						push @passin,$_;
+						push @inlinenr,"$variables{'filename'}:$lineindex";
+						close $IN;
+					}
+				}
 				if (open(my $IN,'<',$file)){
 					if ($ch>0){
 						if ($otrace>0){ print "Chapter:$ch\n";}
