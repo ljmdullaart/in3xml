@@ -1826,6 +1826,7 @@ if ($variables{"do_headers"} eq 'yes'){
 	print "<link rel=\"stylesheet\" href=\"in3style.css\">";
 	print "<link href='https://fonts.googleapis.com/css?family=Roboto Condensed' rel='stylesheet'>\n";
 	print "<link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>\n";
+	print "<link href='https://fonts.googleapis.com/css?family=Pinyon Script' rel='stylesheet'>\n";
 	print "<title>$variables{'title'}</title>\n";
 	if (-f "stylesheet.css"){
 		print "<link rel=\"stylesheet\" href=\"stylesheet.css\">\n";
