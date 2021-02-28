@@ -1,0 +1,158 @@
+.header
+.h1 Styling the documents
+
+.h2 Meta.in
+
+For every document, the file
+.fixed meta.in
+is read if it exists. Some common styling directives can be set
+here. For example:
+
+.pre
+ .set tableexpand no
+.pre
+
+will set the table expansion to "no" for every document where this
+.fixed meta.in
+is used.
+
+An alternative meta file can be given as optional argument; the filename must 
+start with
+.fixed meta
+so, for example, if you use
+.fixed metacomplete.in
+as meta file, you would call
+.fixed in3multipass
+with
+
+.pre
+in2multipass --metacomplete.in inputfile.in
+.pre
+
+The file given in the 
+.fixed --meta
+flag
+.i replaces
+the standard 
+.fixed meta.in.
+However, if this file does not exist,
+.fixed meta.in
+is used anyway and the flag is silently ignored.
+
+For 
+.fixed inputfile.in
+the file 
+.fixed meta.inputfile.in
+is also read. This is in
+.i addition
+to the normal
+.fixed meta.in
+(or its replacement) and read after it.
+
+.h2 Stylesheet.mm
+
+For the GROFF output output, if a file
+.fixed stylesheet.mm
+is avaliable in the directory, it will be read before all other
+input to GROFF. 
+
+As an example: this set of documents have the following stylesheet:
+
+.pre
+ .nr Ej 1
+ .ds HF  HB HB HI HI I I I
+ .ds HP  16 12 12  0 0 0 0
+ .nr Hb 4
+ .nr Hs 1
+ .nr Hps 0
+ .ds pg*header '' in3 ''
+ .ds pg*footer ''- \\nP -''
+.pre
+
+
+The styles set variables for the 
+.fixed in.tmac
+macro set, which is derived largely from the original set for mm.
+
+If you use
+.fixed configyour
+and there is a
+
+.pre
+ .NOHEAD
+.pre
+
+in
+.fixed stylesheet.css
+then 
+.fixed groff
+is called with
+.fixed -rN=4
+to spupress the header on the first page. The complete text is always made with 
+.fixed -rN=4.
+
+.h2 Stylesheet.css
+
+The output of
+.fixed xml3html
+references a
+.fixed stylesheet.css
+wihich can be used to change the appearance of the web page. There are a
+number of in3-specific classes. 
+
+As an example of a stylesheet that makes the output relatively close to
+the pdf version is below.
+
+.lst 
+.lst h1,h2,h3,h4,h5 {
+.lst     font-family:"arial";
+.lst }
+.lst .paragraph {
+.lst   text-align: justify;
+.lst   text-justify: inter-word;
+.lst   font-family: "Times New Roman", Times, serif;
+.lst }
+.lst table.table {
+.lst   margin-left: auto;
+.lst   margin-right: auto;
+.lst }
+.lst .table {
+.lst   font-family: "Times New Roman", Times, serif;
+.lst }
+.lst .list {
+.lst   font-family: "Times New Roman", Times, serif;
+.lst }
+.lst .lst{
+.lst   font-family: monospace;
+.lst }
+.lst pre {
+.lst   width: 90%;
+.lst   border: 1px solid black;
+.lst   padding: 10px;
+.lst   margin: 2px;
+.lst }
+.lst .leftnote {
+.lst   font-family: "Times New Roman", Times, serif;
+.lst }
+.lst .sidenote {
+.lst 	width: 15%;
+.lst 	font-size:small;
+.lst   font-family: "Times New Roman", Times, serif;
+.lst }
+.lst div.test {
+.lst   max-width: 45%;
+.lst   padding: 15px 15px 15px 50%;
+.lst   color: red;
+.lst }
+.lst 
+.lst .test p {
+.lst   font-family: Arial, sans-serif;
+.lst   line-height: 1.5;
+.lst   margin: 0;
+.lst   text-align: justify;
+.lst   font-size: 12px;
+.lst   text-indent: -30px;
+.lst }
+.lst
+
+
