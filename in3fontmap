@@ -1,0 +1,32 @@
+#INSTALL@ /usr/local/share/in3/fontmap
+#in3   groff   html	google
+times	1	'Times New Roman', serif
+timesitalic	2	'Times New Roman', serif
+timesbold	3	'Times New Roman', serif
+timesbolditalic	4	'Times New Roman', serif
+times	5	'Times New Roman', serif
+courier	6	'Courier New', monospace
+courieritalic	7	'Courier New', monospace
+courierbold	8	'Courier New', monospace
+courierbolditalic	9	'Courier New', monospace
+symbol	10
+symbol	11
+symbol	12
+symbol	13
+avantgardebold	14	'Poppins', sans-serif
+avantgardebolditalic	15	'Poppins', sans-serif
+avantgardeitalic	16	'Poppins', sans-serif
+avantgarde	17	'Poppins', sans-serif
+bookmanbold	18
+bookmanbolditalic	19
+bookmanitalic	20
+bookman	21
+helveticabold	22	Helvetica, sans-serif
+helveticabolditalic	23	Helvetica, sans-serif
+helveticaitalic	24	Helvetica, sans-serif
+helvetica	25	Helvetica, sans-serif
+helveticacondensedbold	26	'Roboto Condensed', sans-serif
+helveticacondensedbolditalic	27	'Roboto Condensed', sans-serif
+helveticacondenseditalic	28	'Roboto Condensed', sans-serif
+helveticacondensed	29	'Roboto Condensed', sans-serif
+

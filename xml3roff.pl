@@ -46,6 +46,18 @@ sub timesspace{
 	return $total/250;
 }
 
+my @fontmap;
+
+if (open (my $FM,'<','in3fontmap')){
+    @fontmap=<$FM>;
+    close $FM;
+}
+elsif (open (my $FM,'<','/usr/local/share/in3/fontmap')){
+    @fontmap=<$FM>;
+    close $FM;
+}
+
+
 my @output;
 my $outatol=0;
 sub output{
@@ -147,6 +159,7 @@ my $type;
 my $value='';
 my $varname='';
 my $video;
+my $fontname='';
 
 # Control variables
 my $currentline='';
@@ -352,6 +365,10 @@ sub formatrequest {
 	}
 	elsif ($input[$linenumber] =~/<fixed>/){
 		state_push('fixed');
+	}
+	elsif ($input[$linenumber] =~/<font *type="*(.*)"*>/){
+		$fontname=$1;
+		state_push('font');
 	}
 	elsif ($input[$linenumber] =~/<video>/){
 		$video='';
@@ -908,7 +925,6 @@ while ( $linenumber <= $#input){
 				}
 				$i++;
 			}
-print STDERR "List $listtype[$listlevel] notes $variables{'notes'}\n";
 			if (($variables{'notes'} &2)>0){
 				output ('.ll 12.5c');
 			}
@@ -1501,6 +1517,42 @@ print STDERR "List $listtype[$listlevel] notes $variables{'notes'}\n";
 			$outatol=1;
 		}
 	}
+	elsif ($state  eq 'font'){
+		if ($input[$linenumber] =~/<\/font>/){
+			state_pop();
+		}
+		else {
+			my $fontfam;
+			my $fontsize;
+			if ($fontname=~/([A-Za-z]*)([0-9]*)"*$/){
+				$fontfam=$1;
+				$fontsize=$2;
+			}
+			else {
+				print STDERR "Cannot parse font name $fontname\n";
+			}
+			for (@fontmap){
+				chomp;
+				(my $in3font,my $rofffont,my $webfont)=split '	';
+				if ($fontfam eq $in3font){
+					$fontfam=$rofffont;
+				}
+			}
+
+			if ($fontname=~/([A-Za-z]+)([0-9]+)"*$/){
+				output (".ft $fontfam",".ps $fontsize",".vs $fontsize",$input[$linenumber],'.vs',".ps",".ft");
+			}
+			elsif ($fontname=~/([A-Za-z]+)"*$/){
+				output (".ft $fontfam",$input[$linenumber],".ft");
+			}
+			elsif ($fontname=~/([0-9]+)"*$/){
+				output (".ps $fontsize",$input[$linenumber],".ps");
+			}
+			else {
+				print STDERR "Font specifier $fontname unknown\n";
+			}
+		}
+	}
 	elsif ($state  eq 'fixed'){
 		if ($input[$linenumber] =~/<\/fixed>/){
 			state_pop();
@@ -1635,7 +1687,6 @@ print STDERR "List $listtype[$listlevel] notes $variables{'notes'}\n";
 	}
 	elsif ($state  eq 'video'){
 		if ($input[$linenumber] =~/<\/video>/){
-			print STDERR  ("OUTPUT A VIDEO\n");
 			if ($file ne ''){
 				if ($text eq ''){ $text=$file;}
 				my $imgfile=basename($file);

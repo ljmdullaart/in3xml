@@ -6,7 +6,6 @@ use strict;
 use warnings;
 
 my $otrace=0;
-my $DEBUG=0;
 
 # __     __         _       _     _
 # \ \   / /_ _ _ __(_) __ _| |__ | | ___  ___
@@ -50,6 +49,7 @@ my %variables;
 	$variables{'title'}='';
 
 	$variables{'blockname'}=$variables{'filename'};
+	$variables{'DEBUG'}=0;
 
 
 my @passin;
@@ -258,9 +258,9 @@ sub pushout {
 }
 
 sub debug {
-	if ($DEBUG>0){
+	if ($variables{'DEBUG'}>0){
 		for (@_){
-			print "$passname: $_\n";
+			print STDERR  "$passname: $_\n";
 		}
 	}
 }
@@ -760,7 +760,6 @@ sub markdownpass {
 		$lineindex++;
 		my $mx=0;
 		if ($variables{'markdown'}>0){
-			debug ("markdown=1 for '$line'");
 			$mx=$#passout;
 			#ATX headings
 			if (/^ {0,3}###### /){ s/^ {0,3}######/.h6/;s/ *######$//; pushout($_); debug ('atx h6');}
@@ -1532,6 +1531,7 @@ sub formatpass {
 		$lineindex++;
 		if (/^\.fix (.*)/){pushout('<fixed>'); pushout($1); pushout('</fixed>'); }
 		elsif ($line=~/^\.fixed (.*)/){pushout('<fixed>'); pushout($1); pushout('</fixed>'); }
+		elsif ($line=~/^\.font (\w*) (.*)/){pushout("<font type=\"$1\">"); pushout($2); pushout('</font>'); }
 		elsif ($line=~/^\.center (.*)/){pushout('<center>'); pushout($1); pushout('</center>'); }
 		elsif ($line=~/^\.underline (.*)/){pushout('<underline>'); pushout($1); pushout('</underline>'); }
 		elsif ($line=~/^\.u (.*)/){pushout('<underline>'); pushout($1); pushout('</underline>'); }

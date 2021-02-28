@@ -7,6 +7,17 @@ my $dvifontpath=`find /usr/share -name 'ps2pk.map' 2>&1 | grep -v 'Permission de
 chomp $dvifontpath;
 $dvifontpath=dirname($dvifontpath);
 
+my @fontmap;
+
+if (open (my $FM,'<','in3fontmap')){
+	@fontmap=<$FM>;
+	close $FM;
+}
+elsif (open (my $FM,'<','/usr/local/share/in3/fontmap')){
+	@fontmap=<$FM>;
+	close $FM;
+}
+
 
 my $trace=0;
 my $DEBUG=0;
@@ -114,6 +125,10 @@ my $type;
 my $value='';
 my $varname='';
 my $video;
+my $fontname;
+
+my $fbold=0;
+my $fitalic=0;
 
 # Control variables
 my $fileline=0;
@@ -343,6 +358,43 @@ sub formatrequest {
 	}
 	elsif ($input =~/<hr>/){
 		state_push('hr');
+	}
+	elsif ($input =~/<font *type="*(.*)"*>/){
+		$fontname=$1;
+		my $fontfam;
+		my $fontsize;
+		if ($fontname=~/([A-Za-z]*)([0-9]*)/){
+			$fontfam=$1;
+			$fontsize=$2/10;
+		}
+		else {
+			print STDERR "Cannot parse font name $fontname\n";
+		}
+		if ($fontfam=~/italic/){ $fitalic=1; $fontfam=~s/italic//;}
+		if ($fontfam=~/bold/){ $fbold=1; $fontfam=~s/bold//;}
+		for (@fontmap){
+			(my $in3font,my $rofffont,my $webfont)=split '	';
+			if ($fontfam eq $in3font){
+				$fontfam=$webfont;
+			}
+		}
+
+		if ($fontname=~/([A-Za-z]+)([0-9]+)/){
+			if ($fbold>0){output ('<b>');}
+			if ($fitalic>0){output ('<i>');}
+			output ("<span style=\"font-family:$fontfam; font-size:$fontsize"."em\">");
+		}
+		elsif ($fontname=~/([A-Za-z]+)/){
+			if ($fbold>0){output ('<b>');}
+			if ($fitalic>0){output ('<i>');}
+			output ("<span style=\"font-family:$fontfam\">");
+		}
+		elsif ($fontname=~/([0-9]+)/){
+			if ($fbold>0){output ('<b>');}
+			if ($fitalic>0){output ('<i>');}
+			output ("<span style=\"font-size:$fontsize"."em\">");
+		}
+		state_push('font');
 	}
 	elsif ($input =~/<fixed>/){
 		output('<tt>');
@@ -1210,6 +1262,19 @@ while ( $linenumber <= $#input){
 			$outatol=1;
 		}
 	}
+	elsif ($state  eq 'font'){
+		if ($input[$linenumber] =~/<\/font>/){
+			if ($fitalic>0){output ('</i>');}
+			if ($fbold>0){output ('</b>');}
+			$fitalic=0;
+			$fbold=0;
+			output ('</span>');
+			state_pop();
+		}
+		else {
+			output ($input[$linenumber]);
+		}
+	}
 	elsif ($state  eq 'fixed'){
 		if ($input[$linenumber] =~/<\/fixed>/){
 			output ('</tt>');
@@ -1759,6 +1824,8 @@ if ($variables{"do_headers"} eq 'yes'){
 	print "<head>\n";
 	print "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\n";
 	print "<link rel=\"stylesheet\" href=\"in3style.css\">";
+	print "<link href='https://fonts.googleapis.com/css?family=Roboto Condensed' rel='stylesheet'>\n";
+	print "<link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>\n";
 	print "<title>$variables{'title'}</title>\n";
 	if (-f "stylesheet.css"){
 		print "<link rel=\"stylesheet\" href=\"stylesheet.css\">\n";
