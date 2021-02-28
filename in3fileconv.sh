@@ -157,6 +157,10 @@ case $fromext in
 				debug "convert  $fromfile  pnm:- | convert -density 300 -trim - block/$tobase"
 				convert  "$fromfile"  pnm:- | convert -density 300 -trim - "block/$tobase" 2>> /tmp/in3fileconv.log
 				;;
+			(jpg)
+				debug convert "$fromfile" "block/$tobase"
+				convert "$fromfile" "block/$tobase"
+				;;
 			(png)
 				debug convert "$fromfile" "block/$tobase"
 				convert "$fromfile" "block/$tobase"
