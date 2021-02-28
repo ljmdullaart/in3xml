@@ -25,7 +25,8 @@ The following block-types exist:
 .h2 Pre-formatted block
 
 A pre-formatted block is made with the
-.fixes %.;pre requests. A pre-formatted block should never be 
+.fixed %.;pre
+requests. A pre-formatted block should never be 
 in-line but always a separate construct. As an example:
 
 .pre
@@ -76,6 +77,8 @@ use of these pictures.
  circle
  arrow
  box
+ arrow
+ circle "with text"
  .block
 .pre
 
@@ -85,6 +88,8 @@ gives:
 circle
 arrow
 box
+arrow
+circle "with text"
 .block
 
 Contrary to groff's use of pic, pic blocks can also be used in-line

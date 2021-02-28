@@ -122,6 +122,9 @@ This means, that it is possible to supress the side note
 column by setting
 .fixed notes
 to 0.
+It is advised to do so at a natural moment (just before a header, a list or a table), 
+because doing it in the middle of a paragraph will 
+produce surprising results, like wrong line length or dropped text.
 
 Left and side notes are collected per paragraph and put in coluns to the right and left.
 Numbering of the side notes is restarted at the beginning of each paragraph.
