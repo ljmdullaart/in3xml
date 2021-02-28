@@ -16,6 +16,12 @@ mkinheader: make header/index file for in3
 ";
 }
 
+sub uniq {
+    my %seen;
+    grep !$seen{$_}++, @_;
+}
+
+
 
 my $VERBOSE=0;
 
@@ -95,6 +101,9 @@ elsif ($type eq 'index'){
 	if (( -d 'epub' ) && ($do_total==1)){
 		print ".link $WD.epub (epub)\n";
 	}
+	if (( -d 'web' ) && ($do_total==1)){
+		print ".link total.html (1 page)\n";
+	}
 	if (( -d 'www' ) && ($do_total==1)){
 		print ".link total.html (1 page)\n";
 	}
@@ -140,7 +149,7 @@ sub charmapper {
 
 if ($type eq 'header'){
 	print "<table CLASS=\"toc\">\n";
-	if (open (my $HL,'-|',"grep '^\.headerlink ' *.in | sort -u")){
+	if (open (my $HL,'-|',"grep -h '^\.headerlink ' *.in | sort -u")){
 		while (<$HL>){
 			chomp;
 			s/.*headerlink *//;
