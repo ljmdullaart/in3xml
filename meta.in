@@ -1,17 +1,5 @@
-.headerlink https://dullaart.website/raspberry/index.html raspberry pi
-.headerlink http://dullaart.website/nslu2/1_introduction.html NSLU2
-.headerlink https://dullaart.website/acl/index.html An introduction into ACLs on routers
-.headerlink https://dullaart.website/anycast/index.html Anycast routing
-.headerlink https://dullaart.website/ospf/index.html OSPF 
-.headerlink https://dullaart.website/dhcp/index.html A test with DHCP
-.headerlink https://dullaart.website/mpls/index.html An introduction into MPLS
-.headerlink https://dullaart.website/MPLS_common_services/index.html MPLS with a common services exit
-.headerlink https://dullaart.website/nat/index.html NAT on CISCO devices
-.headerlink https://dullaart.website/portsecurity/index.html A demonstration of sticky MACs and port security
-.headerlink https://dullaart.website/proxy/index.html An explanation on how a proxy works
-.headerlink https://dullaart.website/in3/index.html In-3 
-.headerlink https://dullaart.website/learning_python/index.html to learn Python.
-.headerlink http://dullaart.website/Salix/index.html Back to the Slack
+.headerlink ../top/tech.html Tech
+.headerlink ../top/top.html
 .author ljm
 .title In3
 .subtitle a better mousetrap
