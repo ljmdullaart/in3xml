@@ -58,6 +58,7 @@ request)
 	bold	%.;b	bold text
 	center	%.;center	centered text
 	fixed	%.;fixed	fixed font
+	font	%.;font	use a specific font
 	lst	%.;lst	listings
 	subscript	%.;sub	subscripts
 	superscript	%.;sup	superscripts
@@ -72,7 +73,49 @@ request)
 	stop indent	%.;back	stop indenting for left notes
 	indent after	%=;===>	Indent so the line appears to follow the line above
 
-.set tableexpand yes
+
+.h2 Specific fonts
+
+It is possible to use a specific font for parts of the text. If you want to 
+change the font for all the text, use stylesheets.
+
+The request for a text in a specific font is:
+
+.pre
+ .font [font name][size] text
+.pre
+
+For example:
+
+.pre
+ .font PinyonScript18 PinyonScript.
+.pre
+
+produces
+.font PinyonScript18 PinyonScript.
+Note that the fontname may be ommitted or the size, but not both. 
+Of course, the fonts need to be available in the output processors.
+
+If the fontname is ommitted, the current font is used, so
+.fixed %.;font 16
+would produce a
+.font 15 larger
+text.
+If the size is ommitted, the font is used in the same size as the 
+current, so
+.fixed %.;font courierbolditalic bold and italic
+would produce 
+.font courierbolditalic bold and italic
+text.
+
+The available fonts are stored in 
+.fixed /usr/local/share/in3/fontmap
+and the first column is the one used in in3.
+A list can be generated with
+.fixed cut -d"
+.font 3 tab
+.fixed " -f1 in3fontmap /usr/local/share/in3/fontmap
+
 
 .h2 Left notes and side notes
 
