@@ -3,13 +3,39 @@
 .ds RE \\$2
 ..
 .\"
-.\" $Id: m.tmac,v 2.43 2010/06/24 10:45:57 wl Exp $
-.@revision $Revision: 2.43 $
+.\" $Id: in.tmac,v 8 2021/03/03 15:40:55 wl Exp $
+.@revision $Revision: 8 $
 .ig
+In.tmac is an update on the mgm macro set.
 
+----------------------------------------------------
+Copyright (C) 2020,2021
+  ljm & Free Software Foundation, Inc.
+
+in.tmac is adapdted from the mgm macroset by ljm. It can be
+retrieved from :
+https://github.com/ljmdullaart/in3xml
+Issues may be reported there as well.
+
+in.tmac is free software; you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free
+Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+in.tmac is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+for more details.
+
+----------------------------------------------------
+
+The copyright for the mgm macroset was:
+----------------------------------------------------
 Copyright (C) 1991-2000, 2001, 2002, 2003, 2004, 2005, 2006, 2009,
               2010
   Free Software Foundation, Inc.
+
+
 mgm is written by Jörgen Hägg <jh@axis.com>
 
 mgm is free software; you can redistribute it and/or modify it under
@@ -26,7 +52,7 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 Please send bug reports with examples to bug-groff@gnu.org.
-
+----------------------------------------------------
 Naming convention stolen from mgs.
 Local names	module*name
 Extern names	module@name
@@ -38,12 +64,15 @@ Updates by ljm
   - added dospark macro by Ted Harding
   - added rfloat by Werner Lemberg
   - added lfloat by ljm
+  - improved header suppression with NOHEAD and DOHEAD
+  - font back to previous after a header, instead of forcing font 1
+  - handling of bold and italic for other build-in fonts than times.
   
 ..
 .special S
-.if !\n(.g .ab These mm macros require groff.
+.if !\n(.g .ab These in macros require groff.
 .do if d PH .nx
-.if \n(.C .ab The groff mm macros do not work in compatibility mode.
+.if \n(.C .ab The groff in macros do not work in compatibility mode.
 .if (\n[.warn] == 65543) .warn
 .mso devtag.tmac
 .\" ######## init #######
@@ -1075,7 +1104,8 @@ in=\\n[.i] fi=\\n[.u] .d=\\n[.d] nl=\\n[nl] pg=\\n[%]
 .	br
 .\}
 .el \\$2\\$3\\*[hd*suf-space]\&\c
-.ft 1
+.\" .ft 1
+.ft
 .\" restore pointsize and vertical size.
 .ps \\n[@ps]u
 .vs \\n[@vs]u
@@ -2754,11 +2784,27 @@ in=\\n[.i] fi=\\n[.u] .d=\\n[.d] nl=\\n[nl] pg=\\n[%]
 ..
 .\"-----------
 .de B
-.ie \\n[.$] .fnt@switch \f3 \f[\\n[.f]] \\$@
+.nr boldfont 3
+.ie \\n[.f]=1 .nr boldfont 3
+.ie \\n[.f]=4 .nr boldfont 3
+.ie \\n[.f]=6 .nr boldfont 8
+.ie \\n[.f]=17 .nr boldfont 14
+.ie \\n[.f]=21 .nr boldfont 18
+.ie \\n[.f]=25 .nr boldfont 22
+.ie \\n[.f]=29 .nr boldfont 26
+.ie \\n[.$] .fnt@switch \f[\\n[boldfont]] \f[\\n[.f]] \\$@
 .el .ft 3
 ..
 .de I
-.ie \\n[.$] .fnt@switch \f2 \f[\\n[.f]] \\$@
+.nr italicfont 2
+.ie \\n[.f]=1 .nr italicfont 2
+.ie \\n[.f]=4 .nr italicfont 2
+.ie \\n[.f]=6 .nr italicfont 7
+.ie \\n[.f]=17 .nr italicfont 16
+.ie \\n[.f]=21 .nr italicfont 20
+.ie \\n[.f]=25 .nr italicfont 24
+.ie \\n[.f]=29 .nr italicfont 28
+.ie \\n[.$] .fnt@switch \f[\\n[italicfont]]  \f[\\n[.f]] \\$@
 .el .ft 2
 ..
 .de IB
