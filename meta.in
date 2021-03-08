@@ -5,3 +5,4 @@
 .subtitle a better mousetrap
 .cover cover.png
 .set do_cover no
+.in3charmap "%qtab;",""\s-6tab\s+6"",""<span style="font-size:0.4em">tab</span>""
