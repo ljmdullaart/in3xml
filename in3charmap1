@@ -1,8 +1,6 @@
 
 #INSTALL@ /usr/local/share/in3/in3charmap1
 #char	groff	html
-%%;	%	%
-%=;	=	=
 %ALPHA;	\[*A]	&Alpha;
 %BETHA;	\[*B]	&Beta;
 %CHI;	\[*C]	&Xi;
@@ -517,3 +515,5 @@
 ♣	\[CL]	&clubs;
 ♥	\[HE]	&hearts;
 ♦	\[DI]	&diams;
+%%;	%	%
+%=;	=	=
