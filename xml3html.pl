@@ -1845,6 +1845,16 @@ else {
 }
 
 my @charmap;
+if (-f "meta.in"){
+	if (open(my $META, '<','meta.in')){
+		while (<$META>){
+			if (/^\.in3charmap *"(.*)","(.*)","(.*)"$/){
+				push @charmap,"$1	$2	$3";
+			}
+		}
+	}
+}
+
 if ( open (my $CHARMAP,'<',$charmapfile)){
 	while (<$CHARMAP>){
 		if (/^\#/){ #comment line

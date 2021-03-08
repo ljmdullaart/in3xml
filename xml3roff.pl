@@ -1524,6 +1524,7 @@ while ( $linenumber <= $#input){
 		else {
 			my $fontfam;
 			my $fontsize;
+			my $dot='.';
 			if ($fontname=~/([A-Za-z]*)([0-9]*)"*$/){
 				$fontfam=$1;
 				$fontsize=$2;
@@ -1540,13 +1541,13 @@ while ( $linenumber <= $#input){
 			}
 
 			if ($fontname=~/([A-Za-z]+)([0-9]+)"*$/){
-				output (".ft $fontfam",".ps $fontsize",".vs $fontsize",$input[$linenumber],'.vs',".ps",".ft");
+				output ("$dot"."ft $fontfam","$dot"."ps $fontsize","$dot"."vs $fontsize",$input[$linenumber],"$dot"."vs","$dot"."ps","$dot"."ft");
 			}
 			elsif ($fontname=~/([A-Za-z]+)"*$/){
-				output (".ft $fontfam",$input[$linenumber],".ft");
+				output ("$dot"."ft $fontfam",$input[$linenumber],"$dot"."ft");
 			}
 			elsif ($fontname=~/([0-9]+)"*$/){
-				output (".ps $fontsize",$input[$linenumber],".ps");
+				output ("$dot"."ps $fontsize",$input[$linenumber],"$dot"."ps");
 			}
 			else {
 				print STDERR "Font specifier $fontname unknown\n";
@@ -2018,6 +2019,15 @@ else {
 
 
 my @charmap;
+if (-f "meta.in"){
+	if (open(my $META, '<','meta.in')){
+		while (<$META>){
+			if (/^\.in3charmap *"(.*)","(.*)","(.*)"$/){
+				push @charmap,"$1	$2	$3";
+			}
+		}
+	}
+}
 if ( open (my $CHARMAP,'<',$charmapfile)){
 	while (<$CHARMAP>){
 		if (/^\#/){ #comment line
