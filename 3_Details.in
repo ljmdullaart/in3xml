@@ -112,10 +112,52 @@ The available fonts are stored in
 .fixed /usr/local/share/in3/fontmap
 and the first column is the one used in in3.
 A list can be generated with
-.fixed cut -d"
-.font 3 tab
-.fixed " -f1 in3fontmap /usr/local/share/in3/fontmap
+.fixed cut -d
+%qtab;
+.fixed -f1 /usr/local/share/in3/fontmap
 
+.h2 Characters
+
+In3 tries its best to produce the right characters. That is not always
+straight forward, because the output handlers (groff or web browser) may
+have different ideas about what character is which.
+
+To help in the translation,
+.fixed /usr/local/chare/in3/in3charmap1
+contains a translation for web and groff. The file also contains a number
+of "percent-translations", for example: %%;8X; produces %8X;.
+A percent translation always starts with a %%; and always ends with a ;.
+A special is the %%;%%;; which translates to %%;.
+So %%;%%;;8X produces
+%%;8X;
+A list of characters is available in the appendix.
+
+It is possible to add your own translation in 
+.fixed meta.in
+with an
+.fixed %.;in3charmap
+request.
+The syntax is:
+
+.pre
+ .in3charmap "in3-character","groff-character","html-character"
+.pre
+
+All the three characters must be present, even if they are empty. None of
+the characters may have a
+.fixed ","
+in them.
+The example below allows a quoted tab-character %qtab; to be displayed:
+
+.pre
+ .in3charmap "%%;qtab;",""\s-6tab\s+6"",""<span style="font-size:0.4em">tab</span>""
+.pre
+
+The extra translations are read from
+.fixed meta.in
+for all processing, even for
+.fixed complete.in
+which may not be obvious directly.
 
 .h2 Left notes and side notes
 
