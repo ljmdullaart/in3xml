@@ -337,8 +337,56 @@ sub varpush{
 # | |_) | | |_) |  __/ || (_| | |_) | |  __/
 # | .__/|_| .__/ \___|\__\__,_|_.__/|_|\___|
 # |_|     |_|              
+sub in3length {
+	(my $instring)=@_;
+	my @string;
+	while (length $instring>0){
+		if ($instring=~/^(\&\w+;)(.*)/){ push @string, $1; $instring=$2; }
+		#elsif ($instring=~/^(\%\w+;)(.*)/){ push @string, $1; $instring=$2; }
+		elsif ($instring=~/^(.)(.*)/){ push @string, $1; $instring=$2; }
+		else { print STDERR "in3length: parsing $instring from $_[0] failed\n"; }
+	}
+	my $retval=$#string+1;
+	undef @string;
+	return $retval;
+}
+sub in3substr {
+	(my $instring,my $from,my $l)=@_;
+	my @string;
+	while (length $instring>0){
+		if ($instring=~/^(\&\w+;)(.*)/){ push @string, $1; $instring=$2; }
+		#elsif ($instring=~/^(\%\w+;)(.*)/){ push @string, $1; $instring=$2; }
+		elsif ($instring=~/^(.)(.*)/){ push @string, $1; $instring=$2; }
+		else { print STDERR "in3length: parsing $instring from $_[0] failed\n"; }
+	}
+	my $retval='';
+	for (my $i=0; $i<$l;$i++){
+		$retval=$retval . $string[$from+$i];
+	}
+	undef @string;
+	return $retval;
+}
+sub in3setsubstr {
+	(my $instring,my $position,my $tochar)=@_;
+	my @string;
+	while (length $instring>0){
+		if ($instring=~/^(\&\w+;)(.*)/){ push @string, $1; $instring=$2; }
+		#elsif ($instring=~/^(\%\w+;)(.*)/){ push @string, $1; $instring=$2; }
+		elsif ($instring=~/^(.)(.*)/){ push @string, $1; $instring=$2; }
+		else { print STDERR "in3length: parsing $instring from $_[0] failed\n"; }
+	}
+	$string[$position]=$tochar;
+	my $retval='';
+	for (@string){
+		$retval=$retval . $_;
+	}
+	undef @string;
+	return $retval;
+}
+
+
 my @pipetable;
-my $ptMAX=4096;
+my $ptMAX=80;
 sub pipetablepass{
 	$passname='pipetablepass';
 	my $prevline='';
@@ -365,8 +413,8 @@ sub pipetablepass{
 				my $cols=' ' x $ptMAX;
 				for (@pipetable){
 					my $line=$_;
-					for (my $i=0; $i<length($line); $i++){
-						if (substr($line,$i,1) eq '|'){
+					for (my $i=0; $i<in3length($line); $i++){
+						if (in3substr($line,$i,1) eq '|'){
 							substr($cols,$i,1)='|';
 						}
 					}
@@ -379,7 +427,6 @@ sub pipetablepass{
 					}
 				}
 				$rows=~s/ *$//;
-
 				my $celltext='';
 				my $tableline='';
 				for (my $i=0;  $i<$#pipetable;$i++){
@@ -387,7 +434,7 @@ sub pipetablepass{
 					else {
 						my $j=0;
 						while ($j<length($cols)-1){
-							my $chr=substr($pipetable[$i],$j,1);
+							my $chr=in3substr($pipetable[$i],$j,1);
 							if ($chr=~/[|-]/){}
 							else {
 								my $celltext='';
@@ -395,20 +442,20 @@ sub pipetablepass{
 								my $bottom=$i;
 								my $left=$j;
 								my $right=$j;
-								while (($right < length ($cols)) && !(substr($pipetable[$i],$right,1)=~/[-|]/)){
+								while (($right < length ($cols)) && !(in3substr($pipetable[$i],$right,1)=~/[-|]/)){
 									$right++;
 								}
 								my $hlen=$right-$left;
-								while (($bottom < length ($rows)) && !(substr($pipetable[$bottom],$left,1)=~/[-|]/)){
+								while (($bottom < length ($rows)) && !(in3substr($pipetable[$bottom],$left,1)=~/[-|]/)){
 									$bottom++;
 								}
 								my $vlen=$bottom-$top;
 								for (my $l=$top; $l<$bottom;$l++){
 									if ($celltext eq ''){
-										$celltext= substr($pipetable[$l],$left,$hlen);
+										$celltext= in3substr($pipetable[$l],$left,$hlen);
 									}
 									else {
-										$celltext=$celltext . '%n%' .  substr($pipetable[$l],$left,$hlen);
+										$celltext=$celltext . '%n%' .  in3substr($pipetable[$l],$left,$hlen);
 									}
 								}
 								$celltext=~s/^ *//;
@@ -425,6 +472,7 @@ sub pipetablepass{
 								for (my $l=$top; $l<$bottom;$l++){
 									for (my $m=$left; $m<$right;$m++){
 										substr($pipetable[$l],$m,1)='|';
+										$pipetable[$l]=in3setsubstr($pipetable[$l],$m,'|');
 									}
 								}
 								$j=$j+$hlen;
@@ -615,6 +663,7 @@ sub includepass {
 		$lineindex++;
 		varset($_);
 		if (/^\.headerlink/){}
+		elsif (/^\.in3charmap/){}
 		elsif (/^\.header/){
 			pushout('<header>');
 			pushout('</header>');
