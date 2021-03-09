@@ -208,7 +208,7 @@ else {
 			}
 		}
 		elsif ($what eq 'debug'){
-			if (/([0-9]+)/){ $variables{"H1"}=$1;}
+			if (/([0-9]+)/){ $variables{"DEBUG"}=$1;}
 			else {print STDERR "Can't find a numeric value for 'DEBUG' in $_; ignored the debug set.\n";}
 			$what='';
 		}
@@ -226,6 +226,9 @@ else {
 	}
 }
 
+if ($variables{'DEBUG'} > 0){
+	print STDERR "DEBUG LEVEL $variables{'DEBUG'}\n";
+}
 
 if ($otrace>0){
 	for (my $i=0; $i<+$#passin;$i++){
@@ -240,9 +243,24 @@ if ($otrace>0){
 # |___/\__,_| .__/| .__/ \___/|_|   \__|_|_| |_|\__, | |___/\__,_|_.__/|___/
 #           |_|   |_|                           |___/
 
+my $deb_supporting=1; 	# Supporting subroutines
+my $deb_pipetable=2; 	# pipe table debugging
+my $deb_markup=4;		# Mark-up debugging
+sub debug {
+	(my $level,my $str)=@_;
+	chomp $str;
+	if (($variables{'DEBUG'} & $level)>0){
+		print STDERR  "$passname: $str\n";
+		
+	}
+}
 sub pushout {
 	(my $txt)=@_;
-	$txt='' unless defined $txt;
+	if (defined $txt){}
+	else {
+		$txt='' unless defined $txt;
+		debug($deb_supporting,"\$txt is undefined");
+	}
 	push @passout,$txt;
 	push @outlinenr,$inlinenr[$lineindex];
 	if ($otrace>0){
@@ -257,13 +275,6 @@ sub pushout {
 	}
 }
 
-sub debug {
-	if ($variables{'DEBUG'}>0){
-		for (@_){
-			print STDERR  "$passname: $_\n";
-		}
-	}
-}
 
 sub endpass {
 	undef @passin;
@@ -346,22 +357,28 @@ sub in3length {
 		elsif ($instring=~/^(.)(.*)/){ push @string, $1; $instring=$2; }
 		else { print STDERR "in3length: parsing $instring from $_[0] failed\n"; }
 	}
-	my $retval=$#string+1;
+	my $retval=$#string;
 	undef @string;
 	return $retval;
 }
 sub in3substr {
 	(my $instring,my $from,my $l)=@_;
+	my $debstr=$instring;
 	my @string;
 	while (length $instring>0){
 		if ($instring=~/^(\&\w+;)(.*)/){ push @string, $1; $instring=$2; }
 		#elsif ($instring=~/^(\%\w+;)(.*)/){ push @string, $1; $instring=$2; }
 		elsif ($instring=~/^(.)(.*)/){ push @string, $1; $instring=$2; }
-		else { print STDERR "in3length: parsing $instring from $_[0] failed\n"; }
+		else {
+			debug ($deb_pipetable, "in3length: parsing $instring from $_[0] failed\n");
+		}
+	}
+	if ($from+$l >$#string+1){
+		debug ($deb_pipetable, "in3substr: from=$from l=$l but $debstr = $#string\n");
 	}
 	my $retval='';
-	for (my $i=0; $i<$l;$i++){
-		$retval=$retval . $string[$from+$i];
+	for (my $i=0; ($i<$l) && ($from+$i<=$#string);$i++){
+		$retval=$retval . $string[$from+$i] if defined $string[$from+$i];
 	}
 	undef @string;
 	return $retval;
@@ -369,11 +386,17 @@ sub in3substr {
 sub in3setsubstr {
 	(my $instring,my $position,my $tochar)=@_;
 	my @string;
+	my $debstr=$instring;
 	while (length $instring>0){
 		if ($instring=~/^(\&\w+;)(.*)/){ push @string, $1; $instring=$2; }
 		#elsif ($instring=~/^(\%\w+;)(.*)/){ push @string, $1; $instring=$2; }
 		elsif ($instring=~/^(.)(.*)/){ push @string, $1; $instring=$2; }
-		else { print STDERR "in3length: parsing $instring from $_[0] failed\n"; }
+		else {
+			debug ($deb_pipetable, "in3setsubstr parsing $instring from $_[0] failed\n");
+		}
+	}
+	if ($position>$#string){
+		debug ($deb_pipetable, "in3setsubstr: position=$position, but $debstr = $#string\n");
 	}
 	$string[$position]=$tochar;
 	my $retval='';
@@ -386,7 +409,7 @@ sub in3setsubstr {
 
 
 my @pipetable;
-my $ptMAX=80;
+my $ptMAX=1024;
 sub pipetablepass{
 	$passname='pipetablepass';
 	my $prevline='';
@@ -413,13 +436,16 @@ sub pipetablepass{
 				my $cols=' ' x $ptMAX;
 				for (@pipetable){
 					my $line=$_;
-					for (my $i=0; $i<in3length($line); $i++){
-						if (in3substr($line,$i,1) eq '|'){
+					for (my $i=0; $i<in3length($line)+1; $i++){
+						my $thischar=in3substr($line,$i,1);
+						if ($thischar eq '|'){
+							debug ($deb_pipetable, "thischar=$thischar i=$i");
 							substr($cols,$i,1)='|';
 						}
 					}
 				}
 				$cols=~s/ *$//;
+				debug ($deb_pipetable, "Cols=$cols");
 				my $rows=' ' x $ptMAX;
 				for (my $i=0;$i<=$#pipetable;$i++){
 					if ($pipetable[$i]=~/----/){
@@ -427,29 +453,46 @@ sub pipetablepass{
 					}
 				}
 				$rows=~s/ *$//;
+				debug ($deb_pipetable, "Rows=$rows");
 				my $celltext='';
 				my $tableline='';
 				for (my $i=0;  $i<$#pipetable;$i++){
-					if ($pipetable[$i]=~/^[-|]*$/){}   # drop all lines that are just drawing characters
+					if ($pipetable[$i]=~/^[-\|]*$/){}   # drop all lines that are just drawing characters
 					else {
+						debug ($deb_pipetable, "Examining $pipetable[$i]");
 						my $j=0;
+						my $lencol=length($cols);
 						while ($j<length($cols)-1){
+							debug ($deb_pipetable, "j=$j length cols=$lencol");
 							my $chr=in3substr($pipetable[$i],$j,1);
-							if ($chr=~/[|-]/){}
+							if ($chr=~/[\|-]/){}
 							else {
 								my $celltext='';
 								my $top=$i;
 								my $bottom=$i;
 								my $left=$j;
 								my $right=$j;
-								while (($right < length ($cols)) && !(in3substr($pipetable[$i],$right,1)=~/[-|]/)){
+								while (
+									($right < length ($cols)) &&
+								   	!(in3substr($pipetable[$i],$right,1)=~/\|/) &&
+								   	!(in3substr($pipetable[$i],$right,4)=~/----/)
+								){
+									my $chr=in3substr($pipetable[$i],$right,1);
+									debug ($deb_pipetable, "cellwidth $pipetable[$i] r=$right c=$chr");
 									$right++;
 								}
 								my $hlen=$right-$left;
-								while (($bottom < length ($rows)) && !(in3substr($pipetable[$bottom],$left,1)=~/[-|]/)){
+								while (
+									($bottom < length ($rows)) &&
+								   	!(in3substr($pipetable[$bottom],$left,1)=~/\|/) &&
+								   	!(in3substr($pipetable[$bottom],$left,4)=~/----/)
+								){
+									my $chr=in3substr($pipetable[$bottom],$left,1);
+									debug ($deb_pipetable, "cellheight $pipetable[$bottom] b=$bottom c=$chr l=$left");
 									$bottom++;
 								}
 								my $vlen=$bottom-$top;
+								debug ($deb_pipetable, "left=$left, right=$right, top=$top, bottom=$bottom hlen=$hlen vlen=$vlen");
 								for (my $l=$top; $l<$bottom;$l++){
 									if ($celltext eq ''){
 										$celltext= in3substr($pipetable[$l],$left,$hlen);
@@ -471,7 +514,6 @@ sub pipetablepass{
 								$tableline=$tableline .  $celltext;
 								for (my $l=$top; $l<$bottom;$l++){
 									for (my $m=$left; $m<$right;$m++){
-										substr($pipetable[$l],$m,1)='|';
 										$pipetable[$l]=in3setsubstr($pipetable[$l],$m,'|');
 									}
 								}
@@ -479,12 +521,12 @@ sub pipetablepass{
 							}
 							$j++;
 						}
-						pushout ($tableline);
+						pushout ($tableline) unless ($tableline eq '');
 						$tableline='';
 					}
 				}
 				$inptable=0;
-				undef my @pipetable;
+				undef @pipetable;
 			}
 			else {
 				pushout ($_);
@@ -811,37 +853,37 @@ sub markdownpass {
 		if ($variables{'markdown'}>0){
 			$mx=$#passout;
 			#ATX headings
-			if (/^ {0,3}###### /){ s/^ {0,3}######/.h6/;s/ *######$//; pushout($_); debug ('atx h6');}
-			elsif (/^ {0,3}##### /){ s/^ {0,3}#####/.h5/;s/ *#####$//; pushout($_); debug ('atx h5');}
-			elsif (/^ {0,3}#### /){ s/^ {0,3}####/.h4/;s/ *####$//; pushout($_); debug ('atx h4');}
-			elsif (/^ {0,3}### /){ s/^ {0,3}###/.h3/;s/ *###$//; pushout($_); debug ('atx h3');}
-			elsif (/^ {0,3}## /){ s/^ {0,3}##/.h2/;s/ *##$//; pushout($_); debug ('atx h2');}
-			elsif (/^ {0,3}#.*#$/){ s/^ {0,3}#/.h1/;s/ *#$//; pushout($_); debug ('atx h1');}
+			if (/^ {0,3}###### /){ s/^ {0,3}######/.h6/;s/ *######$//; pushout($_); debug ($deb_markup,'atx h6');}
+			elsif (/^ {0,3}##### /){ s/^ {0,3}#####/.h5/;s/ *#####$//; pushout($_); debug ($deb_markup,'atx h5');}
+			elsif (/^ {0,3}#### /){ s/^ {0,3}####/.h4/;s/ *####$//; pushout($_); debug ($deb_markup,'atx h4');}
+			elsif (/^ {0,3}### /){ s/^ {0,3}###/.h3/;s/ *###$//; pushout($_); debug ($deb_markup,'atx h3');}
+			elsif (/^ {0,3}## /){ s/^ {0,3}##/.h2/;s/ *##$//; pushout($_); debug ($deb_markup,'atx h2');}
+			elsif (/^ {0,3}#.*#$/){ s/^ {0,3}#/.h1/;s/ *#$//; pushout($_); debug ($deb_markup,'atx h1');}
 			# Setex heading and thematic breaks
 			elsif (/^ {0,3}===/){
-				debug ('setex h1');
+				debug ($deb_markup,'setex h1');
 				if ($passout[$mx]=~/^\./){ pushout($line);}
 				elsif ($passout[$mx]=~/^\-/){ pushout($line);}
 				elsif ($passout[$mx]=~/^$/){ pushout($line);}
 				else { $passout[$mx]=".h1 $passout[$mx]";}
 			}
 			elsif (/^ {0,3}---/){
-				debug ('setex h2');
+				debug ($deb_markup,'setex h2');
 				if ($passout[$mx]=~/^\./){ pushout('.hr');}
 				elsif ($passout[$mx]=~/^\-/){ pushout('.hr');}
 				elsif ($passout[$mx]=~/^$/){ pushout('.hr');}
 				else { $passout[$mx]=".h2 $passout[$mx]";}
 			}
 			# pre-formatted blocks
-			elsif (/^```/){ pushout('.pre');debug ('pre');}
-			#elsif (/^>(.*)/){ pushout(".lst $1");debug ('lst');} # interferes with Liliypond
+			elsif (/^```/){ pushout('.pre');debug ($deb_markup,'pre');}
+			#elsif (/^>(.*)/){ pushout(".lst $1");debug ($deb_markup,'lst');} # interferes with Liliypond
 			# lists
-			elsif (/^(\t)*[0-9]+\.[ 	](.*)/){  pushout("$1# $2"); debug ('numlist');}
-			elsif (/^(\t)*[a-z]\.[ 	](.*)/){  pushout("$1@ $2"); debug ('alphalist');}
-			elsif (/^(\t*)-[ 	](.*)/){  pushout("$1- $2"); debug ('dashlist');}
-			else { pushout($line); debug ('rest output'); }
+			elsif (/^(\t)*[0-9]+\.[ 	](.*)/){  pushout("$1# $2"); debug ($deb_markup,'numlist');}
+			elsif (/^(\t)*[a-z]\.[ 	](.*)/){  pushout("$1@ $2"); debug ($deb_markup,'alphalist');}
+			elsif (/^(\t*)-[ 	](.*)/){  pushout("$1- $2"); debug ($deb_markup,'dashlist');}
+			else { pushout($line); debug ($deb_markup,'rest output'); }
 		}
-		else { pushout($line);debug ("markdown=0 for $line");}
+		else { pushout($line);debug ($deb_markup,"markdown=0 for $line");}
 	}
 	endpass();
 }
