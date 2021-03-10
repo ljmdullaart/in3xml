@@ -7,7 +7,7 @@ my $xmlfile='';
 my $fieldflag=0;
 
 sub usage {
-	print "xmlmerge\n";
+	print "in3xmlmerge\n";
 	print " Merges all .in3 xml files with .merge requests with their csv\n";
 	print " csv  : ; separated file; first line=field names\n";
 	print " xml  : xml version of the document (default: stdin)\n";
