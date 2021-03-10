@@ -1,0 +1,157 @@
+.header
+.h1 Man pages and supporting programs
+
+.h2 in3multipass
+
+.b Name
+
+.fixed in3multipass
+A multi-pass parser for in input files
+
+.b Synopsis
+
+.fixed in3multipass [options] [files]
+
+.b Options
+
+
+
+|-------------------------------------------------------------------------------------------------------|
+| .b Option         | .b arg  | .b Meaning                         | .b Example                         |
+|------------------------------------------------------------------|------------------------------------|
+| .lst --           |         | use stdin as input file            |                                    |
+|-------------------------------------------------------------------------------------------------------|
+| .lst -d           |level    | Set debug options                  | .lst in3multipass -d 64            |
+| .lst --debug      |         |                                    | .lst in3multipass --debug 512      |
+|                   |         |                                    | .lst in3multipass --debug=1023     |
+|------------------------------------------------------------------|------------------------------------|
+| .lst -c           |chapter  | Set initial chapter number         | .lst in3multipass -c 3             |
+| .lst --chapter    |         |                                    | .lst in3multipass --chapter 3      |
+|                   |         |                                    | .lst in3multipass --chapter=3      |
+|------------------------------------------------------------------|------------------------------------|
+| .lst -i           | style   | Set interpretation style           |                                    |
+| .lst --interpret  |         |                                    | .lst in3multipass -i 2             |
+|                   |         |                                    |                                    |
+|------------------------------------------------------------------|------------------------------------|
+| .lst -t           |         | Provide trace information          |                                    |
+| .lst --trace      |         |                                    | .lst in3multipass -t               |
+|                   |         |                                    |                                    |
+|------------------------------------------------------------------|------------------------------------|
+| .lst -m           |         |Use mark-down                       |                                    |
+| .lst --markdown   |         |                                    | .lst in3multipass -m               |
+|                   |         |                                    |                                    |
+|------------------------------------------------------------------|------------------------------------|
+| .lst --meta.*     |meta file|Add meta-file                       | .lst in3multipass --metaextras.in  |
+|------------------------------------------------------------------|------------------------------------|
+| .lst -+h          |         |Help text                           |                                    |
+|-------------------------------------------------------------------------------------------------------|
+
+
+.h2 mkinheader
+
+.b Name
+
+.fixed mkinheader
+make header/index file for in3
+
+.b Synposis
+
+.fixed  mkinheader [ flags ]
+
+.b Flags
+
+|------------------------------------------------------------|
+| .fixed --help     |   This help                            |
+|------------------------------------------------------------|
+| .fixed --header   |                                        |
+| .fixed -h         |   create an includable header          |
+|------------------------------------------------------------|
+| .fixed --index    |                                        |
+| .fixed -i         |   create an index-file                 |
+|------------------------------------------------------------|
+|                   |    Don't include the total or complete |
+| .fixed -t         |                                        |
+|------------------------------------------------------------|
+| .fixed -v         |   increase verbosity                   |
+|------------------------------------------------------------|
+
+.b Description
+
+.fixed mkinheader
+creates an index file for all the .in files in the directory.
+The index file is either in HTML format, without headers (
+.fixed -h 
+) or in in3 format (
+.fixed -i
+).
+
+.h2 in3xmlmerge
+
+.b Name
+
+.fixed in3xmlmerge
+a simple mail-merge for XML files
+
+.b Synopsis
+
+.fixed in3xmlmerge 
+
+.b Description
+
+.fixed in3xmlmerge
+provides a simple mail-merge for in3. In the directory
+.fixed merge
+all the output files are placed.
+
+For each
+.fixed %.;in
+file,
+.fixed in3xmlmerge
+will check if a 
+.fixed %.;csv
+file exists, and if so, will create a document set for each line in the
+.fixed %.;csv
+file. 
+The
+.fixed %.;csv
+is a simple semi-colon (;) separated file and the first line contains
+the names of the fields.
+An examle of such a
+.fixed %.;csv
+would be
+
+.pre
+file;name;address;city;code;telephone
+james;James T. Kirk;5543 Aliquet St.;Fort Dodge GA;20783;(717) 450-4729
+paul;Paul Verlaine;5037 Diam Rd.;Daly City;Ohio 90255;(453) 391-4650
+fjodor;Fjodor Dostojewski;6351 Fringilla Avenue;Gardena Colorado ;7547;(559) 104-5475
+.pre
+
+A sample text would then be:
+
+.lst 
+.lst %.;merge name
+.lst %.;br
+.lst %.;merge address
+.lst %.;br
+.lst %.;merge city
+.lst %.;merge code
+.lst %.;br
+.lst 
+.lst 
+.lst Dear
+.lst %.;merge name
+.lst %.;br
+.lst I think your phone number is
+.lst %.;merge telephone
+.lst %.;br
+.lst Yours,
+.lst %.;br
+.lst Me
+.lst 
+
+The column
+.fixed file
+is used as the stem for the file. So, for Verlaine, the files would be
+.fixed paul.xml, paul.pdf, paul.html
+and so on.
