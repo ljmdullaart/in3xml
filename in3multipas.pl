@@ -1118,7 +1118,15 @@ sub headingpass {
 			my $text=$2;
 			$variables{"H$level"}++;
 			my $seq='';
-			for (my $i=1;$i<=$level;$i++){$seq=$seq.$variables{"H$i"}.'.';}
+			my @alpha = (' ','A'..'Z');
+			if ($variables{"H1"}>$variables{"appendix"}){
+				$seq=$alpha[$variables{"H1"}-$variables{"appendix"}];
+			}
+			else {
+				$seq=$variables{"H1"};
+			}
+			$seq=$seq.'.';
+			for (my $i=2;$i<=$level;$i++){$seq=$seq.$variables{"H$i"}.'.';}
 			for (my $i=$level+1;$i<10;$i++){$variables{"H$i"}=0;}
 			pushout("");
 			pushout("<heading>");
@@ -2113,6 +2121,13 @@ noppass();
 print "<?xml version=\"1.0\"?>\n";
 print "<!DOCTYPE in3xml SYSTEM \"/usr/local/share/in3/in3xml.dtd\">\n";
 print "<in3xml>\n";
+# Here there are a number of global variables that may not have been set
+# expilitly, but may be needed by the output processors.
+print "<set>\n";
+print "<variable>\n";print "appendix\n";print "</variable>\n";
+print "<value>\n"; print "$variables{'appendix'}\n"; print "</value>\n";
+print "</set>\n";
+
 for (@passin){
 	print "$_\n";
 }
