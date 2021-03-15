@@ -413,7 +413,9 @@ if [ -d $PDF ] ; then
 			echo "	cat $PDF/$stem.pic |pic > $PDF/$stem.eqn" >> Makefile
 			echo "	cat $PDF/$stem.eqn |eqn > $PDF/$stem.rof" >> Makefile
 			#echo "	cat $PDF/$stem.rof |groff -min -Kutf8 -Tpdf -pdfmark > $PDF/$stem.pdf" >> Makefile
-			#dohead=' -rN4  '
+			if grep -q '^\.NOHEAD' stylesheet.mm ; then
+				dohead=' -rN4  '
+			fi
 			if [ "$stem" = "complete" ] ; then
 				echo "	cat $PDF/$stem.rof |groff -min -rN=4 -Kutf8 -rN4 > $PDF/$stem.ps" >> Makefile
 			elif [ "$stem" = "total" ] ; then
@@ -421,7 +423,7 @@ if [ -d $PDF ] ; then
 			else
 				echo "	cat $PDF/$stem.rof |groff -min -Kutf8 $dohead > $PDF/$stem.ps" >> Makefile
 			fi
-			echo "	cat $PDF/$stem.ps  | ps2pdf - - > $PDF/$stem.pdf" >> Makefile
+			echo "	cat $PDF/$stem.ps  | ps2pdf  -dPDFSETTINGS=/prepress - - > $PDF/$stem.pdf" >> Makefile
 			echo "$PDF/$stem.roff: $XML/$stem.xml " >> Makefile
 			if [ "$stem" = "complete" ] ; then
 				echo "	xml3roff $XML/$stem.xml > $PDF/$stem.roff" >> Makefile
