@@ -380,18 +380,18 @@ sub formatrequest {
 		}
 
 		if ($fontname=~/([A-Za-z]+)([0-9]+)/){
+			output ("<span style=\"font-family:$fontfam; font-size:$fontsize"."em\">");
 			if ($fbold>0){output ('<b>');}
 			if ($fitalic>0){output ('<i>');}
-			output ("<span style=\"font-family:$fontfam; font-size:$fontsize"."em\">");
 		}
 		elsif ($fontname=~/([A-Za-z]+)/){
+			output ("<span style=\"font-family:$fontfam\">");
 			if ($fbold>0){output ('<b>');}
 			if ($fitalic>0){output ('<i>');}
-			output ("<span style=\"font-family:$fontfam\">");
 		}
 		elsif ($fontname=~/([0-9]+)/){
-			if ($fbold>0){output ('<b>');}
 			if ($fitalic>0){output ('<i>');}
+			if ($fbold>0){output ('<b>');}
 			output ("<span style=\"font-size:$fontsize"."em\">");
 		}
 		state_push('font');
@@ -493,7 +493,7 @@ sub outimage {
 	}
 	elsif ($format=~/left/){
 		output ("<img src=\"$blockimg\" alt=\"$img\" width=\"$width\" height=\"$height\" align='left' style=\"margin:10px 10px;vertical-align:-10;\">");
-		$variables{'parastartdelay'}='<hr style="height:1px; visibility:hidden;">';
+		#$variables{'parastartdelay'}='<hr style="height:1px; visibility:hidden;">';
 
 	}
 	elsif ($format=~/right/){
@@ -501,7 +501,7 @@ sub outimage {
 	}
 	else {
 		output ('<div style="text-align: center">');
-		output ("<img src=\"$blockimg\" alt=\"$img\" width:90% >");
+		output ("<img src=\"$blockimg\" alt=\"$img\" width=90% >");
 		output ('</div>');
 	}
 	progress();
@@ -708,7 +708,7 @@ while ( $linenumber <= $#input){
 			if ($prevnotes != $variables{'notes'}){
 				if ($ptableopen>0){ output('</table>');$ptableopen=0;}
 			}
-			output ("<! -- paragraph type $variables{'notes'} -->");
+			output ("<!-- paragraph type $variables{'notes'} -->");
 			if ($variables{'notes'}==0){
 				output ('<p class="paragraph">');
 				if ( $variables{'parastartdelay'} ne ''){
@@ -850,9 +850,12 @@ while ( $linenumber <= $#input){
 				if ($ptableopen>0){ output('</table>');$ptableopen=0;}
 				output ('<pre>');
 				for (@blocktext){
+					s/&/&amp;/g;
 					s/ /&nbsp;/g;
 					s/^"//;
 					s/"$//;
+					s/</&lt;/g;
+					s/>/&gt;/g;
 					s/&#0092;/\\/g;
 					output($_);
 				}
@@ -861,14 +864,16 @@ while ( $linenumber <= $#input){
 			elsif ($type eq 'lst'){
 				if ($ptableopen>0){ output('</table>');$ptableopen=0;}
 				for (@blocktext){
+					s/&/&amp;/g;
 					s/ /&nbsp;/g;
 					s/	/&nbsp;&nbsp;&nbsp;&nbsp;/g;
 					s/^"//;
 					s/"$//;
+					s/</&lt;/g;
+					s/>/&gt;/g;
 					s/&#0092;/\\/g;
-					output("<br><span class=\"lst\">$_</span>");
+					output("<br><span class=\"lst\">&nbsp;$_</span>");
 				}
-				output ('</pre>');
 			}
 			elsif ($type=~/^class(.*)/){
 				$class=$1;
@@ -1728,7 +1733,7 @@ while ( $linenumber <= $#input){
 		if ($input[$linenumber] =~/<\/set>/){
 			if ($varname ne ''){
 				$variables{$varname}=$value;
-				output ("<! -- variables{$varname}=$value -->");
+				output ("<!-- variables{$varname}=$value -->");
 				$value='';
 				$varname='';
 			}
@@ -1823,13 +1828,13 @@ if ($variables{"do_headers"} eq 'yes'){
 	print "<html lang=\"en\">\n";
 	print "<head>\n";
 	print "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\n";
-	print "<link rel=\"stylesheet\" href=\"in3style.css\">";
-	print "<link href='https://fonts.googleapis.com/css?family=Roboto Condensed' rel='stylesheet'>\n";
-	print "<link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>\n";
-	print "<link href='https://fonts.googleapis.com/css?family=Pinyon Script' rel='stylesheet'>\n";
+	print "<link rel=\"stylesheet\" href=\"in3style.css\" type=\"text/css\">";
+	print "<link href='https://fonts.googleapis.com/css?family=Roboto%20Condensed' rel='stylesheet' type=\"text/css\">\n";
+	print "<link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet' type=\"text/css\">\n";
+	print "<link href='https://fonts.googleapis.com/css?family=Pinyon%20Script' rel='stylesheet' type=\"text/css\">\n";
 	print "<title>$variables{'title'}</title>\n";
 	if (-f "stylesheet.css"){
-		print "<link rel=\"stylesheet\" href=\"stylesheet.css\">\n";
+		print "<link rel=\"stylesheet\" href=\"stylesheet.css\" type=\"text/css\">\n";
 	}
 	print "</head>\n";
 	print "<body>\n";
