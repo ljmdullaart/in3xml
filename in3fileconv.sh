@@ -155,18 +155,18 @@ case $fromext in
 		case $toext in
 			(eps)
 				debug "convert  $fromfile  pnm:- | convert -density 300 -trim - block/$tobase"
-				convert  "$fromfile"  pnm:- | convert -density 300 -trim - "block/$tobase" 2>> /tmp/in3fileconv.log
+				convert -resize 1000x1000  "$fromfile"  pnm:- | convert -density 300 -trim - "block/$tobase" 2>> /tmp/in3fileconv.log
 				;;
 			(jpg)
 				debug convert "$fromfile" "block/$tobase"
-				convert "$fromfile" "block/$tobase"
+				convert -resize 1000x1000 "$fromfile" "block/$tobase"
 				;;
 			(png)
 				debug convert "$fromfile" "block/$tobase"
-				convert "$fromfile" "block/$tobase"
+				convert -resize 1000x1000 "$fromfile" "block/$tobase"
 				;;
 			(pdf)
-				debug "convert  $fromfile  pnm:- | convert -density 300 -trim - $TMP.pdf"
+				debug "convert  -resize 1000x1000 $fromfile  pnm:- | convert -density 300 -trim - $TMP.pdf"
 				convert  "$fromfile"  pnm:- | convert -density 300 -trim - $TMP.pdf
 			 	debug pdfcrop $TMP.pdf "block/$tobase"
 			 	pdfcrop $TMP.pdf "block/$tobase"
