@@ -148,7 +148,57 @@ my @listtype;
 	push @listtype,'none';
 my @mapfields;
 my @sidenotes;
+# ----------------------------Charmapping ---------------------------------------
+my $charmapfile;
+if ( -f "/usr/local/share/in3/in3charmap$variables{'interpret'}" ){
+	$charmapfile="/usr/local/share/in3/in3charmap$variables{'interpret'}";
+}
+else {
+	$charmapfile="in3charmap$variables{'interpret'}";
+}
 
+my @charmap;
+if (-f "meta.in"){
+	if (open(my $META, '<','meta.in')){
+		while (<$META>){
+			if (/^\.in3charmap *"(.*)","(.*)","(.*)"$/){
+				push @charmap,"$1	$2	$3";
+			}
+		}
+	}
+}
+if ( open (my $CHARMAP,'<',$charmapfile)){
+	while (<$CHARMAP>){
+		if (/^\#/){ #comment line
+		}
+		else {
+			push @charmap,$_
+		}
+	}
+	close $CHARMAP;
+}
+else { print STDERR "xml3html Cannot open in3charmap\n"; }
+
+sub rofcharmapping {
+	(my $instring)=@_;
+	for (@charmap){
+		chomp;
+		my $char;
+		my $groff;
+		my $html;
+		($char,$groff,$html)=split '	';
+		$char='UNDEFINED_CHAR' unless defined $char;
+			$groff=$char unless defined $groff;
+		$html=$char unless defined $html;
+		if ($instring=~/$char/){
+			$instring=~s/$char/$groff/g;
+		}
+	}
+	return $instring;
+}
+
+
+# ----------------------------debugging ---------------------------------------
 sub debug {
 	if ($variables{'DEBUG'}>0){
 		for (@_){
@@ -164,6 +214,7 @@ sub error {
 	}
 }
 
+# ----------------------------man page ---------------------------------------
 sub hellup {
 	print "
 	NAME: xml3html
@@ -991,7 +1042,8 @@ while ( $linenumber <= $#input){
 							s/"$//;
 							s/&#0092;/\\/g;
 						}
-						print $EQN "$_\n";
+						my $prt=rofcharmapping($_);
+						print $EQN "$prt\n";
 					}
 					print $EQN ".EN\n";
 					close $EQN;
@@ -1029,7 +1081,8 @@ while ( $linenumber <= $#input){
 							s/"$//;
 							s/&#0092;/\\/g;
 						}
-						print $PIC "$_\n";
+						my $prt=rofcharmapping($_);
+						print $PIC "$prt\n";
 					}
 					print $PIC ".PE\n";
 					close $PIC;
@@ -1870,7 +1923,7 @@ if ( open (my $CHARMAP,'<',$charmapfile)){
 	}
 	close $CHARMAP;
 }
-else { print STDERR "in3tbl Cannot open in3charmap\n"; }
+else { print STDERR "xml3html Cannot open in3charmap\n"; }
 
 
 for (@charmap){
