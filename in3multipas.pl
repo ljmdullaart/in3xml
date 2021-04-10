@@ -15,7 +15,7 @@ my $otrace=0;
 #
 
 my %variables;
-	$variables{'COVER'}=0;
+	$variables{'COVER'}='no';
 	$variables{'FIRST'}=0;
 	$variables{'H1'}=0;
 	$variables{'H2'}=0;
@@ -292,26 +292,27 @@ sub endpass {
 sub varset{
 	(my $line)=@_;
 	$line='' unless defined $line;
-	if ($line=~/^\.title *(.*)/){
-		$variables{'title'}=$1;
-	}
-	elsif ($line=~/^\.subtitle *(.*)/){
-		$variables{'subtitle'}=$1;
-	}
-	elsif ($line=~/^\.cover *(.*)/){
-		$variables{'cover'}=$1;
+	if (0==1){}
+	elsif ($line=~/^\.appendix/){
+		$variables{'appendix'}=1;
 	}
 	elsif ($line=~/^\.author *(.*)/){
 		$variables{'author'}=$1;
 	}
-	elsif ($line=~/^\.keywords *(.*)/){
-		$variables{'keywords'}=$1;
-	}
-	elsif ($line=~/^\.appendix/){
-		$variables{'appendix'}=1;
-	}
 	elsif ($line=~/^\.back/){
 		$variables{'back'}=1;
+	}
+	elsif ($line=~/^\.contents/){
+		$variables{'TOC'}=1;
+	}
+	elsif ($line=~/^\.COVER *(.*)/){
+		$variables{'COVER'}='yes';
+	}
+	elsif ($line=~/^\.cover *(.*)/){
+		$variables{'cover'}=$1;
+	}
+	elsif ($line=~/^\.keywords *(.*)/){
+		$variables{'keywords'}=$1;
 	}
 	elsif ($line=~/^\.set *([\w]+) *(.*)/){
 		$variables{$1}=$2;
@@ -322,10 +323,13 @@ sub varset{
 	elsif ($line=~/^\.side  *separator  *(.*)/){
 		$variables{'sidesep'}=$1;
 	}
-	elsif ($line=~/^\.TOC$/){
-		$variables{'TOC'}=1;
+	elsif ($line=~/^\.subtitle *(.*)/){
+		$variables{'subtitle'}=$1;
 	}
-	elsif ($line=~/^\.contents/){
+	elsif ($line=~/^\.title *(.*)/){
+		$variables{'title'}=$1;
+	}
+	elsif ($line=~/^\.TOC$/){
 		$variables{'TOC'}=1;
 	}
 	if ($inlinenr[$lineindex]=~/(.*):/){$variables{'filename'}=$1;}
@@ -659,7 +663,7 @@ sub varpass{
 		elsif (/^\.appendix *(.*)/){ varpush('appendix',1); }
 		elsif (/^\.back *(.*)/){ varpush('back',1); }
 		elsif (/^\.TOC$/){ varpush('TOC',1); }
-		elsif (/^\.COVER$/){ varpush('COVER',1); }
+		elsif (/^\.COVER$/){ varpush('COVER','yes'); }
 		elsif (/^\.FIRST$/){ varpush('FIRST',1); }
 		elsif (/^\.contents/){ varpush('TOC',1); }
 		elsif (/^\.side *separator *(.*)/){varpush('sidesep',$1);}
@@ -2123,10 +2127,17 @@ print "<!DOCTYPE in3xml SYSTEM \"/usr/local/share/in3/in3xml.dtd\">\n";
 print "<in3xml>\n";
 # Here there are a number of global variables that may not have been set
 # expilitly, but may be needed by the output processors.
-print "<set>\n";
-print "<variable>\n";print "appendix\n";print "</variable>\n";
-print "<value>\n"; print "$variables{'appendix'}\n"; print "</value>\n";
-print "</set>\n";
+foreach ('appendix','COVER'){
+	print "<set>\n";
+	print "<variable>\n";
+	print "$_\n";
+	print "</variable>\n";
+	print "<value>\n"; 
+	print $variables{"$_"};
+	print "\n";
+   	print "</value>\n";
+	print "</set>\n";
+}
 
 for (@passin){
 	print "$_\n";
