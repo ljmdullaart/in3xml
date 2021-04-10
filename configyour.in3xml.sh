@@ -29,12 +29,15 @@ not_applicable (){
 # Test if applicable; if not call `not_applicable' 
 
 if [ ! -d $XML ] ; then
+	echo "No $XML directory" >> $LOG
 	not_applicable
 fi
 
 if ls *.in >/dev/null 2>/dev/null ; then
 	echo '# in3xml --- main targets' >> Makefile
 else
+
+	echo 'No .in files in directory' >> $LOG
 	not_applicable
 fi
 

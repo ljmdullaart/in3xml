@@ -57,7 +57,7 @@ fi
 if [ $meges = no ] ; then
 	not_applicable
 	echo "No .in files with .merge in directory"
-	echo "No .in files with .merge in directory">>log
+	echo "No .in files with .merge in directory">>configyour.log
 	echo "Configyour.merge finnished" >> configyour.log
 	exit 0
 fi
