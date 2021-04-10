@@ -123,7 +123,7 @@ my %variables;
     $variables{"back"}=0;
     $variables{"blockcnt"}=0;
     $variables{"cover"}='';
-    $variables{"do_cover"}='no';
+    $variables{"COVER"}='no';
     $variables{"do_headers"}='yes';
     $variables{"tableexpand"}='no';
     $variables{"imagex"}=800;
@@ -194,19 +194,19 @@ for (@ARGV){
 		elsif (/^--debug=([0-9]+)/){ $variables{"DEBUG"}=$1; }
 		elsif (/^-d$/){$what='debug';}
 		elsif (/^--debug$/){$what='debug';}
-		elsif (/^-c([0-9]+)/){ $variables{"H1"}=$1;$variables{"do_cover"}='no';}
-		elsif (/^--chapter([0-9]+)/){ $variables{"H1"}=$1-1;$variables{"do_cover"}='no';}
-		elsif (/^--chapter=([0-9]+)/){ $variables{"H1"}=$1-1;$variables{"do_cover"}='no';}
-		elsif (/^-c$/){$what='chapter';$variables{"do_cover"}='no';}
-		elsif (/^--chapter$/){$what='chapter';$variables{"do_cover"}='no';}
+		elsif (/^-c([0-9]+)/){ $variables{"H1"}=$1;$variables{"COVER"}='no';}
+		elsif (/^--chapter([0-9]+)/){ $variables{"H1"}=$1-1;$variables{"COVER"}='no';}
+		elsif (/^--chapter=([0-9]+)/){ $variables{"H1"}=$1-1;$variables{"COVER"}='no';}
+		elsif (/^-c$/){$what='chapter';$variables{"COVER"}='no';}
+		elsif (/^--chapter$/){$what='chapter';$variables{"COVER"}='no';}
 		elsif (/^--doheaders/){$variables{"do_headers"}='yes';}
 		elsif (/^--do_headers/){$variables{"do_headers"}='yes';}
-		elsif (/^--cover/){$variables{"do_cover"}='yes';}
-		elsif (/^-cover/){$variables{"do_cover"}='yes';}
-		elsif (/^--docover/){$variables{"do_cover"}='yes';}
-		elsif (/^-docover/){$variables{"do_cover"}='yes';}
-		elsif (/^--do_cover/){$variables{"do_cover"}='yes';}
-		elsif (/^-do_cover/){$variables{"do_cover"}='yes';}
+		elsif (/^--cover/){$variables{"COVER"}='yes';}
+		elsif (/^-cover/){$variables{"COVER"}='yes';}
+		elsif (/^--docover/){$variables{"COVER"}='yes';}
+		elsif (/^-docover/){$variables{"COVER"}='yes';}
+		elsif (/^--COVER/){$variables{"COVER"}='yes';}
+		elsif (/^-COVER/){$variables{"COVER"}='yes';}
 		elsif (/^-i([0-9]+)/){ $variables{"interpret"}=$1;}
 		elsif (/^--interpret([0-9]+)/){ $variables{"interpret"}=$1;}
 		elsif (/^--interpret=([0-9]+)/){ $variables{"interpret"}=$1;}
@@ -216,8 +216,8 @@ for (@ARGV){
 		elsif (/^--markdown/){$variables{"markdown"}=1;}
 		elsif (/^--noheaders/){$variables{"do_headers"}='no';}
 		elsif (/^--no_headers/){$variables{"do_headers"}='no';}
-		elsif (/^--nocover/){$variables{"do_cover"}='no';}
-		elsif (/^--no_cover/){$variables{"do_cover"}='no';}
+		elsif (/^--nocover/){$variables{"COVER"}='no';}
+		elsif (/^--no_cover/){$variables{"COVER"}='no';}
 		elsif (/^-+h/){ hellup(); }
 		elsif (/^-t/){ $trace=1;}
 		elsif (/^-p/){ $progressindicator=1;}
@@ -556,10 +556,10 @@ sub outimage {
 		if ($x>$variables{'imagex'}){$myscale=$variables{'imagex'}*$scale/$x;}
 		my $y2=$y*$myscale/$variables{'imagey'};
 		if ($y2>$variables{'imagey'}){$myscale=$variables{'imagey'}*$scale/$y;}
-		$y=$y*$myscale/250;
-		$x=$x*$myscale/250;
+		$y=$y*$myscale/500;
+		$x=$x*$myscale/500;
 		my $up=$y/100;
-		my $need=$y*5;
+		my $need=$y*2;
 		#output ("\\v'$up"."c'");
 		if (($iformat=~/inline/)|| ($inline>0)){
 			output ("\\v'$up".'v\'');
@@ -585,12 +585,17 @@ sub outimage {
 			if ($img=~/\.svg$/){
 				$x=$x*2; $y=$y*2;
 			}
+			elsif ($img=~/\.eps$/){
+				$x=$x*2; $y=$y*2;
+			}
 			else {
 				$x=$x*4; $y=$y*4;
 			}
 			output (".dospark block/$imagename $x $y");
 		}
-		#output (".PSPIC block/$imagename $x");
+		#else {
+			#output (".PSPIC block/$imagename $x");
+		#}
 	}
 }
 
@@ -1243,7 +1248,7 @@ while ( $linenumber <= $#input){
 				output ('.EN');
 			}
 			elsif ($type eq 'gnuplot'){
-				my $mscale=100;
+				my $mscale=1000;
 				if ($format=~/scale=([0-9]+)/){
 					$mscale=$1;
 					$format=~s/scale=[0-9]+//;
@@ -1302,7 +1307,7 @@ while ( $linenumber <= $#input){
 						}
 						print $MUSIC "}\n";
 						close $MUSIC;
-						system ("cd block; lilypond -dbackend=eps  -dresolution=500 -dpreview ../$blk.ly");
+						system ("cd block; lilypond --eps  -dresolution=500 -dpreview ../$blk.ly");
 						system ("sed -i 's/\(%%BeginProcSet: .*\)/\1 0 0/' $blk.eps");
 						system ("sed -i 's/%%IncludeResource: ProcSet (FontSetInit)/%%IncludeResource: ProcSet (FontSetInit) 0 0/' $blk.eps");
 
@@ -2080,7 +2085,7 @@ for (@charmap){
 		if ($output[$i]=~/$char/){
 			$output[$i]=~s/$char/$groff/g;
 		}
-		if ($output[$i]=~/$html/){
+		elsif ($output[$i]=~/$html/){
 			$output[$i]=~s/$html/$groff/g;
 		}
 	}
@@ -2095,11 +2100,11 @@ if ( -f "stylesheet.mm" ) {
 		print STDERR "Cannot read stylesheet.mm\n";
 	}
 }
-debug("variables{'do_cover'}=$variables{'do_cover'}\n");
+debug("variables{'COVER'}=$variables{'COVER'}\n");
 debug("variables{'cover'}=$variables{'cover'}\n");
 debug("variables{'title'}=$variables{'title'}\n");
 
-if ($variables{'do_cover'} eq 'yes'){
+if ($variables{'COVER'} eq 'yes'){
 	print ".nr NOFOOT 1\n";
 	print ".NOHEAD\n";
 	if ($variables{'cover'} ne ''){
