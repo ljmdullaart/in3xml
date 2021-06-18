@@ -120,7 +120,10 @@ elsif ($type eq 'index'){
 
 
 my $charmapfile;
-if ( -f "/usr/local/share/in3charmap1" ){
+if ( -f "/usr/local/share/in3/in3charmap1" ){
+	$charmapfile="/usr/local/share/in3/in3charmap1";
+}
+elsif ( -f "/usr/local/share/in3charmap1" ){
 	$charmapfile="/usr/local/share/in3charmap1";
 }
 else {
