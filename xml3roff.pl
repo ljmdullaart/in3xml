@@ -532,8 +532,8 @@ sub outimage {
 		my $imgsize=`imageinfo --geom block/$imagename`;
 		my $x; my $y; my $xn;
 		($x,$y)=split ('x',$imgsize);
-		$x=$x*$scale/250;
-		$y=$y*$scale/250;
+		$x=$x*$scale/500;
+		$y=$y*$scale/500;
 		debug("dia SIZE $x $y");
 		if (($iformat=~/inline/)||($inline>0)){
 			my $up=$y/4;
