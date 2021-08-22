@@ -47,6 +47,9 @@ my %variables;
 	$variables{'sidesep'}=';';
 	$variables{'subtitle'}='';
 	$variables{'title'}='';
+	$variables{'date-nl'}=`date '+%d-%m-%Y'`;
+	$variables{'date-us'}=`date '+%m-%d-%Y'`;
+	$variables{'date-iso'}=`date '+%Y-%m-%d'`;
 
 	$variables{'blockname'}=$variables{'filename'};
 	$variables{'DEBUG'}=0;
