@@ -1253,7 +1253,7 @@ while ( $linenumber <= $#input){
 					$mscale=$1;
 					$format=~s/scale=[0-9]+//;
 				}
-				$mscale=$mscale/2;   # CHECK  for inline scale!
+				$mscale=$mscale/4;   # CHECK  for inline scale!
 				my $density=1000;
 				if (open my $PLOT, '>',"$blk.gnuplot"){
 					print $PLOT 'set terminal postscript eps';
@@ -2065,9 +2065,9 @@ sub unxmlstr {
 		if ($str=~/$char/){
 			$str=~s/$char/$groff/g;
 		}
-		if ($str=~/$html/){
-			$str=~s/$html/$groff/g;
-		}
+		#elsif ($str=~/$html/){
+		#$str=~s/$html/$groff/g;
+		#}
 	}
 	return $str;
 }
