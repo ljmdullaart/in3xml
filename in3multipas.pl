@@ -296,7 +296,11 @@ sub varset{
 	(my $line)=@_;
 	$line='' unless defined $line;
 	if (0==1){}
+	elsif ($line=~/^\.appendix *([0-9][0-9]*)/){
+		$variables{'appendix'}=$1;
+	}
 	elsif ($line=~/^\.appendix/){
+		print STDERR "varset appeix: %line\n";
 		$variables{'appendix'}=1;
 	}
 	elsif ($line=~/^\.author *(.*)/){
@@ -663,7 +667,7 @@ sub varpass{
 		elsif (/^\.keywords *(.*)/){ varpush('keywords',$1); }
 		elsif (/^\.cover *(.*)/){ varpush('cover',$1); }
 		elsif (/^\.author *(.*)/){ varpush('author',$1); }
-		elsif (/^\.appendix *(.*)/){ varpush('appendix',1); }
+		elsif (/^\.appendix *(.*)/){ varpush('appendix',$1); }
 		elsif (/^\.back *(.*)/){ varpush('back',1); }
 		elsif (/^\.TOC$/){ varpush('TOC',1); }
 		elsif (/^\.COVER$/){ varpush('COVER','yes'); }
@@ -794,6 +798,28 @@ sub mdformatpass {
 						push @mdline2,'<underline>';
 						push @mdline2,$2;
 						push @mdline2,'</underline>';
+					}
+					elsif (/^(.*) `([^`]+)` (.*)/){
+						$repl++;
+						push @mdline2,$1;
+						push @mdline2,'<fixed>';
+						push @mdline2,$2;
+						push @mdline2,'</fixed>';
+						push @mdline2,$3;
+					}
+					elsif (/^`([^`]+)` (.*)/){
+						$repl++;
+						push @mdline2,'<fixed>';
+						push @mdline2,$1;
+						push @mdline2,'</fixed>';
+						push @mdline2,$2;
+					}
+					elsif (/^(.*) `([^`]+)`/){
+						$repl++;
+						push @mdline2,$1;
+						push @mdline2,'<fixed>';
+						push @mdline2,$2;
+						push @mdline2,'</fixed>';
 					}
 					elsif (/^(.*) \/\/([^\/]+)\/\/ (.*)/){
 						$repl++;
