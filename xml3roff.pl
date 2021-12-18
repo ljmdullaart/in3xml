@@ -339,8 +339,14 @@ sub formatrequest {
 	elsif ($input[$linenumber] =~/<italic>/){
 		state_push('italic');
 	}
+	elsif ($input[$linenumber] =~/<italicnospace>/){
+		state_push('italicnospace');
+	}
 	elsif ($input[$linenumber] =~/<bold>/){
 		state_push('bold');
+	}
+	elsif ($input[$linenumber] =~/<boldnospace>/){
+		state_push('boldnospace');
 	}
 	elsif ($input[$linenumber] =~/<center>/){
 		state_push('center');
@@ -365,6 +371,9 @@ sub formatrequest {
 	}
 	elsif ($input[$linenumber] =~/<fixed>/){
 		state_push('fixed');
+	}
+	elsif ($input[$linenumber] =~/<fixednospace>/){
+		state_push('fixednospace');
 	}
 	elsif ($input[$linenumber] =~/<font *type="*(.*)"*>/){
 		$fontname=$1;
@@ -601,6 +610,8 @@ sub outimage {
 
 
 sub close_paratable {
+
+	$outatol=0;
 	if ($ptableopen>0){
 		if ($pcellopen>0){
 			if ($variables{'notes'}==1){
@@ -851,6 +862,7 @@ while ( $linenumber <= $#input){
 		}
 		elsif ($input[$linenumber] =~/<lst>/){
 			close_paratable();
+			$outatol=0;
 			output ('.P');
 			state_push('lst');
 		}
@@ -1006,6 +1018,7 @@ while ( $linenumber <= $#input){
 				close_paratable
 			}
 			if ($variables{'notes'}==0){
+				$outatol=0;
 				output ('.P');
 			}
 			elsif ($ptableopen==0){    
@@ -1455,6 +1468,7 @@ while ( $linenumber <= $#input){
 		if ($input[$linenumber] =~/<\/paragraph>/){
 			$inline=0;
 			if ($variables{'notes'}==0){
+				$outatol=0;
 				output ('.P');
 			}
 			elsif (($pcellopen>0) && ($variables{'notes'}==1)){
@@ -1487,6 +1501,16 @@ while ( $linenumber <= $#input){
 			formatrequest();
 		}
 	}
+	elsif ($state  eq 'italicnospace'){
+		if ($input[$linenumber] =~/<\/italicnospace>/){
+			state_pop();
+		}
+		else {
+			$outatol=1;
+			output ("\\fI$input[$linenumber]\\fP");
+			$outatol=1;
+		}
+	}
 	elsif ($state  eq 'italic'){
 		if ($input[$linenumber] =~/<\/italic>/){
 			state_pop();
@@ -1501,6 +1525,16 @@ while ( $linenumber <= $#input){
 		}
 		else {
 			output (".B \"$input[$linenumber]\"");
+		}
+	}
+	elsif ($state  eq 'boldnospace'){
+		if ($input[$linenumber] =~/<\/boldnospace>/){
+			state_pop();
+		}
+		else {
+			$outatol=1;
+			output ("\\fB$input[$linenumber]\\fP");
+			$outatol=1;
 		}
 	}
 	elsif ($state  eq 'center'){
@@ -1564,7 +1598,17 @@ while ( $linenumber <= $#input){
 			state_pop();
 		}
 		else {
-			output ('.ft 6','.ps -2',$input[$linenumber],'.ps','.ft');
+			output ('.ft 6',$input[$linenumber],'.ft');
+		}
+	}
+	elsif ($state  eq 'fixednospace'){
+		if ($input[$linenumber] =~/<\/fixednospace>/){
+			state_pop();
+		}
+		else {
+			$outatol=1;
+			output ("\\f6$input[$linenumber]\\f[]");
+			$outatol=1;
 		}
 	}
 	elsif ($state  eq 'break'){
@@ -1589,6 +1633,7 @@ while ( $linenumber <= $#input){
 	}
 	elsif ($state  eq 'space'){
 		if ($input[$linenumber] =~/<\/space>/){
+			$outatol=1;
 			output (' ');
 			state_pop();
 		}
@@ -1645,6 +1690,12 @@ while ( $linenumber <= $#input){
 	}
 	elsif ($state  eq 'heading'){
 		if ($input[$linenumber] =~/<\/heading>/){
+			if ($level==1){ $variables{"H1"}++;$variables{"H2"}=0;$variables{"H3"}=0;$variables{"H4"}=0;$variables{"H5"}=0;$variables{"H6"}=0;}
+			if ($level==2){ $variables{"H2"}++;$variables{"H3"}=0;$variables{"H4"}=0;$variables{"H5"}=0;$variables{"H6"}=0;}
+			if ($level==3){ $variables{"H3"}++;$variables{"H4"}=0;$variables{"H5"}=0;$variables{"H6"}=0;}
+			if ($level==4){ $variables{"H4"}++;$variables{"H5"}=0;$variables{"H6"}=0;}
+			if ($level==5){ $variables{"H5"}++;$variables{"H6"}=0;}
+			if ($level==6){ $variables{"H6"}++;}
 			if ($level==0){
 				output (".ne 10v");
 				output (".HU \"$text\"");
@@ -1656,6 +1707,16 @@ while ( $linenumber <= $#input){
 				my $room=10-$level+5;
 				output (".ne $room"."v");
 				output (".HU \"$text\"");
+			}
+			elsif ($variables{"appendix"}==-1){
+				my $v=15/$level;
+				output (".ne $v".'v');
+				output (".H $level \"$text\"");
+			}
+			elsif (($variables{"H1"}>$variables{"appendix"}) && ($level==1)){
+				my $v=15/$level;
+				output (".ne $v".'v');
+				output (".APP \"\" \"$text\"");
 			}
 			else {
 				my $v=15/$level;

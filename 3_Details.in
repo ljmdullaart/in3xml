@@ -12,27 +12,50 @@ and after a one-line construct, the trailing blank line may be ommitted.
 In the previous chapter, we saw the constructs paragraph, table and list.
 A list of the constructs is in the table below:
 
-	.b Construct	.b Recognized by	.b Ends with	.b Usage
-	author	%.;author	End of line	Defines the author of the document
-	block	%.;block <type>	%.;block	Defines different type of blocks
-	cover	%.;cover	End of line	Defines an image for the cover page
-	heading	%.;h<level>	End of line	Defines a Chapter, section etc. title
-	headerlink	%.;headerlink	End of line	Defines a link for external scripts
-	header	%.;header	End of line	Includes a header-file if deemed appropriate
-	hr	%.;hr	End of line	Draws a horizontal line
-	image	%.;img	End of line	Includes an image
-	list	tab(s) with -,@ or #	blank line	Lists
-	lst	%.;lst	blank line	Listings
-	map	%.;map	blank line	Clickable map in HTML, an image in PS
-	note	%.;note	End of line	Defines a footnote
-	page	%.;page	End of line	Ejects a page
-	paragraph	other text	Blank line	Paragraphs of text
-	set	%.;set	End of line	Sets a variable
-	subtitle	%.;subtitle	End of line	Sets the document's subtitle
-	table	Tab 	Blank line	Tables
-	title	%.;title	End of line	Sets the title for the document
-	toc	%.;toc	End of line	Some sort of intermediate title
-	video	%.;video	End of line	In HTML, include a video here, in PS, take an image from a video
+|---------------------------------------------------------------------------------------------------------------------------------|
+| .b Construct     |  .b Recognized by     | .b Ends with     | .b Usage                                                          |
+|---------------------------------------------------------------------------------------------------------------------------------|
+|author            | %.;author             | End of line      | Defines the author of the document                                |
+|---------------------------------------------------------------------------------------------------------------------------------|
+|block             | %.;block <type>       | %.;block         | Defines different type of blocks                                  |
+|---------------------------------------------------------------------------------------------------------------------------------|
+|cover             | %.;cover              | End of line      | Defines an image for the cover page                               |
+|---------------------------------------------------------------------------------------------------------------------------------|
+|heading           | %.;h<level>           | End of line      | Defines a Chapter, section etc. title                             |
+|---------------------------------------------------------------------------------------------------------------------------------|
+|headerlink        | %.;headerlink         | End of line      | Defines a link for external scripts                               |
+|---------------------------------------------------------------------------------------------------------------------------------|
+|header            | %.;header             | End of line      | Includes a header-file if deemed appropriate                      |
+|---------------------------------------------------------------------------------------------------------------------------------|
+|hr                | %.;hr                 | End of line      | Draws a horizontal line                                           |
+|---------------------------------------------------------------------------------------------------------------------------------|
+|image             | %.;img                | End of line      | Includes an image                                                 |
+|---------------------------------------------------------------------------------------------------------------------------------|
+|---------------------------------------------------------------------------------------------------------------------------------|
+|list              | tab(s) with -,@ or #  | blank line       | Lists                                                             |
+|---------------------------------------------------------------------------------------------------------------------------------|
+|lst               | %.;lst                | blank line       | Listings                                                          |
+|---------------------------------------------------------------------------------------------------------------------------------|
+|map               | %.;map                | blank line       | Clickable map in HTML, an image in PS                             |
+|---------------------------------------------------------------------------------------------------------------------------------|
+|note              | %.;note               | End of line      | Defines a footnote                                                |
+|---------------------------------------------------------------------------------------------------------------------------------|
+|page              | %.;page               | End of line      | Ejects a page                                                     |
+|---------------------------------------------------------------------------------------------------------------------------------|
+|paragraph         | other text            | Blank line       | Paragraphs of text                                                |
+|---------------------------------------------------------------------------------------------------------------------------------|
+|set               | %.;set                | End of line      | Sets a variable                                                   |
+|---------------------------------------------------------------------------------------------------------------------------------|
+|subtitle          | %.;subtitle           | End of line      | Sets the document's subtitle                                      |
+|---------------------------------------------------------------------------------------------------------------------------------|
+|table             | Tab                   | Blank line       | Tables                                                            |
+|---------------------------------------------------------------------------------------------------------------------------------|
+|title             | %.;title              | End of line      | Sets the title for the document                                   |
+|---------------------------------------------------------------------------------------------------------------------------------|
+|toc               | %.;toc                | End of line      | Some sort of intermediate title                                   |
+|---------------------------------------------------------------------------------------------------------------------------------|
+|video             | %.;video              | End of line      | In HTML, include a video here, in PS, take an image from a video  |
+|---------------------------------------------------------------------------------------------------------------------------------|
 
 Within constructs, requests can be made. For example, within a paragraph, some
 text may be requested as bold. These are format requests. Some are not really used
@@ -54,10 +77,12 @@ request)
 	break	%.;br	line break
 	space	%.;space	spacing
 	underline	%.;u	underlined text
+	italic	%.;inospace	italic text without space before or after
 	italic	%.;i	italic text
 	bold	%.;b	bold text
 	center	%.;center	centered text
 	fixed	%.;fixed	fixed font
+	fixed	%.;fixednospace	fixed font without space before or after
 	font	%.;font	use a specific font
 	lst	%.;lst	listings
 	subscript	%.;sub	subscripts
@@ -298,10 +323,15 @@ to set the alignment. X can be:
 
 .set tableexpand no
 
-	.b X	.b Meaning
-	center	Center the cell content
-	left	Left justify the content
-	right	Right justify the content
+|---------------------------------------|
+| .b X      | .b Meaning                |
+|---------------------------------------|
+| center    | Center the cell content   |
+|---------------------------------------|
+| left      | Left justify the content  |
+|---------------------------------------|
+| right     | Right justify the content |
+|---------------------------------------|
 
 .set tableexpand yes
 

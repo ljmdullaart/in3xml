@@ -39,6 +39,7 @@ sub output{
 			if ($trace > 0){print STDERR "#                                                               output: $_\n";}
 		}
 	}
+	$outatol=0;
 }
 
 sub outputreplace {
@@ -390,6 +391,12 @@ sub formatrequest {
 		output('<i>');
 		state_push('italic');
 	}
+	elsif ($input =~/<italicnospace>/){
+		$outatol=1;
+		output('<i>');
+		$outatol=1;
+		state_push('italicnospace');
+	}
 	elsif ($input =~/<bold>/){
 		output('<b>');
 		state_push('bold');
@@ -450,6 +457,12 @@ sub formatrequest {
 	elsif ($input =~/<fixed>/){
 		output('<tt>');
 		state_push('fixed');
+	}
+	elsif ($input =~/<fixednospace>/){
+		$outatol=1;
+		output('<tt>');
+		$outatol=1;
+		state_push('fixednospace');
 	}
 	elsif ($input =~/<subscript>/){
 		$outatol=1;
@@ -1280,6 +1293,19 @@ while ( $linenumber <= $#input){
 			formatrequest($input[$linenumber]);
 		}
 	}
+	elsif ($state  eq 'italicnospace'){
+		if ($input[$linenumber] =~/<\/italicnospace>/){
+			$outatol=1;
+			output ('</i>');
+			state_pop();
+			$outatol=1;
+		}
+		else {
+			$outatol=1;
+			output ($input[$linenumber]);
+			$outatol=1;
+		}
+	}
 	elsif ($state  eq 'italic'){
 		if ($input[$linenumber] =~/<\/italic>/){
 			output ('</i>');
@@ -1327,6 +1353,17 @@ while ( $linenumber <= $#input){
 			$fitalic=0;
 			$fbold=0;
 			output ('</span>');
+			state_pop();
+		}
+		else {
+			output ($input[$linenumber]);
+		}
+	}
+	elsif ($state  eq 'fixednospace'){
+		if ($input[$linenumber] =~/<\/fixednospace>/){
+			$outatol=1;
+			output ('</tt>');
+			$outatol=1;
 			state_pop();
 		}
 		else {

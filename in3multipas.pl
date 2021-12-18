@@ -1663,13 +1663,17 @@ sub formatpass {
 		$lineindex++;
 		if (/^\.fix (.*)/){pushout('<fixed>'); pushout($1); pushout('</fixed>'); }
 		elsif ($line=~/^\.fixed (.*)/){pushout('<fixed>'); pushout($1); pushout('</fixed>'); }
+		elsif ($line=~/^\.fixednospace (.*)/){pushout('<fixednospace>'); pushout($1); pushout('</fixednospace>'); }
 		elsif ($line=~/^\.font (\w*) (.*)/){pushout("<font type=\"$1\">"); pushout($2); pushout('</font>'); }
 		elsif ($line=~/^\.center (.*)/){pushout('<center>'); pushout($1); pushout('</center>'); }
 		elsif ($line=~/^\.underline (.*)/){pushout('<underline>'); pushout($1); pushout('</underline>'); }
 		elsif ($line=~/^\.u (.*)/){pushout('<underline>'); pushout($1); pushout('</underline>'); }
+		elsif ($line=~/^\.unospace (.*)/){pushout('<underlinenospace>'); pushout($1); pushout('</underlinenospace>'); }
 		elsif ($line=~/^\.bold (.*)/){pushout('<bold>'); pushout($1); pushout('</bold>'); }
 		elsif ($line=~/^\.b (.*)/){pushout('<bold>'); pushout($1); pushout('</bold>'); }
+		elsif ($line=~/^\.bnospace (.*)/){pushout('<boldnospace>'); pushout($1); pushout('</boldnospace>'); }
 		elsif ($line=~/^\.i (.*)/){pushout('<italic>'); pushout($1); pushout('</italic>'); }
+		elsif ($line=~/^\.inospace (.*)/){pushout('<italicnospace>'); pushout($1); pushout('</italicnospace>'); }
 		elsif ($line=~/^\.italic (.*)/){pushout('<italic>'); pushout($1); pushout('</italic>'); }
 		elsif ($line=~/^\.sub (.*)/){pushout('<subscript>'); pushout($1); pushout('</subscript>'); }
 		elsif ($line=~/^\.sup (.*)/){pushout('<superscript>'); pushout($1); pushout('</superscript>'); }
