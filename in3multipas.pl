@@ -634,7 +634,30 @@ sub depricatepass{
 #  >  <| | | | | | |_____| |  _| |_| | | |_) | (_| \__ \__ \
 # /_/\_\_| |_| |_|_|     |_|_|  \__, | | .__/ \__,_|___/___/
 #                               |___/  |_|
+
+my %pcttranslate;
 sub xmlifypass {
+	my $from='';
+	my $dest='';
+	if (open (my $PCT, "<", "/usr/local/share/in3/in3charmap11" )){
+		while (<$PCT>){
+			chomp;
+			s/#.*//;
+			($from, $dest)=split '	';
+			if ((defined $from) && (defined $dest)){
+				if ( "$from" ne ""){
+					$pcttranslate{$from}=$dest;
+				}
+			}
+		}
+		close $PCT;
+	}
+	else {
+		$pcttranslate{'€'}='%eu;';
+	}
+
+
+
 	$passname='xmlifypass';
 	foreach (@passin){
 		$lineindex++;
@@ -646,6 +669,10 @@ sub xmlifypass {
 		s/"/&quot;/g;
 		s/'/&apos;/g;
 		s/\\/&#0092;/g;
+		my $key;
+		foreach $key (keys %pcttranslate){
+			s/$key/$pcttranslate{$key}/g;
+		}
 		pushout ($_);
 	}
 	endpass();
