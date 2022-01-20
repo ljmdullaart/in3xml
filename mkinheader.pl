@@ -102,7 +102,7 @@ elsif ($type eq 'index'){
 		print ".link $WD.epub (epub)\n";
 	}
 	if (( -d 'web' ) && ($do_total==1)){
-		print ".link total.html (1 page)\n";
+		print ".link complete.html (1 page)\n";
 	}
 	if (( -d 'www' ) && ($do_total==1)){
 		print ".link total.html (1 page)\n";
