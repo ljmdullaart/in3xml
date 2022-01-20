@@ -416,8 +416,10 @@ if [ -d $PDF ] ; then
 			echo "	cat $PDF/$stem.pic |pic > $PDF/$stem.eqn" >> Makefile
 			echo "	cat $PDF/$stem.eqn |eqn > $PDF/$stem.rof" >> Makefile
 			#echo "	cat $PDF/$stem.rof |groff -min -Kutf8 -Tpdf -pdfmark > $PDF/$stem.pdf" >> Makefile
-			if grep -q '^\.NOHEAD' stylesheet.mm ; then
-				dohead=' -rN4  '
+			if [ -f stylesheet.mm ] ; then
+				if grep -q '^\.NOHEAD' stylesheet.mm ; then
+					dohead=' -rN4  '
+				fi
 			fi
 			if [ "$stem" = "complete" ] ; then
 				echo "	cat $PDF/$stem.rof |groff -min -rN=4 -Kutf8 -rN4 > $PDF/$stem.ps" >> Makefile
