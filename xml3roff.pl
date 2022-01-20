@@ -2133,6 +2133,17 @@ sub unxmlstr {
 	return $str;
 }
 
+for my $i (0..$#output){
+	$output[$i]=~s/&lt;/</g;
+	$output[$i]=~s/&gt;/>/g;
+	$output[$i]=~s/&quot;/"/g;
+	$output[$i]=~s/&apos;/'/g;
+	$output[$i]=~s/&amp;/&/g;
+	$output[$i]=~s/&#0092;/\\\\/g;
+	$output[$i]=~s/^%\.;/\\&./;
+	$output[$i]=~s/%backslash;/\\\\/g;
+}
+
 for (@charmap){
 	chomp;
 	my $char;
@@ -2148,6 +2159,17 @@ for (@charmap){
 		}
 		elsif ($output[$i]=~/$html/){
 			$output[$i]=~s/$html/$groff/g;
+		}
+	}
+}
+
+for my $i (0..$#output){
+	for my $i (0..$#output){
+		if ($output[$i]=~/\%\%;/){
+			$output[$i]=~s/\%\%;/\%/g;
+		}
+		elsif ($output[$i]=~/\%pct;/){
+			$output[$i]=~s/\%pct;/\%/g;
 		}
 	}
 }
@@ -2228,15 +2250,19 @@ if ($variables{'COVER'} eq 'yes'){
 
 
 for (@output){
-	s/&lt;/</g;
-	s/&gt;/>/g;
-	s/&quot;/"/g;
-	s/&apos;/'/g;
-	s/&amp;/&/g;
-	s/&#0092;/\\\\/g;
-	s/^%\.;/\\&./;
-	s/%backslash;/\\\\/g;
-	print "$_\n";
+	#s/&lt;/</g;
+	#s/&gt;/>/g;
+	#s/&quot;/"/g;
+	#s/&apos;/'/g;
+	#s/&amp;/&/g;
+	#s/&#0092;/\\\\/g;
+	#s/^%\.;/\\&./;
+	#s/%backslash;/\\\\/g;
+	my $a=$_;
+	while ($a=~/([^f\[\]]*)\\f\[(\w+)\](.+)\\f\[\](\s*)\\f\[\g2\](.*)/){
+		$a="$1\\f\[$2]$3$4$5";
+	}
+	print "$a\n";
 }
 
 if ($variables{'TOC'}>0){
