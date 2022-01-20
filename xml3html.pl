@@ -563,9 +563,21 @@ sub outimage {
 	elsif ($format=~/right/){
 		output ("<img src=\"$blockimg\" alt=\"$img\" width=\"$width\" height=\"$height\" align='right' style=\"margin:10px 10px;vertical-align:-10;\">");
 	}
-	else {
+	elsif ($format=~/full/){
 		output ('<div style="text-align: center">');
-		output ("<img src=\"$blockimg\" alt=\"$img\" width=90% >");
+		output ("<img src=\"$blockimg\" alt=\"$img\" width=$width >");
+		output ('</div>');
+	}
+	elsif ($format=~/half/){
+		$width=$width/2;
+		output ('<div style="text-align: center">');
+		output ("<img src=\"$blockimg\" alt=\"$img\" width=$width >");
+		output ('</div>');
+	}
+	else {
+		$width=$width/1.2;
+		output ('<div style="text-align: center">');
+		output ("<img src=\"$blockimg\" alt=\"$img\" width=$width >");
 		output ('</div>');
 	}
 	progress();
