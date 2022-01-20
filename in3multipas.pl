@@ -1744,6 +1744,28 @@ sub formatpass {
 			pushout('</file>');
 			pushout('</image>');
 		}
+		elsif ($line=~/^\.img *FULL *([^ ]*)/){
+			my $imgname=imgconvert($1);
+			pushout('<image>');
+			pushout('<format>');
+			pushout('full');
+			pushout('</format>');
+			pushout('<file>');
+			pushout("\"$imgname\"");
+			pushout('</file>');
+			pushout('</image>');
+		}
+		elsif ($line=~/^\.img *HALF *([^ ]*)/){
+			my $imgname=imgconvert($1);
+			pushout('<image>');
+			pushout('<format>');
+			pushout('half');
+			pushout('</format>');
+			pushout('<file>');
+			pushout("\"$imgname\"");
+			pushout('</file>');
+			pushout('</image>');
+		}
 		elsif ($line=~/^\.img ([^ ]*)/){
 			my $imgname=imgconvert($1);
 			pushout('<image>');
