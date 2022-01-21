@@ -464,7 +464,7 @@ sub outimage {
 		system ("in3fileconv $img block/$imagename");
 	}
 	# We now have an image in block/$imagename as .eps
-	if ($iformat =~/inlinejhegfqewugfwueygfxqbugfquyfgxbqweuyfgbqeugfbqgefb/){
+	if (1==2){
 		#try that later
 	}
 	elsif ($type=~/music/) {
@@ -563,6 +563,8 @@ sub outimage {
 		($x,$y)=split ('x',$imgsize);
 		my $myscale=$scale;
 		if ($x>$variables{'imagex'}){$myscale=$variables{'imagex'}*$scale/$x;}
+		if ($iformat =~ /full/){ $myscale=50000/$x;}
+		if ($iformat =~ /half/){ $myscale=25000/$x;}
 		my $y2=$y*$myscale/$variables{'imagey'};
 		if ($y2>$variables{'imagey'}){$myscale=$variables{'imagey'}*$scale/$y;}
 		$y=$y*$myscale/500;
@@ -1282,7 +1284,15 @@ while ( $linenumber <= $#input){
 					close $PLOT;
 					system("gnuplot $blk.gnuplot");
 					#system ("eps2eps -B1  $blk.ps $blk.eps");
-					outimage("$blk.eps", $format." scale=$mscale ");
+					if ($format=~/full/){
+						outimage("$blk.eps", $format." full");
+					}
+					elsif ($format=~/half/){
+						outimage("$blk.eps", $format." half ");
+					}
+					else {
+						outimage("$blk.eps", $format." scale=$mscale ");
+					}
 				}
 				else {
 					error ("Cannot open $blk.gnuplot"); 
@@ -1781,7 +1791,7 @@ while ( $linenumber <= $#input){
 	elsif ($state eq 'map'){
 		if ($input[$linenumber] =~/<\/map>/){
 			if ($file ne ''){
-				outimage ($file);
+				outimage ($file,'full');
 			}
 			$file='';
 			state_pop();
@@ -1806,7 +1816,7 @@ while ( $linenumber <= $#input){
 		if ($input[$linenumber] =~/<\/image>/){
 			if ($file ne ''){
 				if ($text eq ''){ $text=$file;}
-				outimage($file);
+				outimage($file,$format);
 				$text='';
 				$file='';
 				$format='';

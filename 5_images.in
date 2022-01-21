@@ -23,10 +23,33 @@ floats around a picture
 which seeks to imitate the nice capitalizations that you sometimes see
 in medieval handwritings. The picture is included with
 .fixed %.;img LEFT I.xcf.
-Of course, in stead of LEFT, you may also opt 
-to use RIGHT, and then the image is placed on the right side of the text.
+Of course, in stead of
+.fixed LEFT
+, you may also opt 
+to use
+.fixed RIGHT
+, and then the image is placed on the right side of the text.
 Beware though: left and right floating pictures are not supported in combination
 with left or side notes.
+In addition,
+.fixed FULL
+will try to create a full-width image and 
+.fixed HALF
+will try to create a half page width image.
+
+As examples, the next is the same
+.fixed plaatje.png
+as above with
+.fixed FULL
+specified:
+
+.img FULL plaatje.png
+
+and with 
+.fixed HALF
+:
+
+.img HALF plaatje.png
 
 An in-line picture is also possible, and it is not limited to
 .img IMG_0364.xcf
