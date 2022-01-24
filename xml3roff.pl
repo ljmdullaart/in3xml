@@ -135,10 +135,11 @@ my %variables;
     $variables{'interpret'}=1;
     $variables{'markdown'}=0;
     $variables{'notes'}=0;
-	$variables{'picheight'}=5;
+    $variables{'picheight'}=5;
     $variables{'preauthor'}=0;
     $variables{'sidechar'}='*';
     $variables{'sidesep'}=';';
+
 
 my @input;
 my @infile;
@@ -562,9 +563,11 @@ sub outimage {
 		my $x; my $y; my $xn;
 		($x,$y)=split ('x',$imgsize);
 		my $myscale=$scale;
+		my $extra='';
 		if ($x>$variables{'imagex'}){$myscale=$variables{'imagex'}*$scale/$x;}
-		if ($iformat =~ /full/){ $myscale=50000/$x;}
-		if ($iformat =~ /half/){ $myscale=25000/$x;}
+		if ($iformat =~ /full/){ $myscale=50000/$x;$extra=' 14c';}
+		if ($iformat =~ /half/){ $myscale=25000/$x;$extra=' 7c';}
+		if ($iformat =~ /quart/){ $myscale=12500/$x;$extra=' 3.5c';}
 		my $y2=$y*$myscale/$variables{'imagey'};
 		if ($y2>$variables{'imagey'}){$myscale=$variables{'imagey'}*$scale/$y;}
 		$y=$y*$myscale/500;
@@ -584,11 +587,11 @@ sub outimage {
 		}
 		elsif($format =~/left/){
 			output (".ne $need".'p');
-			output (".lfloat block/$imagename");
+			output (".lfloat block/$imagename $extra");
 		}
 		elsif($format =~/right/){
 			output (".ne $need".'p');
-			output (".rfloat block/$imagename");
+			output (".rfloat block/$imagename $extra");
 		}
 		else {
 			output (".ne $need".'p');
@@ -1261,6 +1264,40 @@ while ( $linenumber <= $#input){
 					output($_);
 				}
 				output ('.EN');
+			}
+			elsif ($type eq 'piechart'){
+				my $mscale=1000;
+				if ($format=~/scale=([0-9]+)/){
+					$mscale=$1;
+					$format=~s/scale=[0-9]+//;
+				}
+				$mscale=$mscale/4;   # CHECK  for inline scale!
+				my $density=1000;
+				if (open my $PLOT, '>',"$blk.piechart"){
+					for (@blocktext){
+						chomp;
+						if (/^".*"$/){
+							s/^"//;
+							s/"$//;
+						}
+						s/	/,/g;
+						print $PLOT "$_\n";
+					}
+					system(" piechart $blk.piechart --order value,explode,color,legend > $blk.svg");
+					if ($format=~/full/){
+						outimage("$blk.svg", $format." full");
+					}
+					elsif ($format=~/half/){
+						outimage("$blk.svg", $format." half ");
+					}
+					else {
+						outimage("$blk.svg", $format." scale=$mscale ");
+					}
+				}
+				else {
+					error ("Cannot open $blk.piechart"); 
+				}
+					
 			}
 			elsif ($type eq 'gnuplot'){
 				my $mscale=1000;
