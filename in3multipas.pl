@@ -31,6 +31,7 @@ my %variables;
 	$variables{'author'}='';
 	$variables{'back'}=0;
 	$variables{'blocknumber'}=0;
+	$variables{'blocktype'}='';
 	$variables{'cellalign'}='left';
 	$variables{'cover'}='';
 	$variables{'filename'}='stdin';
@@ -41,6 +42,15 @@ my %variables;
 	$variables{'metaname'}='meta.in';
 	$variables{'notenumber'}=0;
 	$variables{'notestring'}='(%NUM)';
+	$variables{'seqpre'}=0;
+	$variables{'seqimg'}=0;
+	$variables{'seqpic'}=0;
+	$variables{'seqeqn'}=0;
+	$variables{'seqgnuplot'}=0;
+	$variables{'seqmusic'}=0;
+	$variables{'seqtexeqn'}=0;
+	$variables{'seqequation'}=0;
+	$variables{'seqfigure'}=0;
 	$variables{'sidechar'}='*';
 	$variables{'sidenumber'}=0;
 	$variables{'sideref'}='';
@@ -1037,10 +1047,18 @@ sub blockpass {
 			if ($line=~/^\.block (.*)/){
 				$variables{'blocknumber'}=$variables{'blocknumber'}+1;
 				$blockname="$variables{'filename'}.$variables{'blocknumber'}";
+				my $blktype=$1;
+				$variables{'blocktype'}=$blktype;
+				if (defined $variables{"seq$blktype"})
+					{$variables{"seq$blktype"}++;
+				}
+				else {
+					$variables{"seq$blktype"}=1;
+				}
 				progress();
 				pushout("<block>");
 				pushout("<name>"); pushout("\"$blockname\""); pushout("</name>");
-				pushout("<type>"); pushout("\"$1\""); pushout("</type>");
+				pushout("<type>"); pushout("\"$blktype\""); pushout("</type>");
 				$inblk=1;
 				undef @thisblock;
 			}
@@ -1071,6 +1089,9 @@ sub blockpass {
 		elsif ($inblk==1){
 			if (/^\.block format (.*)/){
 				pushout("<format>"); pushout("\"$1\""); pushout("</format>");
+			}
+			elsif (/^\.block caption (.*)/){
+				pushout("<caption>"); pushout("\"$1\""); pushout("</caption>");
 			}
 			elsif (/^\.block/){
 				pushout("<blocktext>");
@@ -1722,6 +1743,18 @@ sub formatpass {
 			pushout('</target>');
 			pushout('</link>');
 		}
+		elsif ($line=~/^\.img *([A-Z]+) *([^ ]*)/){
+			my $fmt=lc $1;
+			my $imgname=imgconvert($2);
+			pushout('<image>');
+			pushout('<format>');
+			pushout($fmt);
+			pushout('</format>');
+			pushout('<file>');
+			pushout("\"$imgname\"");
+			pushout('</file>');
+			pushout('</image>');
+		}
 		elsif ($line=~/^\.img *LEFT *([^ ]*)/){
 			my $imgname=imgconvert($1);
 			pushout('<image>');
@@ -2075,6 +2108,19 @@ sub blockmakepass {
 					else { print STDERR "Cannot open $blk.pic\n"; }
 
 				}
+			    elsif ($type eq 'piechart'){
+					if (open (my $PIECHART, '>',"$blk.piechart")){
+						for (@thisblock){
+							print $PIECHART "$_\n";
+						}
+						close $PIECHART;
+						system(" piechart $blk.piechart --order value,explode,color,legend > $blk.svg");
+						pushout('<image>');
+						pushout("$blk.svg");
+						pushout('</image>');
+					}
+					else { print STDERR "Cannot open $blk.piechart\n"; }
+				}
 			    elsif ($type eq 'gnuplot'){
 					if (open (my $GNUPLOT, '>',"$blk.gnuplot")){
 						print $GNUPLOT "set terminal png size 800,800 enhanced font \"Helvetica,8\"";
@@ -2089,8 +2135,6 @@ sub blockmakepass {
 						pushout('</image>');
 					}
 					else { print STDERR "Cannot open $blk.gnuplot\n"; }
-
-
 				}
 			    elsif ($type eq 'music'){
 					if (open (my $MUSIC, '>',"$blk.ly")){
