@@ -85,6 +85,7 @@ use of these pictures.
 gives:
 
 .block pic
+.block caption Example pic-block
 circle
 arrow
 box
@@ -114,6 +115,7 @@ gives
  
 
 .block eqn
+.block caption Example eqn-block
 pi r sup 2
 .block
 
@@ -157,6 +159,7 @@ set display, papersize et cetera. As an example:
 .pre
 
 .block gnuplot
+.block format quart
 $mydata <<EOD
 1 0-10  8   2.67
 2 10-15 14  4.67
@@ -228,9 +231,51 @@ becomes:
 
 
 .block texeqn
+.block format quart
 \begin{align*}
 S(\omega)
 &= \frac{\alpha g^2}{\omega^5} e^{[ -0.74\bigl\{\frac{\omega U_\omega 19.5}{g}\bigr\}^{\!-4}\,]} \\
 &= \frac{\alpha g^2}{\omega^5} \exp\Bigl[ -0.74\Bigl\{\frac{\omega U_\omega 19.5}{g}\Bigr\}^{\!-4}\,\Bigr]
 \end{align*}
 .block
+
+.h2 Piechart
+
+With the distribution you might get a copy of  Sam Hocevar's piechart program. Because it has a DWTFYW-license
+I incorporated it in the ditribution of in3xml.
+The tables must have the order value, explode, color and legend. So, for example, if the data is:
+
+|-----------------------------|
+| 25  | 10 | red    | not ok  |
+|-----------------------------|
+| 25  | 20 | yellow | warn    |
+|-----------------------------|
+| 25  | 30 | blue   | unknown |
+|-----------------------------|
+| 150 | 0  | green  | ok      |
+|-----------------------------|
+
+
+The block would be:
+
+.pre
+ .block piechart
+ .block format leftquart
+ 25,10,red,not ok
+ 25,20,yellow,warn
+ 25,30,blue,unknown
+ 150,0,green,ok
+ .block
+.pre
+
+with the result:
+
+.block piechart
+.block format leftquart
+25,10,red,not ok
+25,20,yellow,warn
+25,30,blue,unknown
+150,0,green,ok
+.block
+
+Note that the format is a combined format here: left for having the piechart on the left and quart for the size.
