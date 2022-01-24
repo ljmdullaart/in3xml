@@ -65,7 +65,7 @@ This is the in3 xml definition
 <!ELEMENT leftnote (#PCDATA)>
 
 <!-- Tables -->
-<!ELEMENT table (row*)>
+<!ELEMENT table (row|caption)*>
 <!ELEMENT row (cell*)>
 <!ELEMENT cell (#PCDATA |note|blank|break|space|underline|italicnospace|italic|bold|center|font|fixednospace|fixed|lst|subscript|superscript|video|image|block|link|set|merge)* >
 	<!ATTLIST cell
@@ -80,8 +80,8 @@ This is the in3 xml definition
 <!ELEMENT value (#PCDATA)>
 <!ELEMENT variable (#PCDATA)>
 
-<!ELEMENT image (file|format)*>
-<!ELEMENT block (name|type|blocktext|image|format)*>
+<!ELEMENT image (file|format|caption)*>
+<!ELEMENT block (name|type|blocktext|image|format|caption)*>
 <!ELEMENT blocktext (#PCDATA)>
 
 <!ELEMENT note (ref|seq|notetext)*>
@@ -112,3 +112,4 @@ This is the in3 xml definition
 <!ELEMENT target (#PCDATA)>
 <!ELEMENT type (#PCDATA)>
 <!ELEMENT merge (#PCDATA)>
+<!ELEMENT caption (#PCDATA)>
