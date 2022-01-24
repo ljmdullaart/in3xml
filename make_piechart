@@ -1,0 +1,15 @@
+#!/bin/bash
+
+
+#DO_ME
+#CLEAN_ME
+
+#DEP piechart/piechart.c piechart/svg_header
+
+if [ "$1" = "DO_ME" ] ; then
+	cd piechart ; make && sudo make install
+elif [ "$1" = "CLEAN_ME" ] ; then
+	cd piechart ; make clean
+fi
+	
+
