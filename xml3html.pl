@@ -519,23 +519,11 @@ sub outimage {
 	my $baseimg=basename($img);
 	my $blockimg="block/$baseimg";
 	if ($blockimg=~/(.*)\.png/){}
+	elsif ($blockimg=~/(.*)\.svg/){}
 	else {
 		$blockimg=~s/\.[^\.]*$/.png/;
 	}
 	system ("in3fileconv $img $blockimg");
-	#if ($baseimg=~/(.*)\.xcf/){
-	#$baseimg="$1.png";
-	#$blockimg="block/$baseimg";
-	#progress();
-	#system ("in3fileconv $img $blockimg");
-	##system ("convert $img $baseimg >/dev/null 2>/dev/null");
-	##system ("cp $baseimg block/$baseimg");
-	#}
-	#else {
-	#system ("in3fileconv $img $blockimg");
-	##system ("cp $img web/$blockimg >/dev/null 2>/dev/null");
-	#}
-
 	my $imgsize=` imageinfo --geom $blockimg`;
 	chomp $imgsize;
 	my $scale=100; #percent
@@ -548,12 +536,14 @@ sub outimage {
 		if ($scale > (100*$variables{'imagey'})/$x){ $scale=(100*$variables{'imagey'})/$y;}
 	}
 	my $align='';
-	if ($inline>0){$scale=24;}
+	#if ($inline>0){$scale=24;}
 	my $width=($x*$scale)/200;
 	my $height=($y*$scale)/200;
+	if ($format =~/inttwice/){ $width=$width*2; $height=$height*2; }
+	if ($format =~/inttrice/){ $width=$width*2; $height=$height*3; }
 	my $align=$y/10;
 	if ($inline>0){
-		output ("<img src=\"$blockimg\" alt=\"$img\" width=\"$width\" height=\"$height\" style=\"vertical-align:-$align%;\">");
+		output ("<img src=\"$blockimg\" alt=\"$img\" width=\"$width\" style=\"vertical-align:-$align%;\">");
 	}
 	elsif ($format=~/left/){
 		output ("<img src=\"$blockimg\" alt=\"$img\" width=\"$width\" height=\"$height\" align='left' style=\"margin:10px 10px;vertical-align:-10;\">");
@@ -568,14 +558,20 @@ sub outimage {
 		output ("<img src=\"$blockimg\" alt=\"$img\" width=$width >");
 		output ('</div>');
 	}
+	elsif ($format=~/quart/){
+		$width=$width/2;
+		output ('<div style="text-align: center">');
+		output ("<img src=\"$blockimg\" alt=\"$img\" width=25% >");
+		output ('</div>');
+	}
 	elsif ($format=~/half/){
 		$width=$width/2;
 		output ('<div style="text-align: center">');
-		output ("<img src=\"$blockimg\" alt=\"$img\" width=$width >");
+		output ("<img src=\"$blockimg\" alt=\"$img\" width=50% >");
 		output ('</div>');
 	}
 	else {
-		$width=$width/1.2;
+		if ($width> 500){$width=$width/1.2;}
 		output ('<div style="text-align: center">');
 		output ("<img src=\"$blockimg\" alt=\"$img\" width=$width >");
 		output ('</div>');
@@ -963,6 +959,40 @@ while ( $linenumber <= $#input){
 				output ('<br>');
 				output ('</div>');
 			}
+			elsif ($type=~/piechart(.*)/){
+				my $mscale=100;
+				$mscale=$mscale;   # CHECK  for inline scale!
+				my $blk="block/$name";
+				my $density=1000;
+				my $x=800*$mscale/100;
+				my $y=600*$mscale/100;
+				if (open my $PLOT, '>',"$blk.piechart"){
+					for (@blocktext){
+						chomp;
+						if (/^".*"$/){
+							s/^"//;
+							s/"$//;
+							s/&#0092;/\\/g;
+						}
+						s/	/,/g;
+						print $PLOT "$_\n";
+					}
+					close $PLOT;
+					progress();
+					system(" piechart $blk.piechart --order value,explode,color,legend > $blk.svg");
+					if ($inline==0){
+						output ('<div style="text-align: center">');
+					}
+					#output("<img src=\"$blk.svg\"  width=\"$x\">");
+					outimage ("$blk.svg");
+					if ($inline==0){
+						output ('</div>');
+					}
+				}
+				else {
+					error ("Cannot open $blk.piechart"); 
+				}
+			}
 			elsif ($type=~/gnuplot(.*)/){
 				my $mscale=100;
 				#if ($format=~/scale=([0-9]+)/){
@@ -993,7 +1023,9 @@ while ( $linenumber <= $#input){
 					if ($inline==0){
 						output ('<div style="text-align: center">');
 					}
-					output("<img src=\"$blk.svg\"  width=\"$x\">");
+					#output("<img src=\"$blk.svg\"  width=\"$x\">");
+					outimage ("$blk.svg");
+					
 					if ($inline==0){
 						output ('</div>');
 					}
@@ -1043,7 +1075,8 @@ while ( $linenumber <= $#input){
 					if ($inline==0){
 						output ('<div style="text-align: center">');
 					}
-					output("<img src=\"$blk.svg\" alt=\"$blk\" style=\"height:$ysize;vertical-align:-$yalign;\">");
+					#output("<img src=\"$blk.svg\" alt=\"$blk\" style=\"height:$ysize;vertical-align:-$yalign;\">");
+					outimage ("$blk.svg");
 					if ($inline==0){
 						output ('</div>');
 					}
@@ -1058,6 +1091,7 @@ while ( $linenumber <= $#input){
 				my $density=1000;
 				my $x=800*$mscale/100;
 				my $y=600*$mscale/100;
+				$format="inttrice$format";
 				if (open (my $EQN,'>',"$blk.eqn")){
 					print $EQN ".EQ\n";
 					for (@blocktext){
@@ -1084,7 +1118,8 @@ while ( $linenumber <= $#input){
 					if ($inline==0){
 						output ('<div style="text-align: center">');
 					}
-					output("<img src=\"$blk.svg\" alt=\"$blk\" style=\"height:$ysize;vertical-align:-$yalign;\">");
+					#output("<img src=\"$blk.svg\" alt=\"$blk\" style=\"height:$ysize;vertical-align:-$yalign;\">");
+					outimage ("$blk.svg");
 					if ($inline==0){
 						output ('</div>');
 					}
@@ -1178,6 +1213,7 @@ while ( $linenumber <= $#input){
 						output ('<div style="text-align: center">');
 					}
 					output("<img src=\"$blk.png\" alt=\"$blk\" style=\"height:$ysize;\">");
+
 					if ($inline==0){
 						output ('</div>');
 					}
