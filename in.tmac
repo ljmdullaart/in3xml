@@ -3718,7 +3718,7 @@ in=\\n[.i] fi=\\n[.u] .d=\\n[.d] nl=\\n[nl] pg=\\n[%]
 .
 .  ev rfloat-env
 .    di rfloat-div
-.      PSPIC -L \\$1
+.      PSPIC -L \\$1 \\$2
 .    di
 .  ev
 .
@@ -3776,7 +3776,7 @@ in=\\n[.i] fi=\\n[.u] .d=\\n[.d] nl=\\n[nl] pg=\\n[%]
 .
 .de lfloat
 .    di lfloat-div
-.      PSPIC -L \\$1
+.      PSPIC -L \\$1 \\$2
 .    di
 .
 .  \" The vertical and horizontal dimensions of the image are now stored in
