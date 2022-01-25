@@ -21,6 +21,27 @@ The following block-types exist:
 	music	Music format using Lilypond
 	texeqn	More elaborate equations using Tex
 
+Most block types will accept a format line
+
+.pre
+.block format <format>
+.pre
+
+with 
+.fixed <format>:
+
+	.fixed <format>	.b meaning
+	.fixed full	Block is displayed over about the full width
+	.fixed half	Block is displayed over about the half width
+	.fixed quart	Block is displayed over a quarter of the width
+	.fixed left	block is displayed on the left side
+	.fixed right	Block is displayed on the right side
+
+A combination like
+.fixed halfright
+or
+.fixed leftquart
+is possible as long as they are sensical.
 
 .h2 Pre-formatted block
 
@@ -278,4 +299,4 @@ with the result:
 150,0,green,ok
 .block
 
-Note that the format is a combined format here: left for having the piechart on the left and quart for the size.
+Note that the format for the block is a combined format here: left for having the piechart on the left and quart for the size.
