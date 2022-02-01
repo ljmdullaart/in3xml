@@ -1743,7 +1743,7 @@ sub formatpass {
 			pushout('</target>');
 			pushout('</link>');
 		}
-		elsif ($line=~/^\.img *([A-Z]+) *([^ ]*)/){
+		elsif ($line=~/^\.img +([A-Z]+) +([^ ]*)/){
 			my $fmt=lc $1;
 			my $imgname=imgconvert($2);
 			pushout('<image>');
