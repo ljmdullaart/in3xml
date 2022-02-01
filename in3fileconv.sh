@@ -56,6 +56,8 @@ if [ $logsize -ge 500 ] ; then
 	touch /tmp/in3fileconv.log
 fi
 
+
+
 fromfile="$1"
 tofile="$2"
 frombase=$(basename "$fromfile")
@@ -64,6 +66,32 @@ fromext=${frombase##*.}
 toext=${tobase##*.}
 fromstem=${frombase%.*}
 tostem=${tobase%.*}
+
+gimpcnvt(){
+{
+cat <<EOF
+(define (convert-xcf-png filename outpath)
+    (let* (
+            (image (car (gimp-file-load RUN-NONINTERACTIVE filename filename )))
+            (drawable (car (gimp-image-merge-visible-layers image CLIP-TO-IMAGE)))
+            )
+        (begin (display "Exporting ")(display filename)(display " -> ")(display outpath)(newline))
+	(plug-in-semiflatten RUN-NONINTERACTIVE image drawable)
+        (gimp-file-save RUN-NONINTERACTIVE image drawable outpath outpath )
+        (gimp-image-delete image)
+    )
+)
+
+(gimp-message-set-handler 1) ; Messages to standard output
+EOF
+
+echo "(convert-xcf-png \"$1\" \"$2\")"
+
+echo "(gimp-quit 0)"
+
+} | gimp -i -b -
+}
+
 cat >> /tmp/in3fileconv.log <<EOF
 ------------------------
 EOF
@@ -151,7 +179,29 @@ case $fromext in
 				>&2 echo "Sorry, no conversion from $fromext to $toext known."
 				;;
 		esac ;;
-	(JPG|jpg|XCF|xcf)
+	(XCF|xcf)
+		case $toext in
+			(eps)
+				gimpcnvt "$fromfile" block/tmp.$$.png
+				convert  "block/tmp.$$.png"  pnm:- | convert -density 300 -trim - "block/$tobase"
+				rm -f block/tmp.$$.png
+				;;
+			(jpg|png)
+				gimpcnvt "$fromfile" "block/$tobase"
+				;;
+			(pdf)
+				gimpcnvt "$fromfile" block/tmp.$$.png
+				convert  "$fromfile"  pnm:- | convert -density 300 -trim - $TMP.pdf
+				rm -f block/tmp.$$.png
+			 	debug pdfcrop $TMP.pdf "block/$tobase.pdf"
+			 	pdfcrop $TMP.pdf "block/$tobase.pdf"
+				rm -f $TMP.pdf
+				;;
+				
+			esac
+		;;	
+
+	(JPG|jpg)
 		case $toext in
 			(eps)
 				debug "convert  $fromfile  pnm:- | convert -density 300 -trim - block/$tobase"
