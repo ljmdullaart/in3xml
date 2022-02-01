@@ -1,0 +1,81 @@
+Thu Jan 20 16:40:11 CET 2022
+Doing /tmp/configyour.2993093
+feature
+fotoblader
+htmlindex
+in
+in3xml
+merge
+pgm
+photo
+photoswipe
+photozip
+src
+BIN=/usr/local/bin
+-rwxr-xr-x 1 root root 599 Jan 20 14:18 /usr/local/bin/configyour.feature
+-rwxr-xr-x 1 root root 1918 Dec 24 23:17 /usr/local/bin/configyour.fotoblader
+-rwxr-xr-x 1 root root 1829 Aug 16 19:40 /usr/local/bin/configyour.htmlindex
+-rwxr-xr-x 1 root root 20036 Aug 16 19:40 /usr/local/bin/configyour.in
+-rwxr-xr-x 1 root root 11169 Jan 20 14:32 /usr/local/bin/configyour.in3xml
+-rwxr-xr-x 1 root root 1722 Dec 29 15:48 /usr/local/bin/configyour.merge
+-rwxr-xr-x 1 root root 7269 Jan 20 14:30 /usr/local/bin/configyour.pgm
+-rwxr-xr-x 1 root root 6390 Aug 16 19:40 /usr/local/bin/configyour.photo
+-rwxr-xr-x 1 root root 4252 Dec 24 18:22 /usr/local/bin/configyour.photoswipe
+-rwxr-xr-x 1 root root 2119 Aug 16 19:40 /usr/local/bin/configyour.photozip
+-rwxr-xr-x 1 root root 1587 Jan 20 14:18 /usr/local/bin/configyour.src
+************************************************************************
+Configyour.feature starting
+Not applicable
+Configyour.feature finnished
+************************************************************************
+Configyour.fotoblader starting
+No 'FOTOBLADER' in imagelist
+Not applicable
+Configyour.fotoblader finishing
+************************************************************************
+Configyour.htmlindex starting
+Configyour.htmlindex finishing
+************************************************************************
+configour.in3 starting
+#  Starting configure with:
+#    host       = shell.xs4all.nl
+#    remote_dir = WWW/noto
+#    dest       = xs4all
+#    pwd        = /home/ljm/src/fonts/noto
+#    wd         = noto
+No .in-files found
+configour.in3 finishing
+************************************************************************
+Configyour.in3xml starting
+No in3xml directory
+Not applicable
+************************************************************************
+Configyour.merge starting
+Not applicable
+Configyour.merge finnished
+************************************************************************
+/usr/local/bin/configyour.pgm starting
+	CRONS 
+	PGMS: 
+	SOURCES: 
+	REMOTES: 
+	DO ME: do_install.sh
+	DO ME: do_install.sh
+	do me: do_install.sh
+************************************************************************
+/usr/local/bin/configyour.photo starting
+No imagelist
+Not appliable
+************************************************************************
+/usr/local/bin/configyour.photoswipe starting
+No imagelist
+Not applicable
+************************************************************************
+/usr/local/bin/configyour.photozip starting
+No imagelist file
+Not appliacble
+************************************************************************
+configyour.src starting
+No src directory
+Not applicable
+configyour.src finished
