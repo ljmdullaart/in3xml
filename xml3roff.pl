@@ -103,6 +103,23 @@ sub error {
 	}
 }
 
+my $print5=999999;
+
+sub prt5 {
+	(my $line)=@_;
+	if ($print5 < 5 ){
+		print STDERR "CONTEXT - $line\n";
+		$print5++
+	}
+}
+
+
+#for (@output){
+#	if (/^\.FS/){$print5=0;}
+#	prt5($_);
+#}
+
+
 
 # Variables for overall use
 my %variables;
@@ -2255,6 +2272,7 @@ if ($variables{'COVER'} eq 'yes'){
 	}
 	else {
 		print ".PGNG\n";
+		print ".ie o .bp\n";
 		$variables{'title'}=unxmlstr($variables{'title'});
 		$variables{'subtitle'}=unxmlstr($variables{'subtitle'});
 		$variables{'author'}=unxmlstr($variables{'author'});
@@ -2296,6 +2314,7 @@ if ($variables{'COVER'} eq 'yes'){
 }
 
 
+my $a='';
 for (@output){
 	#s/&lt;/</g;
 	#s/&gt;/>/g;
@@ -2305,11 +2324,14 @@ for (@output){
 	#s/&#0092;/\\\\/g;
 	#s/^%\.;/\\&./;
 	#s/%backslash;/\\\\/g;
-	my $a=$_;
-	while ($a=~/([^f\[\]]*)\\f\[(\w+)\](.+)\\f\[\](\s*)\\f\[\g2\](.*)/){
-		$a="$1\\f\[$2]$3$4$5";
+	if (($a eq '.P') && ($_ eq '.P')){}
+	else {
+		my $a=$_;
+		while ($a=~/(.*)\\f\[(\w+)\](.+)\\f\[\](\s*)\\f\[\g2\](.*)/){
+			$a="$1\\f\[$2]$3$4$5";
+		}
+		print "$a\n";
 	}
-	print "$a\n";
 }
 
 if ($variables{'TOC'}>0){
