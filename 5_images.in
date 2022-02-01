@@ -33,9 +33,15 @@ Beware though: left and right floating pictures are not supported in combination
 with left or side notes.
 In addition,
 .fixed FULL
-will try to create a full-width image and 
+will try to create a full-width image,
 .fixed HALF
-will try to create a half page width image.
+will try to create a half page width image and
+.fixed QUART
+a quarter of the width.
+A combination like
+.fixed HALFRIGHT
+is also possible.
+
 
 As examples, the next is the same
 .fixed plaatje.png
