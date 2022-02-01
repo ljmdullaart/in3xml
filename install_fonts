@@ -1,0 +1,10 @@
+#!/bin/bash
+
+#DO_ME
+#CLEAN_ME
+#DEP tag/pgm.bin
+
+
+cd fonts/noto
+./do_install.sh $1
+
