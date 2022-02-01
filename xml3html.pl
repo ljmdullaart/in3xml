@@ -1966,13 +1966,15 @@ if ($variables{"do_headers"} eq 'yes'){
 	print "<html lang=\"en\">\n";
 	print "<head>\n";
 	print "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\n";
-	print "<link rel=\"stylesheet\" href=\"in3style.css\" type=\"text/css\">";
-	print "<link href='https://fonts.googleapis.com/css?family=Roboto%20Condensed' rel='stylesheet' type=\"text/css\">\n";
-	print "<link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet' type=\"text/css\">\n";
-	print "<link href='https://fonts.googleapis.com/css?family=Pinyon%20Script' rel='stylesheet' type=\"text/css\">\n";
+	#print "<link href='https://fonts.googleapis.com/css?family=Roboto%20Condensed' rel='stylesheet' type=\"text/css\">\n";
+	#print "<link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet' type=\"text/css\">\n";
+	#print "<link href='https://fonts.googleapis.com/css?family=Pinyon%20Script' rel='stylesheet' type=\"text/css\">\n";
 	print "<title>$variables{'title'}</title>\n";
 	if (-f "stylesheet.css"){
 		print "<link rel=\"stylesheet\" href=\"stylesheet.css\" type=\"text/css\">\n";
+	}
+	if (-f "in3style.css"){
+		print "<link rel=\"stylesheet\" href=\"in3style.css\" type=\"text/css\">";
 	}
 	print "</head>\n";
 	print "<body>\n";
