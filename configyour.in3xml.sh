@@ -273,7 +273,7 @@ echo >> Makefile
 
 if [ -d $WWW ] ; then
 	echo "$WWW/block: |block">> Makefile
-	echo "	ln -s $(realpath block) $WWW" >> Makefile
+	echo "	- ln -s $(realpath block) $WWW" >> Makefile
 	echo "WWW targets in $WWW:" >> $LOG
 	echo -n "tag/in3xml.$WWW: tag/in3xml.xml" >> Makefile
 	for infile in *.in ; do		# the *.in are the only guaranteed availables
@@ -429,6 +429,9 @@ if [ -d $PDF ] ; then
 				echo "	cat $PDF/$stem.rof |groff -min -Kutf8 $dohead > $PDF/$stem.ps" >> Makefile
 			fi
 			echo "	cat $PDF/$stem.ps  | ps2pdf  -dPDFSETTINGS=/prepress - - > $PDF/$stem.pdf" >> Makefile
+			if [ "$stem" = "complete" ] ; then
+				echo "	pdfrm1stblank $PDF/$stem.pdf" >> Makefile
+			fi
 			echo "$PDF/$stem.roff: $XML/$stem.xml " >> Makefile
 			if [ "$stem" = "complete" ] ; then
 				echo "	xml3roff $XML/$stem.xml > $PDF/$stem.roff" >> Makefile
