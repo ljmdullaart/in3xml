@@ -1,4 +1,5 @@
 #!/usr/bin/perl
+#INSTALLEDFROM verlaine:/home/ljm/src/in3xml
 #INSTALL@ /usr/local/bin/in3multipass
 
 use File::Basename;
@@ -34,6 +35,8 @@ my %variables;
 	$variables{'blocktype'}='';
 	$variables{'cellalign'}='left';
 	$variables{'cover'}='';
+	$variables{'equation'}=0;
+	$variables{'figure'}=0;
 	$variables{'filename'}='stdin';
 	$variables{'inlineemp'}=0;
 	$variables{'keywords'}='';
@@ -56,6 +59,7 @@ my %variables;
 	$variables{'sideref'}='';
 	$variables{'sidesep'}=';';
 	$variables{'subtitle'}='';
+	$variables{'table'}=0;
 	$variables{'title'}='';
 	$variables{'date-nl'}=`date '+%d-%m-%Y'`;
 	$variables{'date-us'}=`date '+%m-%d-%Y'`;
@@ -1743,57 +1747,18 @@ sub formatpass {
 			pushout('</target>');
 			pushout('</link>');
 		}
-		elsif ($line=~/^\.img +([A-Z]+) +([^ ]*)/){
+		elsif ($line=~/^\.img +([HFQLR][EIUA][FGAL][A-Z]+) +([^ ]+)/){
 			my $fmt=lc $1;
 			my $imgname=imgconvert($2);
 			pushout('<image>');
 			pushout('<format>');
 			pushout($fmt);
 			pushout('</format>');
-			pushout('<file>');
-			pushout("\"$imgname\"");
-			pushout('</file>');
-			pushout('</image>');
-		}
-		elsif ($line=~/^\.img *LEFT *([^ ]*)/){
-			my $imgname=imgconvert($1);
-			pushout('<image>');
-			pushout('<format>');
-			pushout('left');
-			pushout('</format>');
-			pushout('<file>');
-			pushout("\"$imgname\"");
-			pushout('</file>');
-			pushout('</image>');
-		}
-		elsif ($line=~/^\.img *RIGHT *([^ ]*)/){
-			my $imgname=imgconvert($1);
-			pushout('<image>');
-			pushout('<format>');
-			pushout('right');
-			pushout('</format>');
-			pushout('<file>');
-			pushout("\"$imgname\"");
-			pushout('</file>');
-			pushout('</image>');
-		}
-		elsif ($line=~/^\.img *FULL *([^ ]*)/){
-			my $imgname=imgconvert($1);
-			pushout('<image>');
-			pushout('<format>');
-			pushout('full');
-			pushout('</format>');
-			pushout('<file>');
-			pushout("\"$imgname\"");
-			pushout('</file>');
-			pushout('</image>');
-		}
-		elsif ($line=~/^\.img *HALF *([^ ]*)/){
-			my $imgname=imgconvert($1);
-			pushout('<image>');
-			pushout('<format>');
-			pushout('half');
-			pushout('</format>');
+			if ($line=~/^\.img +([HFQLR][EIUA][FGAL][A-Z]+) +([^ ]+) +(.+)/){
+				pushout('<caption>');
+				pushout($3);
+				pushout('</caption>');
+			}				
 			pushout('<file>');
 			pushout("\"$imgname\"");
 			pushout('</file>');
@@ -1802,6 +1767,11 @@ sub formatpass {
 		elsif ($line=~/^\.img ([^ ]*)/){
 			my $imgname=imgconvert($1);
 			pushout('<image>');
+			if ($line=~/^\.img +([^ ]+) +(.+)/){
+				pushout('<caption>');
+				pushout($2);
+				pushout('</caption>');
+			}				
 			pushout('<file>');
 			pushout("\"$imgname\"");
 			pushout('</file>');
