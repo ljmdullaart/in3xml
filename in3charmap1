@@ -1,4 +1,5 @@
 #INSTALL@ /usr/local/share/in3/in3charmap1
+#INSTALLEDFROM verlaine:/home/ljm/src/in3xml
 #char	groff	html
 ¡	\[r!]	&iexcl;
 %r!;	\[r!]	&iexcl;
@@ -61,7 +62,7 @@
 Á	\['A]	&Aacute;
 %'A;	\['A]	&Aacute;
 Â	\[^A]	&Acirc;
-%^A;	\[^A]	&Acirc;
+%\^A;	\[^A]	&Acirc;
 Ã	\[~A]	&Atilde;
 %~A;	\[~A]	&Atilde;
 Ä	\[:A]	&Auml;
@@ -77,7 +78,7 @@
 É	\['E]	&Eacute;
 %'E;	\['E]	&Eacute;
 Ê	\[^E]	&Ecirc;
-%^E;	\[^E]	&Ecirc;
+%\^E;	\[^E]	&Ecirc;
 Ë	\[:E]	&Euml;
 %:E;	\[:E]	&Euml;
 Ì	\[`I]	&Igrave;
@@ -85,7 +86,7 @@
 Í	\['I]	&Iacute;
 %'I;	\['I]	&Iacute;
 Î	\[^I]	&Icirc;
-%^I;	\[^I]	&Icirc;
+%\^I;	\[^I]	&Icirc;
 Ï	\[:I]	&Iuml;
 %:I;	\[:I]	&Iuml;
 Ð	\[-D]	&ETH;
@@ -97,7 +98,7 @@
 Ó	\['O]	&Oacute;
 %'O;	\['O]	&Oacute;
 Ô	\[^O]	&Ocirc;
-%^O;	\[^O]	&Ocirc;
+%\^O;	\[^O]	&Ocirc;
 Õ	\[~O]	&Otilde;
 %~O;	\[~O]	&Otilde;
 Ö	\[:O]	&Ouml;
@@ -112,7 +113,7 @@
 Ú	\['U]	&Uacute;
 %'U;	\['U]	&Uacute;
 Û	\[^U]	&Ucirc;
-%^U;	\[^U]	&Ucirc;
+%\^U;	\[^U]	&Ucirc;
 Ü	\[:U]	&Uuml;
 %:U;	\[:U]	&Uuml;
 Ý	\['Y]	&Yacute;
@@ -126,7 +127,7 @@
 á	\['a]	&aacute;
 %'a;	\['a]	&aacute;
 â	\[^a]	&acirc;
-%^a;	\[^a]	&acirc;
+%\^a;	\[^a]	&acirc;
 ã	\[~a]	&atilde;
 %~a;	\[~a]	&atilde;
 ä	\[:a]	&auml;
@@ -142,7 +143,7 @@
 é	\['e]	&eacute;
 %'e;	\['e]	&eacute;
 ê	\[^e]	&ecirc;
-%^e;	\[^e]	&ecirc;
+%\^e;	\[^e]	&ecirc;
 ë	\[:e]	&euml;
 %:e;	\[:e]	&euml;
 ì	\[`i]	&igrave;
@@ -150,7 +151,7 @@
 í	\['i]	&iacute;
 %'i;	\['i]	&iacute;
 î	\[^i]	&icirc;
-%^i;	\[^i]	&icirc;
+%\^i;	\[^i]	&icirc;
 ï	\[:i]	&iuml;
 %:i;	\[:i]	&iuml;
 ð	\[Sd]	&eth;
@@ -162,7 +163,7 @@
 ó	\['o]	&oacute;
 %'o;	\['o]	&oacute;
 ô	\[^o]	&ocirc;
-%^o;	\[^o]	&ocirc;
+%\^o;	\[^o]	&ocirc;
 õ	\[~o]	&otilde;
 %~o;	\[~o]	&otilde;
 ö	\[:o]	&ouml;
@@ -175,7 +176,7 @@
 ú	\['u]	&uacute;
 %'u;	\['u]	&uacute;
 û	\[^u]	&ucirc;
-%^u;	\[^u]	&ucirc;
+%\^u;	\[^u]	&ucirc;
 ü	\[:u]	&uuml;
 %:u;	\[:u]	&uuml;
 ý	\['y]	&yacute;
