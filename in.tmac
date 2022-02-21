@@ -1,3 +1,6 @@
+.ig
+#INSTALLEDFROM verlaine:/home/ljm/src/in3xml
+..
 .\"  
 .de @revision
 .ds RE \\$2
@@ -3817,4 +3820,46 @@ in=\\n[.i] fi=\\n[.u] .d=\\n[.d] nl=\\n[nl] pg=\\n[%]
 .ds SIDE \v'-.5m'\s-3\\$1\s0\v'.5m'
 .de y-from-top-down
 .  sp |\\$1-\\n[.v]u
+..
+.de rfloat2
+.  mk rfloat2point
+.  PSPIC -R \\$1
+.  nr rfloat2-width \\n[ps-deswid]
+.  nr rfloat2-prll \\n[.l]
+.  nr rfloat2-ind \\n[rfloat2-prll]-\\n[rfloat2-width]
+.  ie \\$2 \{
+.    in \\n[rfloat2-ind]u
+.    I "\\$2" 
+.    in \}
+.  nr rfloat2-end \\n[nl]
+.  wh \\n[rfloat2-end]u-1v  endrfloat2
+.  rt \\n[rfloat2point]u
+.  sp
+.  ll \\n[rfloat2-ind]u-0.25c
+..
+.de endrfloat2
+.  ll \\n[rfloat2-prll]u
+.  wh \\n[rfloat2-end]u
+..
+.de lfloat2
+.  br
+.  mk lfloat2point
+.  PSPIC -L \\$1
+.  nr lfloat2-width \\n[ps-deswid]
+.  nr lfloat2-prll \\n[.l]
+.  nr lfloat2-ll \\n[lfloat2-prll]-\\n[lfloat2-width]
+.  ie \\$2 \{
+.    ll \\n[lfloat2-width]u
+.    I "\\$2"
+.    br
+.    ll \}
+.  nr lfloat2-end \\n[nl]-1v
+.  wh \\n[lfloat2-end]u  endlfloat2
+.  rt \\n[lfloat2point]u
+.  nr lfloat2indent \\n[lfloat2-width]+\\n[lfloat2-width]/100
+.  in \\n[lfloat2-width]u+.25c
+..
+.de endlfloat2
+'  in 0
+.  wh \\n[lfloat2-end]u
 ..
