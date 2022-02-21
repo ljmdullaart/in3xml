@@ -1,4 +1,3 @@
-.NOHEAD
 .nr Ej 1
 .ds HF  HB HB HI HI I I I
 .ds HP  16 12 12  0 0 0 0
