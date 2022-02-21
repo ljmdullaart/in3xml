@@ -1,4 +1,5 @@
 #!/bin/bash
+#INSTALLEDFROM verlaine:/home/ljm/src/in3xml
 #INSTALL@ /usr/local/bin/in3fileconv
 
 helpme(){
@@ -48,6 +49,13 @@ if [ "$2" = "" ] ; then
 	exit 0
 fi
 
+if [ "$3" = "" ] ; then
+	caption=''
+else
+	caption="$3"
+fi
+	
+
 touch /tmp/in3fileconv.log
 
 logsize=$(ls -s /tmp/in3fileconv.log | sed 's/ .*//')
@@ -89,7 +97,7 @@ echo "(convert-xcf-png \"$1\" \"$2\")"
 
 echo "(gimp-quit 0)"
 
-} | gimp -i -b -
+} | gimp -i -b - > /dev/null 2>/dev/null
 }
 
 cat >> /tmp/in3fileconv.log <<EOF
@@ -131,9 +139,9 @@ if [ ! -d block ] ; then
 fi
 
 if [ "$fromfile" = "block/$tobase" ] ; then
-	>&2 echo "Fromfile $fromfile is block/$tobase; no converion done."
+	debug "Fromfile $fromfile is block/$tobase; no converion done."
 	if [ "$tofile" = "block/$tobase" ] ; then
-	   >&2 echo "To-file $tofile is block/$tobase; no copy made."
+	   debug "To-file $tofile is block/$tobase; no copy made."
    else
 	   if cp "block/$tobase" "$tofile" ; then 
 		   :
@@ -152,6 +160,23 @@ case $fromext in
 			(eps)
 				debug "cairosvg  -f ps $fromfile -o block/$tobase"
 				cairosvg  -f ps "$fromfile" -o "block/$tobase"
+				if [ "$caption" = "" ] ; then
+					:
+				else
+					cd block
+					mv "$tobase" "$tobase".nocap
+					echo ".PSPIC $tobase.nocap" > "$tobase".caproff
+					echo ".ce" >> "$tobase".caproff
+					echo "$caption" >> "$tobase".caproff
+					groff "$tobase".caproff > "$tobase".cap.ps
+					rm -f "$tobase".cap.eps
+					ps2eps -B -C "$tobase".cap.ps > /dev/null 2> /dev/null
+					mv "$tobase".cap.eps "$tobase"
+				fi
+					
+
+					
+			
 				;;
 			(png)
 				debug "convert -density 1000 -scale 15% -trim $fromfile block/$tobase"
@@ -168,8 +193,8 @@ case $fromext in
 			(pdf)
 				debug "cairosvg  -f ps $fromfile -o $TMP.ps"
 				cairosvg  -f ps "$fromfile" -o $TMP.ps
-				debug ps2pdf $TMP.ps $TMP.pdf
-				ps2pdf $TMP.ps $TMP.pdf
+				debug ps2pdf $TMP.ps $TMP.pdf 
+				ps2pdf $TMP.ps $TMP.pdf > /dev/null 2> /dev/null
 				debug pdfcrop $TMP "block/$tostem.pdf"
 				pdfcrop $TMP "block/$tostem.pdf"
 				debug rm -f $TMP.ps $TMP.pdf
@@ -185,6 +210,19 @@ case $fromext in
 				gimpcnvt "$fromfile" block/tmp.$$.png
 				convert  "block/tmp.$$.png"  pnm:- | convert -density 300 -trim - "block/$tobase"
 				rm -f block/tmp.$$.png
+				if [ "$caption" = "" ] ; then
+					:
+				else
+					cd block
+					mv "$tobase" "$tobase".nocap
+					echo ".PSPIC $tobase.nocap" > "$tobase".caproff
+					echo ".ce" >> "$tobase".caproff
+					echo "$caption" >> "$tobase".caproff
+					groff "$tobase".caproff > "$tobase".cap.ps
+					rm -f "$tobase".cap.eps
+					ps2eps -B -C "$tobase".cap.ps > /dev/null 2> /dev/null
+					mv "$tobase".cap.eps "$tobase"
+				fi
 				;;
 			(jpg|png)
 				gimpcnvt "$fromfile" "block/$tobase"
@@ -206,6 +244,19 @@ case $fromext in
 			(eps)
 				debug "convert  $fromfile  pnm:- | convert -density 300 -trim - block/$tobase"
 				convert -resize '1000x1000>'  "$fromfile"  pnm:- | convert -density 300 -trim - "block/$tobase" 2>> /tmp/in3fileconv.log
+				if [ "$caption" = "" ] ; then
+					:
+				else
+					cd block
+					mv "$tobase" "$tobase".nocap
+					echo ".PSPIC $tobase.nocap" > "$tobase".caproff
+					echo ".ce" >> "$tobase".caproff
+					echo "$caption" >> "$tobase".caproff
+					groff "$tobase".caproff > "$tobase".cap.ps
+					rm -f "$tobase".cap.eps
+					ps2eps -B -C "$tobase".cap.ps > /dev/null 2> /dev/null
+					mv "$tobase".cap.eps "$tobase"
+				fi
 				;;
 			(jpg)
 				debug convert "$fromfile" "block/$tobase"
@@ -231,6 +282,19 @@ case $fromext in
 			(eps)
 				debug "convert  $fromfile  pnm:- | convert -density 300 -trim - block/$tobase"
 				convert  "$fromfile"  pnm:- | convert -density 300 -trim - "block/$tobase"
+				if [ "$caption" = "" ] ; then
+					:
+				else
+					cd block
+					mv "$tobase" "$tobase".nocap
+					echo ".PSPIC $tobase.nocap" > "$tobase".caproff
+					echo ".ce" >> "$tobase".caproff
+					echo "$caption" >> "$tobase".caproff
+					groff "$tobase".caproff > "$tobase".cap.ps
+					rm -f "$tobase".cap.eps
+					ps2eps -B -C "$tobase".cap.ps > /dev/null 2> /dev/null
+					mv "$tobase".cap.eps "$tobase"
+				fi
 				;;
 			(png)
 				debug " cp $fromfile block/$tobase"
@@ -256,6 +320,19 @@ case $fromext in
 			(eps)
 				debug dia -t eps "$fromfile"  -e "block/$tobase" > /dev/null 2>/dev/null
 				dia -t eps "$fromfile"  -e "block/$tobase" > /dev/null 2>/dev/null
+				if [ "$caption" = "" ] ; then
+					:
+				else
+					cd block
+					mv "$tobase" "$tobase".nocap
+					echo ".PSPIC $tobase.nocap" > "$tobase".caproff
+					echo ".ce" >> "$tobase".caproff
+					echo "$caption" >> "$tobase".caproff
+					groff "$tobase".caproff > "$tobase".cap.ps
+					rm -f "$tobase".cap.eps
+					ps2eps -B -C "$tobase".cap.ps > /dev/null 2> /dev/null
+					mv "$tobase".cap.eps "$tobase"
+				fi
 				;;
 			(png)
 				debug dia -t png "$fromfile"  -e "block/$tobase" > /dev/null 2>/dev/null
@@ -269,7 +346,7 @@ case $fromext in
 				debug dia -t eps "$fromfile"  -e $TMP.ps > /dev/null 2>/dev/null
 				dia -t eps "$fromfile"  -e $TMP.ps > /dev/null 2>/dev/null
 				debug ps2pdf $TMP.ps $TMP.pdf > /dev/null 2>/dev/null
-				ps2pdf $TMP.ps $TMP.pdf > /dev/null 2>/dev/null
+				ps2pdf $TMP.ps $TMP.pdf > /dev/null 2>/dev/null > /dev/null 2> /dev/null
 				debug pdfcrop $TMP "block/$tostem.pdf" > /dev/null 2>/dev/null
 				pdfcrop $TMP "block/$tostem.pdf" > /dev/null 2>/dev/null
 				rm -f $TMP.ps $TMP.pdf
@@ -283,6 +360,19 @@ case $fromext in
 			(eps) 
 				debug dvips -E "$fromfile" -o "block/$tobase"
 				dvips -E "$fromfile" -o "block/$tobase"
+				if [ "$caption" = "" ] ; then
+					:
+				else
+					cd block
+					mv "$tobase" "$tobase".nocap
+					echo ".PSPIC $tobase.nocap" > "$tobase".caproff
+					echo ".ce" >> "$tobase".caproff
+					echo "$caption" >> "$tobase".caproff
+					groff "$tobase".caproff > "$tobase".cap.ps
+					rm -f "$tobase".cap.eps
+					ps2eps -B -C "$tobase".cap.ps > /dev/null 2> /dev/null
+					mv "$tobase".cap.eps "$tobase"
+				fi
 				;;
 			(png)
 				echo "convert -trim -density 500 $fromfile block/$tobase"
@@ -311,6 +401,19 @@ case $fromext in
 				groff block/$tostem.groff > block/$tostem.ps
 				debug gs -o "block/$tostem.eps" -sDEVICE=eps2write "block/$tostem.ps"
 				gs -o "block/$tostem.eps" -sDEVICE=eps2write "block/$tostem.ps"
+				if [ "$caption" = "" ] ; then
+					:
+				else
+					cd block
+					mv "$tobase" "$tobase".nocap
+					echo ".PSPIC $tobase.nocap" > "$tobase".caproff
+					echo ".ce" >> "$tobase".caproff
+					echo "$caption" >> "$tobase".caproff
+					groff "$tobase".caproff > "$tobase".cap.ps
+					rm -f "$tobase".cap.eps
+					ps2eps -B -C "$tobase".cap.ps > /dev/null 2> /dev/null
+					mv "$tobase".cap.eps "$tobase"
+				fi
 				;;
 			(png)
 				debug eqn $fromfile > block/$tostem.groff
@@ -346,6 +449,19 @@ case $fromext in
 				sed -i "1i set output 'block/$tostem.eps'" block/$tostem.plt
 				debug gnuplot block/$tostem.plt
 				gnuplot block/$tostem.plt
+				if [ "$caption" = "" ] ; then
+					:
+				else
+					cd block
+					mv "$tobase" "$tobase".nocap
+					echo ".PSPIC $tobase.nocap" > "$tobase".caproff
+					echo ".ce" >> "$tobase".caproff
+					echo "$caption" >> "$tobase".caproff
+					groff "$tobase".caproff > "$tobase".cap.ps
+					rm -f "$tobase".cap.eps
+					ps2eps -B -C "$tobase".cap.ps > /dev/null 2> /dev/null
+					mv "$tobase".cap.eps "$tobase"
+				fi
 				;;
 			(png)
 				debug sed -i '1i set terminal png size 800,800 enhanced font "Helvetica,8"' block/$tostem.plt
