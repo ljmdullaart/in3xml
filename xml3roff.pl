@@ -1,4 +1,5 @@
 #!/usr/bin/perl
+#INSTALLEDFROM verlaine:/home/ljm/src/in3xml
 #INSTALL@ /usr/local/bin/xml3roff
 #
 use strict;
@@ -162,6 +163,7 @@ my @input;
 my @infile;
 
 # Variables that are picked-up in sub-states and used when higher states close
+my $caption='';
 my $class='';
 my $coord='';
 my $file='';
@@ -504,6 +506,11 @@ sub outimage {
 			output ('.ce 1');
 			output (".dospark block/$imagename $x $y");
 		}
+		if ($caption ne ''){
+			output (".ce 1");
+			output (".I \"$caption\"");
+			$caption='';
+		}
 	}
 	elsif ($type=~/texeqn/) {
 		debug ("IMAGE TYPE=texeqn");
@@ -523,6 +530,11 @@ sub outimage {
 			output ('.sp 1');
 			output ('.ce 1');
 			output (".dospark block/$imagename $x $y");
+		}
+		if ($caption ne ''){
+			output (".ce 1");
+			output (".I \"$caption\"");
+			$caption='';
 		}
 	}
 	elsif ($type=~/pic/) {
@@ -551,6 +563,11 @@ sub outimage {
 			output (".PSPIC block/$imagename $x $y");
 		}
 		#output (".PSPIC block/$imagename $x");
+		if ($caption ne ''){
+			output (".ce 1");
+			output (".I \"$caption\"");
+			$caption='';
+		}
 	}
 	elsif ($img=~/\.dia$/) {
 		debug ("IMAGE TYPE=dia");
@@ -572,6 +589,11 @@ sub outimage {
 			output ('.sp 1');
 			output ('.ce 1');
 			output (".dospark block/$imagename $x $y");
+		}
+		if ($caption ne ''){
+			output (".ce 1");
+			output (".I \"$caption\"");
+			$caption='';
 		}
 	}
 	else {
@@ -604,11 +626,13 @@ sub outimage {
 		}
 		elsif($format =~/left/){
 			output (".ne $need".'p');
-			output (".lfloat block/$imagename $extra");
+			output (".lfloat2 block/$imagename \"$caption\"");
+			$caption='';
 		}
 		elsif($format =~/right/){
 			output (".ne $need".'p');
-			output (".rfloat block/$imagename $extra");
+			output (".rfloat2 block/$imagename \"$caption\"");
+			$caption='';
 		}
 		else {
 			output (".ne $need".'p');
@@ -627,6 +651,11 @@ sub outimage {
 		#else {
 			#output (".PSPIC block/$imagename $x");
 		#}
+		if ($caption ne ''){
+			output (".ce 1");
+			output (".I \"$caption\"");
+			$caption='';
+		}
 	}
 }
 
@@ -1206,6 +1235,9 @@ while ( $linenumber <= $#input){
 					output('.br',$_);
 				}
 				output ('.sp 1',,'.ps','.vs','.ft','.fi','.B2');
+				if ($caption ne ''){
+					output (".I \"$caption\"");
+				}
 			}
 			elsif ($type eq 'lst'){
 				close_paratable();
@@ -1223,6 +1255,9 @@ while ( $linenumber <= $#input){
 					output('.br',$_);
 				}
 				output ('.vs','.ps','.ft','.fi');
+				if ($caption ne ''){
+					output (".I \"$caption\"");
+				}
 			}
 			elsif ($type eq 'pic'){
 				if ($inline==0){
@@ -1233,6 +1268,10 @@ while ( $linenumber <= $#input){
 						output($_);
 					}
 					output ('.PE');
+				}
+				if ($caption ne ''){
+					output (".ce 1");
+					output (".I \"$caption\"");
 				}
 				else { # This is a hack because pic does not provide in-line images.
 					my $mscale=100;
@@ -1281,6 +1320,10 @@ while ( $linenumber <= $#input){
 					output($_);
 				}
 				output ('.EN');
+				if ($caption ne ''){
+					output (".ce 1");
+					output (".I \"$caption\"");
+				}
 			}
 			elsif ($type eq 'piechart'){
 				my $mscale=1000;
@@ -1362,7 +1405,7 @@ while ( $linenumber <= $#input){
 					system ("rm  -f $blk.eps");
 					if (open (my $MUSIC, '>',"$blk.ly")){
 						print $MUSIC "\\version \"2.18.2\"\n";
-						print $MUSIC "\\book {\n";
+						#print $MUSIC "\\book {\n";
 						print $MUSIC "\\paper {\n";
 						print $MUSIC "indent = 0\\mm\n";
 						print $MUSIC "line-width = 110\\mm\n";
@@ -1382,7 +1425,7 @@ while ( $linenumber <= $#input){
 							}
 							print $MUSIC "$_\n";
 						}
-						print $MUSIC "}\n";
+						#print $MUSIC "}\n";
 						close $MUSIC;
 						system ("cd block; lilypond --eps  -dresolution=500 -dpreview ../$blk.ly");
 						system ("sed -i 's/\(%%BeginProcSet: .*\)/\1 0 0/' $blk.eps");
@@ -1464,6 +1507,9 @@ while ( $linenumber <= $#input){
 			undef @blocktext;
 			state_pop();
 		} #end state block: end of block
+		elsif ($input[$linenumber] =~/<caption>/){
+			state_push('caption');
+		}
 		elsif ($input[$linenumber] =~/<type>/){
 			state_push('type');
 		}
@@ -1881,6 +1927,9 @@ while ( $linenumber <= $#input){
 		elsif ($input[$linenumber]=~/<text>/){
 			state_push('text');
 		}
+		elsif ($input[$linenumber]=~/<caption>/){
+			state_push('caption');
+		}
 		elsif ($input[$linenumber]=~/<format>/){
 			state_push('format');
 		}
@@ -1889,6 +1938,17 @@ while ( $linenumber <= $#input){
 		}
 		else {
 			$image=$input[$linenumber];
+		}
+	}
+	elsif ($state  eq 'caption'){
+		if ($input[$linenumber] =~/<\/caption>/){
+			state_pop();
+		}
+		else {
+			$caption=$input[$linenumber];
+			chomp $caption;
+			$caption=~s/^[ 	]*" *//;
+			$caption=~s/ *"$//;
 		}
 	}
 	elsif ($state  eq 'type'){

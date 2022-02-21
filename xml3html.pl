@@ -1,4 +1,5 @@
 #!/usr/bin/perl
+#INSTALLEDFROM verlaine:/home/ljm/src/in3xml
 #INSTALL@ /usr/local/bin/xml3html
 use strict;
 use File::Basename;
@@ -111,6 +112,7 @@ my @input;
 my @infile;
 
 # Variables that are picked-up in sub-states and used when higher states close
+my $caption='';
 my $class='';
 my $coord='';
 my $file='';
@@ -487,6 +489,7 @@ sub formatrequest {
 		$type='pre';
 		$image='';
 		$class='';
+		$caption='';
 		undef@blocktext;
 		state_push('block');
 	}
@@ -546,34 +549,98 @@ sub outimage {
 		output ("<img src=\"$blockimg\" alt=\"$img\" width=\"$width\" style=\"vertical-align:-$align%;\">");
 	}
 	elsif ($format=~/left/){
-		output ("<img src=\"$blockimg\" alt=\"$img\" width=\"$width\" height=\"$height\" align='left' style=\"margin:10px 10px;vertical-align:-10;\">");
-		#$variables{'parastartdelay'}='<hr style="height:1px; visibility:hidden;">';
+		if ($format=~/quart/){
+			$width=$width/2;
+			output ('<div style="text-align: center; width:25%;float:left;">');
+			output ("<img src=\"$blockimg\" alt=\"$img\" style=\"vertical-align: middle;\">");
+			if ( $caption ne '' ) {
+				output ("<br><i>$caption</i>");
+			}
+			output ('</div>');
+		}
+		elsif ($format=~/half/){
+			$width=$width/2;
+			output ('<div style="text-align: center;width:50%;float:left;">');
+			output ("<img src=\"$blockimg\" alt=\"$img\" style=\"vertical-align: middle;\">");
+			if ( $caption ne '' ) {
+				output ("<br><i>$caption</i>");
+			}
+			output ('</div>');
+		}
+		else {
+			if ($width> 500){$width=$width/1.2;}
+			output ('<div style="text-align: center;float:left;">');
+			output ("<img src=\"$blockimg\" alt=\"$img\" width=$width  style=\"vertical-align: middle;\">");
+			if ( $caption ne '' ) {
+				output ("<br><i>$caption</i>");
+			}
+			output ('</div>');
+		}
 
 	}
 	elsif ($format=~/right/){
-		output ("<img src=\"$blockimg\" alt=\"$img\" width=\"$width\" height=\"$height\" align='right' style=\"margin:10px 10px;vertical-align:-10;\">");
+		if ($format=~/quart/){
+			$width=$width/2;
+			output ('<div style="text-align: center; width:25%;float:right;">');
+			output ("<img src=\"$blockimg\" alt=\"$img\" style=\"vertical-align: middle;\">");
+
+			if ( $caption ne '' ) {
+				output ("<br><i>$caption</i>");
+			}
+			output ('</div>');
+		}
+		elsif ($format=~/half/){
+			$width=$width/2;
+			output ('<div style="text-align: center;width:50%;float:right;">');
+			output ("<img src=\"$blockimg\" alt=\"$img\" style=\"vertical-align: middle;\">");
+			if ( $caption ne '' ) {
+				output ("<br><i>$caption</i>");
+			}
+			output ('</div>');
+		}
+		else {
+			if ($width> 500){$width=$width/1.2;}
+			output ('<div style="text-align: center;float:right;">');
+			output ("<img src=\"$blockimg\" alt=\"$img\" width=$width  style=\"vertical-align: middle;\">");
+			if ( $caption ne '' ) {
+				output ("<br><i>$caption</i>");
+			}
+			output ('</div>');
+		}
 	}
 	elsif ($format=~/full/){
 		output ('<div style="text-align: center">');
 		output ("<img src=\"$blockimg\" alt=\"$img\" width=$width >");
+		if ( $caption ne '' ) {
+			output ("<br><i>$caption</i>");
+		}
 		output ('</div>');
 	}
 	elsif ($format=~/quart/){
 		$width=$width/2;
 		output ('<div style="text-align: center">');
 		output ("<img src=\"$blockimg\" alt=\"$img\" width=25% >");
+		if ( $caption ne '' ) {
+			output ("<br><i>$caption</i>");
+		}
 		output ('</div>');
 	}
 	elsif ($format=~/half/){
 		$width=$width/2;
 		output ('<div style="text-align: center">');
 		output ("<img src=\"$blockimg\" alt=\"$img\" width=50% >");
+		if ( $caption ne '' ) {
+			output ("<br><i>$caption</i>");
+		}
 		output ('</div>');
 	}
 	else {
 		if ($width> 500){$width=$width/1.2;}
 		output ('<div style="text-align: center">');
 		output ("<img src=\"$blockimg\" alt=\"$img\" width=$width >");
+		if ( $caption ne '' ) {
+			output ("<br><i>$caption</i>");
+		}
 		output ('</div>');
 	}
 	progress();
@@ -1160,7 +1227,8 @@ while ( $linenumber <= $#input){
 					if ($inline==0){
 						output ('<div style="text-align: center">');
 					}
-					output("<img src=\"$blk.png\" alt=\"$blk\" style=\"height:$ysize;\">");
+					#output("<img src=\"$blk.png\" alt=\"$blk\" style=\"height:$ysize;\">");
+					outimage ("$blk.png");
 					if ($inline==0){
 						output ('</div>');
 					}
@@ -1175,7 +1243,7 @@ while ( $linenumber <= $#input){
 				my $y=600*$mscale/100;
 				if (open (my $MUSIC,'>',"$blk.music")){
 					print $MUSIC "\\version \"2.18.2\"\n";
-					print $MUSIC "\\book {\n";
+					#print $MUSIC "\\book {\n";
 					print $MUSIC "\\paper {\n";
 					print $MUSIC "indent = 0\\mm\n";
 					print $MUSIC "line-width = 110\\mm\n";
@@ -1196,7 +1264,7 @@ while ( $linenumber <= $#input){
 						}
 						print $MUSIC "$_\n";
 					}
-					print $MUSIC "}\n";
+					#print $MUSIC "}\n";
 					close $MUSIC;
 					progress();
 					system ("cd block; lilypond --png  -dresolution=500  ../$blk.music 2>/dev/null" );
@@ -1212,7 +1280,8 @@ while ( $linenumber <= $#input){
 					if ($inline==0){
 						output ('<div style="text-align: center">');
 					}
-					output("<img src=\"$blk.png\" alt=\"$blk\" style=\"height:$ysize;\">");
+					#output("<img src=\"$blk.png\" alt=\"$blk\" style=\"height:$ysize;\">");
+					outimage ("$blk.png");
 
 					if ($inline==0){
 						output ('</div>');
@@ -1233,6 +1302,9 @@ while ( $linenumber <= $#input){
 			undef @blocktext;
 			state_pop();
 		} #end state block: end of block
+		elsif ($input[$linenumber] =~/<caption>/){
+			state_push('caption');
+		}
 		elsif ($input[$linenumber] =~/<name>/){
 			state_push('name');
 		}
@@ -1244,6 +1316,7 @@ while ( $linenumber <= $#input){
 			$file='';
 			$format='';
 			$image='';
+			$caption='';
 			state_push('image');
 		}
 		elsif ($input[$linenumber] =~/<blocktext>/){
@@ -1622,8 +1695,12 @@ while ( $linenumber <= $#input){
 				$file='';
 				$format='';
 				$image='';
+				$caption='';
 			}
 			state_pop();
+		}
+		elsif ($input[$linenumber]=~/<caption>/){
+			state_push('caption');
 		}
 		elsif ($input[$linenumber]=~/<format>/){
 			state_push('format');
@@ -1636,6 +1713,16 @@ while ( $linenumber <= $#input){
 		}
 		else {
 			$image=$input[$linenumber];
+		}
+	}
+	elsif ($state  eq 'caption'){
+		if ($input[$linenumber] =~/<\/caption>/){
+			state_pop();
+		}
+		else {
+			$caption=$input[$linenumber];
+			$caption=~s/^"//;
+			$caption=~s/"$//;
 		}
 	}
 	elsif ($state  eq 'name'){
