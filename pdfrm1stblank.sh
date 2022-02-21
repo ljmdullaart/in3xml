@@ -1,4 +1,5 @@
 #!/bin/sh
+#INSTALLEDFROM verlaine:/home/ljm/src/in3xml
 #INSTALL@ /usr/local/bin/pdfrm1stblank
 IN="$1"
 TMP=/tmp/pdfrmblank.$$
