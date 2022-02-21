@@ -1,4 +1,5 @@
 #!/usr/bin/perl
+#INSTALLEDFROM verlaine:/home/ljm/src/in3xml
 #INSTALL@ /usr/local/bin/fontlength
 use strict;
 
