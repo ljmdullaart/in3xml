@@ -1,4 +1,5 @@
 #!/usr/bin/perl
+#INSTALLEDFROM verlaine:/home/ljm/src/in3xml
 #INSTALL@ /usr/local/bin/mkinheader
 use strict;
 use warnings;
@@ -177,6 +178,11 @@ if ($type eq 'header'){
 	elsif (-d 'pdf'){
 		print "	<tr class=tocrow><td><a href=\"total.pdf\">";
 		print "<span CLASS=tocitem>PDF</span></a></td></tr>\n";
+	}
+	if ( -d 'epub' ){
+		my $ep=`basename epub/*epub`;
+		print "	<tr class=tocrow><td><a href=\"$ep\">";
+		print "<span CLASS=tocitem>EPUB</span></a></td></tr>\n";
 	}
 }
 
