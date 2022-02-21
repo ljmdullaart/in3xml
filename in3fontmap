@@ -1,4 +1,5 @@
 #INSTALL@ /usr/local/share/in3/fontmap
+#INSTALLEDFROM verlaine:/home/ljm/src/in3xml
 #in3   groff   html	google
 times	1	'Times New Roman', serif
 timesitalic	2	'Times New Roman', serif
