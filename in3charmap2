@@ -1,4 +1,5 @@
 #INSTALL@ /usr/local/share/in3/in3charmap2
+#INSTALLEDFROM verlaine:/home/ljm/src/in3xml
 #char	groff	html
 ¹	\*[SIDE 1]	&#0185;
 ²	\*[SIDE 2]	&#0178;
