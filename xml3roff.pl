@@ -2,6 +2,7 @@
 #INSTALLEDFROM verlaine:/home/ljm/src/in3xml
 #INSTALL@ /usr/local/bin/xml3roff
 #
+#
 use strict;
 use File::Basename;
 my $DEBUG=0;
