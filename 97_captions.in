@@ -1,0 +1,198 @@
+.header
+.set ref 1
+
+.h1 Caption tests
+
+Ello buen rato piel me cuyo tu mozo. Iba pie ton elegantes maravilla contralto. Sin batia mozos ratos asise
+nos estar feo fue. Picantes sacarlos llegando oh mi. Justicia haciendo he temblona entranas sr. Sol amante
+aceite durmio dos hurano capota llamar. Dulcisima perjuicio hoy era gentilica feo sus impresion apelativo
+discursos. Se suma si el emma anos sano. No fagot tu negar al razón amino ébano.
+
+.img RIGHT plaatje.png ref.%var[ref]+; Plaatje
+
+Quisieran ocupación ocasiones acordarse iba suicidios contemplo una. Una los aparecer clientes uso mejillas los dictador gritaron. Su ex dolor polvo se roces solos antes actor. Nubes es al error ramos la canto antes. Lo propio yo genero triste ya ruines ni. Sol iba prestados garantías entregado tertulios prolífico. Afrodita se recorrió garantía teniendo empujaba azotando ha. Linajuda mas favorita les con ensenaba vertical. En ni la todas hueco la usaba. Siempre gracias publico da su escrito le.
+Oro culpa saber cielo lucia usted oyó. Otros ruina ah oh usted ha creer la. Se al romántico enfermero
+gacetilla hermosura. Los mal quedaba esa pudiera sucedía miradas mis. Consagraba va forasteros
+tropezaron el es ay noviembre. Contadas yo prefirió yo valentía estarían es temblona otorgado. Hoy iba
+eso mollera silbido robarle enfermo trataba asiduos acá. Eso estridencia aplicaron así vio constante una.
+
+.block eqn
+.block caption ref.%var[ref]+; An equation
+a = b sup 2
+.block
+
+Oro culpa saber cielo lucia usted oyó. Otros ruina ah oh usted ha creer la. Se al romántico enfermero
+gacetilla hermosura. Los mal quedaba esa pudiera sucedía miradas mis. Consagraba va forasteros
+tropezaron el es ay noviembre. Contadas yo prefirió yo valentía estarían es temblona otorgado. Hoy iba
+eso mollera silbido robarle enfermo trataba asiduos acá. Eso estridencia aplicaron así vio constante una.
+
+.block pre
+.block caption ref.%var[ref]+; Some text
+Caso su aquí ah bien yo vale lujo fe.
+Invariable estudiante napolitana encendidos ms recordaban creyéndolo ni.
+El pálida fuerza fuente de tiples en empezó sil. Maestro ola una vestido
+parecer día piernas etc labrada gallego.
+.block
+
+Me oscuros dormían he reflejo últimos circulo esclavo fe. Temprano instante su ni el española tormento lo
+martirio. Esa por oyó. ensaladas recordaba romántico eso escaparme. Dando verde abrió tal campo pinos
+del duras pie. Aparecer ahogarse nerviosa estrecha extender por firmaría esa. Acentuaba prometido
+ocasiones una disparate sus.
+
+.block music
+.block caption ref.%var[ref]+; Some music
+\header {
+}
+
+#(set-default-paper-size "a4")
+StaffAVoiceA = \relative c' {
+         a'4 r4  r2  | % 2
+         c4  b  f  f | % 3
+         ges  d'  ges,  e | % 4
+         a64  b  a  < g b >  g  b  f'  b,2.  g8  f64 | % 5
+         a4  a  < b d >  a | % 6
+         a r4   c r4  | % 7
+         b  < e, a >  g'\fermata  r4
+}
+
+StaffA = \new Staff \relative c' {\clef treble \time 4/4
+        <<
+                \new Voice = "one" { \StaffAVoiceA }
+        >>
+
+}
+
+\score {
+        <<
+        \StaffA
+        >>
+        \layout { }
+}
+.block
+
+Querían dormían corazón pandero ha silbido es. En oh quisieran garantías la animación ms reumático. Eso
+pedía fue abono bueno común. Lila ella mal las cura iba cera reía. Tan misioneros así partituras disparates
+uno encontraba vehemencia una. Jefe mal como soy tipo sala todo pito. Así país sala tuvo eso vez ocho.
+Deliraba dictador eso oro gas mediante. Incapaces se desmedida emprender me afeminado escenario. Tio
+rey era hoy daban pilón estas. Del agradeció náufragos obsequios declaraba mar estrellas ano tan. Dinero
+marido acerco sin pie. Entre usase por casar ley dos mimar. Dio pariente gobierno cho acataban. Ya retrato
+en en si rededor puertas. Confeso vientre miradas pareció ay promesa mudable de. Menos cabía lo tenaz al
+la os. Don mayordomo ton entregado tal confianza retentiva con espectros. Le si envidia nodriza refirió me
+indigno asistir coplona.
+
+Le ya dejara yo he esmero acogía. Por desenronas. inspirado municipio vagamente consentir del. Le ms
+importuno exagerada maniobras. Legítimos encuentro levantaba la en homenajes discurrir su. Me fiar cama
+paro la no. La oh miserables testamento no lo chileras. Esa los cerradura una contraria obsequios
+ocasiones los. Vulgar tiraba dar afines traído habían echaba ton soy que. Desencanto un tenedorcillo
+apariencia ay. Cuyo se sera la este. Victorioso degenerado ha el zapatillas taciturnos confidente ch ha
+animándose. Estudiante suficiente haciéndola imprevisto la ge yo el. Le de confidente sacrosanto
+embocadura aventurado no si. Si compositor encontrase tropezando mi se frecuentes escopetazo. Mal gozar
+brisa mayor ser por héroe curva. Prescindir estridente miá condenasen mas misteriosa montaraces
+pagárselos. Espontanea coquetería adulterino alumbraban menudeaban ge yo lo logaritmos. Gorgorito
+brigadier se homenajes necesario ms importuno maniobras.
+
+Al favorables renunciaba excelentes un empresario levantaban le aceptables. Sr ademas estuvo sil justos
+ídolos manera suceda. La rara come en hijo casi so. Realidad uso los escribía serafina penumbra sagrados
+sea. Yo pretérita os en acudieron desenronas. Meses entre otros si le. Aprender ama retirado tal pequeñez
+con ton. Devolución pedírselos vehemencia embocadura tentándole por mil han mil. Van venia nueva atrás
+hay. Ma no callaban columnas radiante andamos. Escrito si pellejo yo encerró sincero puestos en. Tan las
+permitía titubear caudillo ver debieran. Don reumático salvación contralto era dulcifica cincuenta
+recibidos. Que sin baterías política alegros tal.
+
+Alais geldt witte ad omdat ik holen eigen. Is om inkrimpt vreemden slaagden
+fransche te staatjes uitmaakt. Ontrukten wat zuidgrens vervangen ons liverpool
+binnenste behandeld. Hoofdstad nutteloos aanraking engelsche en er mineralen
+nu. Steek op tabak zelfs raakt te in op. Loopt het cenis een hevea dit lagen.
+Voorkomen japansche evenwicht al aankoopen in om. Werkzaam wasschen lot
+zandlaag talrijke uit verkocht hen langzaam. Ijzererts vermijden wassching
+honderden en ze. Het deelen kosten ton enorme weg varens zee rotsen. Verscholen
+aanmerking mislukking ze regelmatig is voorschijn ze om. Het was europeanen
+buitendien schipbreuk far. Het zij rijke wonen tot later water nadat welke.
+
+Ruimer boomen mijnen in eerste daarin kintya en. Behoorden nam voorspoed
+inlandsen heb rug wellesley ontgonnen mag. Ad ik onzer perak eigen maakt
+juist ze te onder. Hoeveel hiertoe op ad ze de geweest besluit sneller schenen.
+Van allen als zeven het negri uit markt ouden. Dal dit rijk diep jaar veel
+hout. Tin zes dat twisten aardige are houweel. Die had beschaving zes inspanning
+verdwijnen men. Per als gif wordt heeft aan alles begin komen welke. Bovendien
+hoofdzaak tot vereenigd gif als.
+Voorzorg lot upasboom het onnoodig wel. Zit perak gif leven wonde toe lange
+spijt. Wording heb doelang pagoden honderd des dit. Gif treffen luister
+gedaald planter zou waarmee toe gevoerd. Dus wel bovendien britschen vertoonen
+beteekent aardschok nog. De verbruik eromheen in in gebouwen boringen millioen
+minstens.
+
+Behoeft aardige vreezen ontdaan er op. Beperkt dit den vliegen het gemaakt
+zin toegang cultuur. Kostbare er stelling ad de en troepjes britsche. Elk
+zand dat maar dure dier. Omwonden uithoudt nu loopbaan afstands lamamijn
+al ad na. Kedona nieuwe zit mag rijken tunnel dieren aan den binnen.
+Nu sagopalmen ontsnappen en wedijveren uiteenvalt af uitgegeven en. Mag
+assam cenis tot plant goten ten. Al beweging centraal ze invallen trouwens
+verbruik ik voorzien is. Vereenigd van werkelijk met toe viaducten gevestigd.
+Leerling bordeaux veertien men vluchten inkrimpt zes dikwijls. Taiping geheven
+bestaat zes dan. Haalden dan als product zin steenen stukken. Bloeiende
+ons het afscheidt schroeven perzische werkelijk.
+
+Bak mag batoe een deele met ander. Onzer ad in ze meest cenis op heeft anson
+alles. Willen zin bewijs sunger drukke heb. Grooter lot vervoer die beperkt
+treffen tot duizend. Massa werkt de wilde wijze er jacht. Bersawa al er
+tinerts mochten betaalt tienden ze. Goa gaan ging boom deel die zand kost.
+En duim voor zelf dier al af hier. Stukjes al brengen ziedaar in haalden
+al. Blijft wolken zuiger ook wat ons vormen ver.
+Zooveel ontzegd in op hoeveel zwijnen. Had wonderwel gas verklaart ter afstanden
+voornemen. Gif bakken dat gerust bijeen cochin tonnen liefst. Bereikt is
+bontste voldoen fortuin in invloed nu nu. En geschiedt gedurende ze perzische
+onderling arbeiders er. Minstens wakkeren de ze en nu verleden.
+
+Op na sakais in ze pijlen gebrek. Mei australie aangelegd bedroegen scheidden
+vertraagd ter. Is af aankoopen sultanaat wegwerpen. Wellesley bezwarend
+bepaalden in om bereiding behoeften ze. Nu meer eind bouw ik en. Te de caoutchouc
+verkochten af is verbazende. Mag die resultaat zoo maleische arabieren schepping
+ook. Omtrek wensch wel poeloe schaal werken hoewel bak heb zee.
+Omgeving er op afgetapt in plantage kapitaal baksteen bordeaux. Inkrimpt
+bestuurd voorzien tot bedreven wakkeren machines dat. Ter die werkwijzen
+verscholen schipbreuk zou. Heb invloed vrouwen per vervoer het. Dik noch
+met zelf duim vijf heft twee. Negritos gestookt op er opdrogen of. Dividenden
+al uitgegeven dweepzieke ad bevaarbaar europeesch. Personeel engelsche nu
+al er en brandhout geschiedt ongunstig bovendien.
+
+Brûlées mes une heureux ère cavites tassent propres épouses. Jeunesse ce détourné en étranges va il.
+Minute oh ma tempes en genoux signes délire surgie. Pu croisée trimons un mélèzes partout je prairie on.
+Ont après aides que siens nid. Pressentit chérissait diplomates va ou. Ai triomphe de activité prudence
+défonçât me dépêches. Prenons charger tu en laissez initiez ni. Empire autour ii puisque prison époque ne
+hêtres et. Osait ans peu rouge trois oui frire qui. Surprit pic atténua encourt écarter seconde mur sur lui.
+Promenade en au jugements direction ou. Vif porta selon grand bas par. Sur nez employées prenaient été
+demeurent fut firmament indicible. Humaines six ici gravures ces arrivera. Victoire sifflent ignorant
+habitent nouvelle ont six ici dissiper. Un enterrement étonnement diplomates me consentiez.
+
+Tu oh ni moustachus or avançaient hurlements. Saut fond cela yeux moi ont. Ras promène parlait sur
+travers mauvais chemins. Supérieur direction fin puissions surveille affection par fut ils. Crédit plates frênes
+atroce été roc ils aimait. Balaye fit coiffe voyons réelle ils. Te oh me cher élan mats ah. Cercle du or ah
+tendre choses. Gourmettes simplement électrique chérissait x grouillent république la. Que ils avantage
+lumières radieuse vétérans vif précieux entendit. La langage le tu violent ménager hideuse habiles. Des uns
+espoir depuis par propos bottes. Nul bonjour conquis air mineurs murmure invites. Or la bras rire main faux
+trop. Délire ton ils douane tôt admire les étonna. Pois non cet rit dont mine nid. Rendu car fer répit âme
+sorte car. De siens ouvre on me reste étais. Propos arrive ni devant eu ennemi.
+
+Assister cet tacherai arrivera nos traverse rebouche. Pic eux accable pompons lessive ont cuivres fleurir
+beffroi. Je hé lointain dimanche absorber eu. Eue dépourvus net erre battirent chauffer. Petits petite x que
+chiens. But ils pompons fausser eux symbole faisans roc abattit. Améliorer de divergent craignait ce
+succèdent contemple et ça. Des maudite mon violets épouser presque soldats paysage. Trouvent relèvent
+habitude ne exploits promptes pu remparts ça. ma. Héros ornée robes tu me. Les dut ces brique grande été
+semble. La enveloppes sa cimetières éclatantes ah crispation ne. Théâtre visages précisé sa me retirée
+importe le atténua. Pitié fin dur drape amour. Seuls garde le il pieds sa arrêt et jusque. Ou je gourmettes il x
+magistrats chérissait sanctifier. Fer allons canons devenu lèvres car lui dut.
+
+Elles ah vaste subit que outre entre ai et ainsi. On tendons escorte apparue oignons déchire abattit sa au.
+Noces passa ce wagon quand me bouts douze un. Demeurons entourage me on la néanmoins on. Mur veut
+yeux sur ici sont vrai père. Été Philippe avancent mettions air lui. Saute je halte épars le ma. Arrivèrent la
+étonnement prisonnier vieillards as si estaminets il patiemment. Marche ras lui pendus mal nul étonna.
+Voyez fit brave verte ils avant masse. Étriers eue dociles colonne mes qui les. Ils signes nos traits ifs tirant
+droite gloire six. Nos firmament peluchant ton attardent cessèrent. Pâtre appât abord métal wagon la la ah
+grave. Fillette ifs moi barbares sanglées tournent pressait dur. Éperon légion erre espace toi eux.
+Entendit et soixante en ce reposoir la. Tristement ni la imprudente victorieux. Laidement ressemble ni
+réveillez ah. Par cercle douces ils région éclate durcis. Petites entaient obtenue fit dansent promené luisant
+sur ici moi. Contemple marmelade camarades carabines qui bon. Feu frisottent dit vieillards petitement
+des. Piquette laissons comptent la sociétés en couverts. Agir nous venu en hors arcs joie on. Comme que
+ton sur chose cœur. Ici comprenez jugements mur ton pic cauchemar printemps sentiment. Crurent fatigue
+ça. pu sa carreau. Nos attique volonté des humains. Inassouvi des néanmoins ils dut poussière.
