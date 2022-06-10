@@ -2257,6 +2257,20 @@ sub unxmlstr {
 	return $str;
 }
 
+
+for my $i (0..$#output){
+	while ($output[$i]=~/%var\[(\w.*)\](\+*);/){
+		my $var=$1;
+		my $incr=$2;
+		if (!defined($variables{$var})){
+			$variables{$var}=0;
+		}
+		$output[$i]=~s/%var\[(\w.*)\](\+*);/$variables{$var}/g;
+		if ($incr ne ''){ $variables{$var}++;}
+	}
+}
+
+
 for my $i (0..$#output){
 	$output[$i]=~s/&lt;/</g;
 	$output[$i]=~s/&gt;/>/g;
