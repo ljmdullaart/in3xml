@@ -432,8 +432,10 @@ is a column separator. Always. So no
 .fixed |
 symbols are allowed in the text.
 - A horizontal separation between two cells must be at least 4 dashes (
-.fixed ----
+.fixednospace ----
 )
+- Composed letters must be written out. For example: é must be written as %percnt;'e; This is because
+the translation of characters to percent-notation will mess-up the pipe-alignments.
 - Leading and trailing spaces in a cell are deleted
 - No allignment hints are allowed
 
