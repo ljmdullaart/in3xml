@@ -2067,6 +2067,17 @@ if ($variables{"do_headers"} eq 'yes'){
 	print "<body>\n";
 }
 
+for my $i (0..$#output){
+	while ($output[$i]=~/%var\[(\w.*)\](\+*);/){
+		my $var=$1;
+		my $incr=$2;
+		if (!defined($variables{$var})){
+			$variables{$var}=0;
+		}
+		$output[$i]=~s/%var\[(\w.*)\](\+*);/$variables{$var}/g;
+		if ($incr ne ''){ $variables{$var}++;}
+	}
+}
 
 my $charmapfile;
 if ( -f "/usr/local/share/in3/in3charmap$variables{'interpret'}" ){
