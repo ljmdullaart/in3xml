@@ -252,7 +252,14 @@ for (@in){
 		my $level=$1;
 		s/.*\.toc.//;
 		if  ($type eq 'index') {
-		 	print ".hu $level $_\n";
+		 	print ".hu$level $_\n";
+		}
+	}
+	elsif ($inline=~/.in:\.toc/){
+		my $level=2;
+		s/.*\.toc.//;
+		if  ($type eq 'index') {
+		 	print ".hu$level $_\n";
 		}
 	}
 	elsif ($inline=~/.in:\.toc /){
