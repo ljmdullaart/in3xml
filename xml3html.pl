@@ -540,12 +540,13 @@ sub outimage {
 	}
 	my $align='';
 	#if ($inline>0){$scale=24;}
-	my $width=($x*$scale)/200;
-	my $height=($y*$scale)/200;
+	my $width=($x*$scale)/175;
+	my $height=($y*$scale)/175;
 	if ($format =~/inttwice/){ $width=$width*2; $height=$height*2; }
 	if ($format =~/inttrice/){ $width=$width*2; $height=$height*3; }
-	my $align=$y/10;
+	my $align=$y*2;
 	if ($inline>0){
+		$width=$width*1.1;
 		output ("<img src=\"$blockimg\" alt=\"$img\" width=\"$width\" style=\"vertical-align:-$align%;\">");
 	}
 	elsif ($format=~/left/){
@@ -2126,6 +2127,16 @@ for (@charmap){
 		}
 	}
 }
+
+if ($variables{'COVER'} eq 'yes'){
+	if ($variables{'cover'} ne ''){
+		print "<img src=\"block/$variables{'cover'}\" alt=\"$variables{'cover'}\">\n";
+		if (-f $variables{'cover'}){
+			system ("cp $variables{'cover'} block");
+		}
+	}
+}
+
 
 for (@output){
 	s/%\.;/./;
