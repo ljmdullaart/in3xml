@@ -1,5 +1,6 @@
 .ig
 #INSTALLEDFROM verlaine:/home/ljm/src/in3xml
+#INSTALL@ /usr/share/groff/current/tmac/in.tmac
 ..
 .\"  
 .de @revision
@@ -12,10 +13,10 @@
 In.tmac is an update on the mgm macro set.
 
 ----------------------------------------------------
-Copyright (C) 2020,2021
+Copyright (C) 2020,2021,2022,2023
   ljm & Free Software Foundation, Inc.
 
-in.tmac is adapdted from the mgm macroset by ljm. It can be
+in.tmac is adapted from the mgm macroset by ljm. It can be
 retrieved from :
 https://github.com/ljmdullaart/in3xml
 Issues may be reported there as well.
@@ -61,7 +62,6 @@ Local names	module*name
 Extern names	module@name
 Env.var		environ:name
 Index		array!index
-#INSTALL@ /usr/share/groff/current/tmac/in.tmac
 
 Updates by ljm
   - added dospark macro by Ted Harding
@@ -3680,12 +3680,12 @@ in=\\n[.i] fi=\\n[.u] .d=\\n[.d] nl=\\n[nl] pg=\\n[%]
 .
 .\" rfloat Version 1.1 (2011-Jan-02) by Werner LEMBERG
 .\" Adjust PSPIC to provide a correct width within a diversion.
-.am PSPIC
-.  vpt 0
-\h'(\\n[ps-offset]u + \\n[ps-deswid]u)'
-.  sp -1
-.  vpt 1
-..
+.\" .am PSPIC
+.\" .  vpt 0
+.\" \h'(\\n[ps-offset]u + \\n[ps-deswid]u)'
+.\" .  sp -1
+.\" .  vpt 1
+.\" ..
 .
 .de end
 ..
@@ -3827,9 +3827,10 @@ in=\\n[.i] fi=\\n[.u] .d=\\n[.d] nl=\\n[nl] pg=\\n[%]
 .  nr rfloat2-width \\n[ps-deswid]
 .  nr rfloat2-prll \\n[.l]
 .  nr rfloat2-ind \\n[rfloat2-prll]-\\n[rfloat2-width]
-.  ie \\$2 \{
+.  if \\$2 \{ 
 .    in \\n[rfloat2-ind]u
 .    I "\\$2" 
+.    br
 .    in \}
 .  nr rfloat2-end \\n[nl]
 .  wh \\n[rfloat2-end]u-1v  endrfloat2
@@ -3848,8 +3849,9 @@ in=\\n[.i] fi=\\n[.u] .d=\\n[.d] nl=\\n[nl] pg=\\n[%]
 .  nr lfloat2-width \\n[ps-deswid]
 .  nr lfloat2-prll \\n[.l]
 .  nr lfloat2-ll \\n[lfloat2-prll]-\\n[lfloat2-width]
-.  ie \\$2 \{
+.  if \\$2 \{
 .    ll \\n[lfloat2-width]u
+.    br
 .    I "\\$2"
 .    br
 .    ll \}
