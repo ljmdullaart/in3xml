@@ -416,7 +416,7 @@ if [ -d $PDF ] ; then
 			echo "	cat $PDF/$stem.tbl |tbl > $PDF/$stem.pic" >> Makefile
 			echo "	cat $PDF/$stem.pic |pic > $PDF/$stem.eqn" >> Makefile
 			echo "	cat $PDF/$stem.eqn |eqn > $PDF/$stem.rof" >> Makefile
-			#echo "	cat $PDF/$stem.rof |groff -min -Kutf8 -Tpdf -pdfmark > $PDF/$stem.pdf" >> Makefile
+			echo "	cat $PDF/$stem.rof |nroff -min > $PDF/$stem.txt" >> Makefile
 			if [ -f stylesheet.mm ] ; then
 				if grep -q '^\.NOHEAD' stylesheet.mm ; then
 					dohead=' -rN4  '
