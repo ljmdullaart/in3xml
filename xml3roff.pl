@@ -789,7 +789,7 @@ sub table_lookahead{
 			}
 			else {
 				$cellstring="$cellstring$input[$localline]";
-				if ($colwidth[$tablecol] < length($cellstring)){$colwidth[$tablecol] =length($cellstring);}
+				if ($colwidth[$tablecol] <= length($cellstring)){$colwidth[$tablecol] =length($cellstring);}
 
 			}
 		}
@@ -799,10 +799,17 @@ sub table_lookahead{
 	my $largestcol=0;
 	my $largestcolval=0;
 	for (my $i=0; $i<=$maxcol; $i++){
-		if ($largestcolval<$colwidth[$i]){
+		if ($largestcolval<=$colwidth[$i]){
 			$largestcol=$i;
 			$largestcolval=$colwidth[$i];
 		}
+		my $xpcol=$variables{'expandcol'}-1;
+		$xpcol=9999 unless defined $xpcol;
+		if ($i == $xpcol){
+			$largestcol=$i;
+			$largestcolval=$colwidth[$i];
+		}
+	
 	}
 	nodupoutput (".ne $vspace".'v');
 	output ('.TS');
