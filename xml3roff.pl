@@ -136,6 +136,7 @@ my %variables;
     $variables{"H7"}=0;
     $variables{"H8"}=0;
     $variables{"H9"}=0;
+    $variables{"need"}=4;
     $variables{"TOC"}=0;
     $variables{"appendix"}=-1;
     $variables{"author"}='';
@@ -1078,6 +1079,7 @@ while ( $linenumber <= $#input){
 			}
 			if ($variables{'notes'}==0){
 				$outatol=0;
+    				output (".ne $variables{'need'}");
 				output ('.P');
 			}
 			elsif ($ptableopen==0){    
