@@ -243,7 +243,7 @@ case $fromext in
 		case $toext in
 			(eps)
 				debug "convert  $fromfile  pnm:- | convert -density 300 -trim - block/$tobase"
-				convert -resize '1000x1000>'  "$fromfile"  pnm:- | convert -density 300 -trim - "block/$tobase" 2>> /tmp/in3fileconv.log
+				convert -resize '1000x1000>'  "$fromfile"  pnm:- | convert -density 300 -gamma 1.5  -trim - "block/$tobase" 2>> /tmp/in3fileconv.log
 				if [ "$caption" = "" ] ; then
 					:
 				else
