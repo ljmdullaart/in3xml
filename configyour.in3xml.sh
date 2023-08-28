@@ -15,6 +15,15 @@ HTM=htm
 XML=in3xml
 EPUB=ebook
 
+fontoption=' '
+completefontoption=' '
+if [ -f meta.in ] ; then
+	fontoption=$(sed -n 's/^\.set *fontsize */-rS/p' meta.in)
+fi
+if [ -f metacomplete.in ] ; then
+	completefontoption=$(sed -n 's/^\.set *fontsize */-rS/p' metacomplete.in)
+fi
+
 echo "Configyour.in3xml starting" >> $LOG
 $banner in3xml >> Makefile
 
@@ -384,6 +393,7 @@ fi
 # |_|   |____/|_|      \__\__,_|_|  \__, |\___|\__|___/
 #                                   |___/
 
+
 pwd >>$LOG
 
 ls -ld |grep $PDF >>$LOG
@@ -423,11 +433,11 @@ if [ -d $PDF ] ; then
 				fi
 			fi
 			if [ "$stem" = "complete" ] ; then
-				echo "	cat $PDF/$stem.rof |groff -min -rN=4 -Kutf8 -rN4 > $PDF/$stem.ps" >> Makefile
+				echo "	cat $PDF/$stem.rof |groff -min -rN=4 $completefontoption -Kutf8 -rN4 > $PDF/$stem.ps" >> Makefile
 			elif [ "$stem" = "total" ] ; then
-				echo "	cat $PDF/$stem.rof |groff -min -rN=4 -Kutf8  -rN4 > $PDF/$stem.ps" >> Makefile
+				echo "	cat $PDF/$stem.rof |groff -min -rN=4 -Kutf8 $completefontoption -rN4 > $PDF/$stem.ps" >> Makefile
 			else
-				echo "	cat $PDF/$stem.rof |groff -min -Kutf8 $dohead > $PDF/$stem.ps" >> Makefile
+				echo "	cat $PDF/$stem.rof |groff -min $fontoption  -Kutf8 $dohead > $PDF/$stem.ps" >> Makefile
 			fi
 			echo "	cat $PDF/$stem.ps  | ps2pdf  -dPDFSETTINGS=/prepress - - > $PDF/$stem.pdf" >> Makefile
 			if [ "$stem" = "complete" ] ; then
