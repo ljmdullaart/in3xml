@@ -252,6 +252,7 @@ for (@in){
 		my $level=$1;
 		s/.*\.toc.//;
 		if  ($type eq 'index') {
+			print ".br\n";
 		 	print ".hu$level $_\n";
 		}
 	}
@@ -259,6 +260,7 @@ for (@in){
 		my $level=2;
 		s/.*\.toc.//;
 		if  ($type eq 'index') {
+			print ".br\n";
 		 	print ".hu$level $_\n";
 		}
 	}
