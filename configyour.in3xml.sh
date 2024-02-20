@@ -1,6 +1,6 @@
 #!/bin/bash
-#INSTALLEDFROM verlaine:/home/ljm/src/in3xml
 #INSTALL@ /usr/local/bin/configyour.in3xml
+#INSTALLEDFROM verlaine:/home/ljm/src/in3xml
 if [ -x /usr/local/bin/my_banner ] ; then
     banner=/usr/local/bin/my_banner
 else
@@ -178,12 +178,17 @@ for infile in *.in ; do
 		:
 	elif [ "$infile" = "index.in" ] ; then
 		:
-	elif [ "$infile" = "meta.in" ] ; then
-		:
 	else
 		echo -n " $infile" >> Makefile
 	fi
 done
+if [ -f stylesheet.mm ] ; then
+	 echo -n " stylesheet.mm" >> Makefile
+fi
+
+ifcover=$(grep -h '^\.cover ' *complete.in | head -1 | sed 's/^.cover//')
+echo -n " $ifcover"  >> Makefile
+
 echo >> Makefile
 touch "complete.in"
 echo -n "complete.in:" >>$LOG
