@@ -1,6 +1,6 @@
 #!/bin/bash
-#INSTALLEDFROM verlaine:/home/ljm/src/in3xml
 #INSTALL@ /usr/local/bin/configyour.merge
+#INSTALLEDFROM verlaine:/home/ljm/src/in3xml
 if [ -x /usr/local/bin/my_banner ] ; then
     banner=/usr/local/bin/my_banner
 else
