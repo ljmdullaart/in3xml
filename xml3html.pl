@@ -1,6 +1,6 @@
 #!/usr/bin/perl
-#INSTALLEDFROM verlaine:/home/ljm/src/in3xml
 #INSTALL@ /usr/local/bin/xml3html
+#INSTALLEDFROM verlaine:/home/ljm/src/in3xml
 use strict;
 use File::Basename;
 

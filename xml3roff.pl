@@ -1,6 +1,6 @@
 #!/usr/bin/perl
-#INSTALLEDFROM verlaine:/home/ljm/src/in3xml
 #INSTALL@ /usr/local/bin/xml3roff
+#INSTALLEDFROM verlaine:/home/ljm/src/in3xml
 #
 #
 use strict;
@@ -813,6 +813,38 @@ sub table_lookahead{
 	
 	}
 	nodupoutput (".ne $vspace".'v');
+	my @colwidths=();
+	for (my $j=0; $j<=$maxcol; $j++){
+		$colwidths[$j]='';
+	}
+	if ($variables{'tableexpand'} eq 'yes'){
+		$colwidths[$variables{'tableexpand'}]='x';
+	}
+	output (".ig TX");
+	output ('Columnsizes');
+	if (defined ($variables{'colwidth'})){
+		output ($variables{'colwidth'});
+		if ($variables{'colwidth'}=~/,/){
+			my @incw=split (',',$variables{'colwidth'});
+			for my $i (0 .. $#incw){
+				$colwidths[$i]=$incw[$i];
+			}
+		}
+		
+	}
+	else {
+	}
+	for (my $j=0; $j<=$maxcol; $j++){
+		output("col $j : $colwidths[$j]");
+	}
+	output (".TX");
+	for (my $j=0; $j<=$maxcol; $j++){
+		if ($colwidths[$j]=~/^[0-9]+$/){
+			output(".nr %$colwidths[$j] \\n(.lu*$colwidths[$j]u/100");
+			$colwidths[$j]="w(\\n[%$colwidths[$j]]u)";
+			#output ($colwidths[$j]);
+		}
+	}
 	output ('.TS');
 	output ('allbox,center;');
 	for (my $i=0; $i<=$maxrow; $i++){
@@ -831,11 +863,20 @@ sub table_lookahead{
 					elsif ($1 eq 'text'){ $rowfmt="$rowfmt l";}
 					elsif ($1 eq 'right'){ $rowfmt="$rowfmt r";}
 					elsif ($1 eq 'num'){ $rowfmt="$rowfmt n";}
-					if (($i==1)&&($j==$largestcol)&&($variables{'tableexpand'} eq 'yes')){$rowfmt=$rowfmt . 'x';}
+					$rowfmt="$rowfmt$colwidths[$j]";
+					#if (defined ($variables{'colwidth'})){
+						#if ($variables{'colwidth'}=~','){
+							#my @clw=split(',',$variables{'colwidth'});
+						#}
+						#	
+					#}
+					#elsif (($i==0)&&($j==$largestcol)&&($variables{'tableexpand'} eq 'yes')){$rowfmt=$rowfmt . 'x';}
+					#elsif (($i==0)&&($j==1)&&($variables{'tableexpand'} eq 'yes')){$rowfmt=$rowfmt . 'x';}
 				}
 				else {
 					$rowfmt="$rowfmt l";
-					if (($i==1)&&($j+1==$largestcol)&&($variables{'tableexpand'} eq 'yes')){$rowfmt=$rowfmt . 'x';}
+					if (($i==0)&&($j+1==$largestcol)&&($variables{'tableexpand'} eq 'yes')){$rowfmt=$rowfmt . 'x';}
+					elsif (($i==0)&&($j==1)&&($variables{'tableexpand'} eq 'yes')){$rowfmt=$rowfmt . 'x';}
 				}
 			}
 		}

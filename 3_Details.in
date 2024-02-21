@@ -371,6 +371,15 @@ gives:
 The effect is mainly for the PS and PDF output. In html,
 no specific change will be visible.
 
+For more flexibility, the variable
+.fixed colwidth
+can be set to a comma-separated list of column widths. The numbers are a
+percentage of the line length to the right side of the page, so overwriting
+the right margin. An
+.fixed x
+in a field will expand the table via this field, an empty field will allow
+the output processor to make a guess what the width could be.
+
 .h2 Pipe tables
 There is another way, perhaps more intiutive to enter a table.
 You can draw a table with
