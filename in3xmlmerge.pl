@@ -1,7 +1,7 @@
 #!/usr/bin/perl
-#INSTALLEDFROM verlaine:/home/ljm/src/in3xml
 #
 #INSTALL@ /usr/local/bin/in3xmlmerge
+#INSTALLEDFROM verlaine:/home/ljm/src/in3xml
 
 my $csvfile='';
 my $xmlfile='';

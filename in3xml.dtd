@@ -1,7 +1,7 @@
 <!--
-#INSTALLEDFROM verlaine:/home/ljm/src/in3xml
 This is the in3 xml definition
 #INSTALL@ /usr/local/share/in3/in3xml.dtd
+#INSTALLEDFROM verlaine:/home/ljm/src/in3xml
 -->
 <!-- Entity corresponding to formatrequest -->
 <!ELEMENT bold (#PCDATA)>

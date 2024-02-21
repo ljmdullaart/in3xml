@@ -1,6 +1,6 @@
 #!/usr/bin/perl
-#INSTALLEDFROM verlaine:/home/ljm/src/in3xml
 #INSTALL@ /usr/local/bin/in3multipass
+#INSTALLEDFROM verlaine:/home/ljm/src/in3xml
 
 use File::Basename;
 use strict;

@@ -1,6 +1,6 @@
 #!/bin/bash
-#INSTALLEDFROM verlaine:/home/ljm/src/in3xml
 #INSTALL@ /usr/local/bin/mkfontwidthtable
+#INSTALLEDFROM verlaine:/home/ljm/src/in3xml
 tmpfont=tmpfont
 
 font=$(basename $1)

@@ -1,6 +1,6 @@
 #!/bin/bash
-#INSTALLEDFROM verlaine:/home/ljm/src/in3xml
 #INSTALL@ /usr/local/bin/in3init
+#INSTALLEDFROM verlaine:/home/ljm/src/in3xml
 
 #       _                                
 #   ___| | ___  __ _ _ __    _   _ _ __  
