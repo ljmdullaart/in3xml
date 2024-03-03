@@ -426,7 +426,7 @@ sub in3setsubstr {
 	$string[$position]=$tochar;
 	my $retval='';
 	for (@string){
-		$retval=$retval . $_;
+		$retval=$retval . $_ if defined $_;
 	}
 	undef @string;
 	return $retval;
