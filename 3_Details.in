@@ -379,6 +379,8 @@ the right margin. An
 .fixed x
 in a field will expand the table via this field, an empty field will allow
 the output processor to make a guess what the width could be.
+This is for PDFs. It also works well for simple tables, but if you use 
+row- or columnspan, it quickly becomes very complex.
 
 .h2 Pipe tables
 There is another way, perhaps more intiutive to enter a table.
