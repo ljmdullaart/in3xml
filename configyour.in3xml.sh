@@ -229,6 +229,12 @@ echo '' >>$LOG
 #                                  |___/
 
 echo "XML targets:">>$LOG
+for infile in *.in ; do
+	if grep -q '^#--DEP' "$infile" ; then
+		dependency=$(sed -n 's/^#--DEP //p' $infile | head -1)
+		echo "$infile: $dependency" >> Makefile
+	fi
+done
 echo -n "tag/in3xml.xml:" >> Makefile
 for infile in *.in ; do
 	stem=${infile%.in}
@@ -439,6 +445,7 @@ if [ -d $PDF ] ; then
 			fi
 			if [ "$stem" = "complete" ] ; then
 				echo "	cat $PDF/$stem.rof |groff -min -rN=4 $completefontoption -Kutf8 -rN4 > $PDF/$stem.ps" >> Makefile
+				echo "	pdfbook2 $PDF/$stem.pdf" >> Makefile
 			elif [ "$stem" = "total" ] ; then
 				echo "	cat $PDF/$stem.rof |groff -min -rN=4 -Kutf8 $completefontoption -rN4 > $PDF/$stem.ps" >> Makefile
 			else
