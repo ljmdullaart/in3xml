@@ -2050,6 +2050,7 @@ if ($trace > 0){
 	}
 }
 if ($variables{"do_headers"} eq 'yes'){
+	my $secby10=int(time()/10);
 	print "<!DOCTYPE html>\n";
 	print "<html lang=\"en\">\n";
 	print "<head>\n";
@@ -2059,13 +2060,14 @@ if ($variables{"do_headers"} eq 'yes'){
 	#print "<link href='https://fonts.googleapis.com/css?family=Pinyon%20Script' rel='stylesheet' type=\"text/css\">\n";
 	print "<title>$variables{'title'}</title>\n";
 	if (-f "stylesheet.css"){
-		print "<link rel=\"stylesheet\" href=\"stylesheet.css\" type=\"text/css\">\n";
+		print "<link rel=\"stylesheet\" href=\"stylesheet.css?ts=$secby10\" type=\"text/css\">\n";
 	}
 	if (-f "in3style.css"){
-		print "<link rel=\"stylesheet\" href=\"in3style.css\" type=\"text/css\">";
+		print "<link rel=\"stylesheet\" href=\"in3style.css?ts=$secby10\" type=\"text/css\">";
 	}
 	print "</head>\n";
 	print "<body>\n";
+	print "<!-- $secby10 -->\n";
 }
 
 for my $i (0..$#output){
