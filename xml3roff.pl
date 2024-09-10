@@ -164,7 +164,7 @@ my %variables;
 my @input;
 my @infile;
 
-# Variables that are picked-up in sub-states and used when higher states close
+# Variables that are picked-up in sub-states and may be  used when higher states close
 my $caption='';
 my $class='';
 my $coord='';
@@ -182,6 +182,7 @@ my $value='';
 my $varname='';
 my $video;
 my $fontname='';
+my $qtyspace=1;
 
 # Control variables
 my $currentline='';
@@ -377,6 +378,7 @@ sub formatrequest {
 		state_push('lst');
 	}
 	elsif ($input[$linenumber] =~/<space>/){
+		$qtyspace=1;
 		state_push('space');
 	}
 	elsif ($input[$linenumber] =~/<hr>/){
@@ -1794,9 +1796,14 @@ while ( $linenumber <= $#input){
 	}
 	elsif ($state  eq 'space'){
 		if ($input[$linenumber] =~/<\/space>/){
-			$outatol=1;
-			output (' ');
+			#$outatol=1;
+			for (my $i=0; $i<$qtyspace; $i++){
+				output ('\0');
+			}
 			state_pop();
+		}
+		elsif (/([0-9][0-9]*)/){
+			$qtyspace=$1;
 		}
 	}
 	elsif ($state  eq 'hr'){
