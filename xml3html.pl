@@ -516,7 +516,8 @@ sub formatrequest {
 #                    |___/
 
 sub outimage {
-	(my $img)=@_;
+	(my $img,my $flag)=@_;
+	$flag=''  unless defined $flag;
 	chomp $img;
 	$img=~s/ *$//;
 	my $baseimg=basename($img);
@@ -611,7 +612,12 @@ sub outimage {
 	}
 	elsif ($format=~/full/){
 		output ('<div style="text-align: center">');
-		output ("<img src=\"$blockimg\" alt=\"$img\" width=$width >");
+		if ($flag=~/nowidth/){
+			output ("<img src=\"$blockimg\" alt=\"$img\" >");
+		}
+		else {
+			output ("<img src=\"$blockimg\" alt=\"$img\" width=$width >");
+		}
 		if ( $caption ne '' ) {
 			output ("<br><i>$caption</i>");
 		}
@@ -638,7 +644,12 @@ sub outimage {
 	else {
 		if ($width> 500){$width=$width/1.2;}
 		output ('<div style="text-align: center">');
-		output ("<img src=\"$blockimg\" alt=\"$img\" width=$width >");
+		if ($flag=~/nowidth/){
+			output ("<img src=\"$blockimg\" alt=\"$img\" >");
+		}
+		else {
+			output ("<img src=\"$blockimg\" alt=\"$img\" width=$width >");
+		}
 		if ( $caption ne '' ) {
 			output ("<br><i>$caption</i>");
 		}
@@ -1144,7 +1155,7 @@ while ( $linenumber <= $#input){
 						output ('<div style="text-align: center">');
 					}
 					#output("<img src=\"$blk.svg\" alt=\"$blk\" style=\"height:$ysize;vertical-align:-$yalign;\">");
-					outimage ("$blk.svg");
+					outimage ("$blk.svg","nowidth");
 					if ($inline==0){
 						output ('</div>');
 					}
