@@ -153,6 +153,9 @@ OPTIONS
         named on the command line.
 
         If -f is not given, a prompt asks for the font name.
+
+AUTHOR:
+	Unknown. Sorry.
 "
 EOF
 }
