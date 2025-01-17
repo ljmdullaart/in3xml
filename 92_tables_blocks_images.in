@@ -186,3 +186,9 @@ And an svg test:
 .map field https://dullaart.website/Utrecht/index.html 393,505,408,518
 .map field https://dullaart.website/Zwolle/index.html 599,361,617,380
 .map field https://dullaart.website/Zutphen/index.html 627,494,644,512
+
+And a test csv-file:
+
+.csvfile test.csv ;
+
+

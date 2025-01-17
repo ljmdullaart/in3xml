@@ -12,6 +12,8 @@ and after a one-line construct, the trailing blank line may be ommitted.
 In the previous chapter, we saw the constructs paragraph, table and list.
 A list of the constructs is in the table below:
 
+.set colwidth 10,25,15,x
+
 |---------------------------------------------------------------------------------------------------------------------------------|
 | .b Construct     |  .b Recognized by     | .b Ends with     | .b Usage                                                          |
 |---------------------------------------------------------------------------------------------------------------------------------|
@@ -20,6 +22,8 @@ A list of the constructs is in the table below:
 |block             | %.;block <type>       | %.;block         | Defines different type of blocks                                  |
 |---------------------------------------------------------------------------------------------------------------------------------|
 |cover             | %.;cover              | End of line      | Defines an image for the cover page                               |
+|---------------------------------------------------------------------------------------------------------------------------------|
+|csvfile           |%,;csvfile <file> [sep]| End of line      | Include the CSV-file as a simple table                            |
 |---------------------------------------------------------------------------------------------------------------------------------|
 |heading           | %.;h<level>           | End of line      | Defines a Chapter, section etc. title                             |
 |---------------------------------------------------------------------------------------------------------------------------------|
@@ -30,7 +34,6 @@ A list of the constructs is in the table below:
 |hr                | %.;hr                 | End of line      | Draws a horizontal line                                           |
 |---------------------------------------------------------------------------------------------------------------------------------|
 |image             | %.;img                | End of line      | Includes an image                                                 |
-|---------------------------------------------------------------------------------------------------------------------------------|
 |---------------------------------------------------------------------------------------------------------------------------------|
 |list              | tab(s) with -,@ or #  | blank line       | Lists                                                             |
 |---------------------------------------------------------------------------------------------------------------------------------|
@@ -69,7 +72,7 @@ Most format requests are terminated by the end of line (except for example the
 .fixed .block
 request)
 
-.set tableexpand no
+.set colwidth 15,15,x
 
 	.b Format request	.b Request	.b Used for
 	note	%.;note	footnotes
@@ -414,6 +417,9 @@ include formatting commands.
 |---------------------|
 .pre
 
+.set tableexpand no
+.set colwidth 15,15,15,x
+
 |---------------------|
 |   head              |
 |---------------------|
@@ -428,6 +434,8 @@ include formatting commands.
 | r sup 2 over n sup 2|
 | .block              |
 |---------------------|
+
+.set tableexpand yes
 
 Some rules:
 
@@ -449,6 +457,30 @@ symbols are allowed in the text.
 the translation of characters to percent-notation will mess-up the pipe-alignments.
 - Leading and trailing spaces in a cell are deleted
 - No allignment hints are allowed
+
+.h2 csvfile
+
+Another option to make a simple table is to include a separate csv file. The request would be:
+
+.pre
+ .csvfile file.csv [ separator ]
+.pre
+
+where
+.i separator
+is the field separator, which can be a comma, a colon or a semi-colon. Fields may be quoted with single
+or double quotes. No colspan or rowspan is supported. As an example, including a file
+.fixed test.csv
+with the contents:
+
+.pre
+a;b;c
+d;e;f
+.pre
+
+would give:
+
+.csvfile test.csv ;
 
 .h2 Chapter, sections et cetera
 

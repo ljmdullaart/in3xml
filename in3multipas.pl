@@ -291,6 +291,16 @@ sub pushout {
 		printf("TRACE-%s-%s  %-45.45s | %-20.20s |%-45.45s\n",$variables{'filename'},$passname,$t1,$inlinenr[$i],$t2);
 	}
 }
+sub addout {
+	(my $txt)=@_;
+	if (defined $txt){}
+	else {
+		$txt='' unless defined $txt;
+		debug($deb_supporting,"\$txt is undefined");
+	}
+	$passout[-1] .= $txt;
+}
+	
 
 
 sub endpass {
@@ -761,6 +771,63 @@ sub includepass {
 		elsif (/^\.header/){
 			pushout('<header>');
 			pushout('</header>');
+		}
+		elsif (/^\.csvfile/){
+			my $csv_file_name='NO_FILE_NAME';
+			my $csv_separator=',';
+			if (/^\.csvfile  *(.*)  *([,;:])/){
+				$csv_file_name=$1;
+				$csv_separator=$2;
+			}
+			elsif (/^\.csvfile  *(.*)/){
+				$csv_file_name=$1;
+			}
+			if (open (my $CSVFILE,'<',$1)){
+				pushout('<table>');
+				my $csvlines=0;
+				while (my $csv_string=<$CSVFILE>){
+					my @csvfields=();
+					while ($csv_string =~ /
+						\s*                          # Allow optional leading spaces
+						(?:                          # Group for matching a field
+							"([^"]*)"                # Match double-quoted fields
+							|                        # OR
+							'([^']*)'                # Match single-quoted fields
+							|                        # OR
+							([^$csv_separator\s]+)   # Match unquoted fields (up to separator or whitespace)
+						)
+						\s*                          # Allow optional trailing spaces
+						$csv_separator?              # Match the separator if present
+					/xg) {
+						# Capture the matched field
+						push @csvfields, defined($1) ? $1 : defined($2) ? $2 : $3;
+					}
+					pushout('<row>');
+					my $rowcells=0;
+					for my $i (0 .. $#csvfields){
+						pushout('<cell format="left">');
+						pushout($csvfields[$i]);
+						pushout('</cell>');
+						$rowcells++;
+					}
+					if ($rowcells==0){
+						pushout('<cell format="left">');
+						pushout(' ');
+						pushout('</cell>');
+					}
+					$csvlines++;
+					pushout('</row>');
+				}
+				if ($csvlines==0){
+					pushout('<row>');
+					pushout('<cell format="left">');
+					pushout('Empty file');
+					pushout('</cell>');
+					pushout('</row>');
+				}
+				pushout('</table>');
+				close $CSVFILE;
+			}
 		}
 		else { pushout($_); }
 	}
