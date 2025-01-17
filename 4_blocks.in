@@ -10,6 +10,8 @@ for a separate construct, add a blank line above and below the
 block definition. For an in-line, keep the block within the 
 current construct.
 
+.set colwidth 25,x
+
 The following block-types exist:
 
 	.b Type	.b Description
@@ -24,7 +26,7 @@ The following block-types exist:
 Most block types will accept a format line
 
 .pre
-.block format <format>
+ .block format <format>
 .pre
 
 with 
@@ -106,7 +108,6 @@ use of these pictures.
 gives:
 
 .block pic
-.block caption Example pic-block
 circle
 arrow
 box
@@ -180,7 +181,7 @@ set display, papersize et cetera. As an example:
 .pre
 
 .block gnuplot
-.block format quart
+.block format half
 $mydata <<EOD
 1 0-10  8   2.67
 2 10-15 14  4.67
@@ -281,7 +282,6 @@ The block would be:
 
 .pre
  .block piechart
- .block format leftquart
  25,10,red,not ok
  25,20,yellow,warn
  25,30,blue,unknown
@@ -292,11 +292,12 @@ The block would be:
 with the result:
 
 .block piechart
-.block format leftquart
+.block format half
 25,10,red,not ok
 25,20,yellow,warn
 25,30,blue,unknown
 150,0,green,ok
 .block
+
 
 Note that the format for the block is a combined format here: left for having the piechart on the left and quart for the size.
