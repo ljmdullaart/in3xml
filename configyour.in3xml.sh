@@ -253,17 +253,28 @@ for infile in *.in ; do
 	stem=${infile%.in}
 	if [ "$infile" = "meta.in" ] ; then
 		:
+	elif [ "$infile" = "metacomplete.in" ] ; then
+		:
 	elif [ "$infile" = "total.in" ] ; then
 		:
 	elif [ "$infile" = "complete.in" ] ; then
 		echo -n "$XML/$stem.xml: $infile " >> Makefile
 		if [ -f metacomplete.in ] ; then
-			echo " metacomplete.in " >> Makefile
+			echo -n  " metacomplete.in " >> Makefile
 		elif [ -f meta.in ] ; then
-			echo " meta.in " >> Makefile
-		else
-			echo >> Makefile
+			echo  -n " meta.in " >> Makefile
 		fi
+		if  grep -q '^\.img' $infile  ; then
+			for dep in $(grep '^\.img' $infile  | sed 's/^\.img  *//;s/[A-Z]* //;s/ .*//'| sort -u) ; do  # not space safe!!!!
+				echo -n " $dep" >> Makefile
+			done
+		fi
+		if  grep -q '^\.csvfile' $infile  ; then
+			for dep in $(grep '^\.csvfile' $infile  | sed 's/^\.csvfile//;s/ [,;:]//' | sort -u ) ; do  # not space safe!!!!
+				echo -n " $dep" >> Makefile
+			done
+		fi
+		echo >> Makefile
 		if [ -f metacomplete.in ] ; then
 			echo "	in3multipass --metacomplete.in  $infile > $XML/$stem.xml" >> Makefile
 		else
@@ -274,10 +285,19 @@ for infile in *.in ; do
 	else
 		echo -n "$XML/$stem.xml: $infile " >> Makefile
 		if [ $META = yes ] ; then
-			echo " meta.in" >> Makefile
-		else
-			echo >> Makefile
+			echo -n " meta.in" >> Makefile
 		fi
+		if  grep -q '^\.img' $infile  ; then
+			for dep in $(grep '^\.img' $infile  | sed 's/^\.img  *//;s/[A-Z]* //;s/ .*//'| sort -u) ; do  # not space safe!!!!
+				echo -n " $dep" >> Makefile
+			done
+		fi
+		if  grep -q '^\.csvfile' $infile  ; then
+			for dep in $(grep '^\.csvfile' $infile  | sed 's/^\.csvfile//;s/ [,;:]//' | sort -u ) ; do  # not space safe!!!!
+				echo -n " $dep" >> Makefile
+			done
+		fi
+		echo >> Makefile
 		echo "	in3multipass $infile > $XML/$stem.xml" >> Makefile
 		echo "	xmllint --postvalid $XML/$stem.xml > /dev/null" >> Makefile
 		echo "    $XML/$stem.xml" >> $LOG
