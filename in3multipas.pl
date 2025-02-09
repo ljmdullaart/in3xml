@@ -1657,10 +1657,10 @@ sub parapass{
 				if ($#parablock>=0){	# paragraph-block is not empty
 					# Collect all side and left notes from the paragraph block
 					for (@parablock){
-						if (/^([^ 	]+)\t.*/){
+						if (/^([^	]+)\t.*/){
 							push @leftnote,$1;
 							#s/^([\w%\?,\. ;:\(\)]+)\t//;
-							s/^([^ 	]+)\t//;
+							s/^([^	]+)\t//;
 						}
 						if (/^\.side *char (.*)/){}
 						elsif (/^\.side *separator (.*)/){}
