@@ -253,8 +253,6 @@ for infile in *.in ; do
 	stem=${infile%.in}
 	if [ "$infile" = "meta.in" ] ; then
 		:
-	elif [ "$infile" = "metacomplete.in" ] ; then
-		:
 	elif [ "$infile" = "total.in" ] ; then
 		:
 	elif [ "$infile" = "complete.in" ] ; then
@@ -465,7 +463,6 @@ if [ -d $PDF ] ; then
 			fi
 			if [ "$stem" = "complete" ] ; then
 				echo "	cat $PDF/$stem.rof |groff -min -rN=4 $completefontoption -Kutf8 -rN4 > $PDF/$stem.ps" >> Makefile
-				echo "	pdfbook2 $PDF/$stem.pdf" >> Makefile
 			elif [ "$stem" = "total" ] ; then
 				echo "	cat $PDF/$stem.rof |groff -min -rN=4 -Kutf8 $completefontoption -rN4 > $PDF/$stem.ps" >> Makefile
 			else
@@ -474,6 +471,7 @@ if [ -d $PDF ] ; then
 			echo "	cat $PDF/$stem.ps  | ps2pdf  -dPDFSETTINGS=/prepress - - > $PDF/$stem.pdf" >> Makefile
 			if [ "$stem" = "complete" ] ; then
 				echo "	pdfrm1stblank $PDF/$stem.pdf" >> Makefile
+				echo "	pdfbook2 $PDF/$stem.pdf" >> Makefile
 			fi
 			echo "$PDF/$stem.roff: $XML/$stem.xml " >> Makefile
 			if [ "$stem" = "complete" ] ; then
