@@ -2070,11 +2070,20 @@ if ($variables{"do_headers"} eq 'yes'){
 	#print "<link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet' type=\"text/css\">\n";
 	#print "<link href='https://fonts.googleapis.com/css?family=Pinyon%20Script' rel='stylesheet' type=\"text/css\">\n";
 	print "<title>$variables{'title'}</title>\n";
+	print "<style>
+        .img-full { width:100%; height: auto;margin: 0 0 10px 10px;}
+        .img-half { width:100%; height: auto;margin: 0 0 10px 10px;}
+        .img-halfleft { width:50%; height: auto;float:left;margin: 0 0 10px 10px;}
+        .img-halfright { width:50%; height: auto;float:right;margin: 0 0 10px 10px;}
+        .img-quart { width:25%; height: auto;margin: 0 0 10px 10px;}
+        .img-quartleft { width:25%; height: auto;float:left;margin: 0 0 10px 10px;}
+        .img-quartright { width:25%; height: auto;float:right;margin: 0 0 10px 10px;}
+	</style>\n";
 	if (-f "stylesheet.css"){
-		print "<link rel=\"stylesheet\" href=\"stylesheet.css?ts=$secby10\" type=\"text/css\">\n";
+		print "<link rel=\"stylesheet\" href=\"stylesheet.css\" type=\"text/css\">\n";
 	}
 	if (-f "in3style.css"){
-		print "<link rel=\"stylesheet\" href=\"in3style.css?ts=$secby10\" type=\"text/css\">";
+		print "<link rel=\"stylesheet\" href=\"in3style.css\" type=\"text/css\">";
 	}
 	print "</head>\n";
 	print "<body>\n";
