@@ -605,16 +605,22 @@ sub outimage {
 		my $imgsize=`imageinfo --geom block/$imagename`;
 		my $x; my $y; my $xn;
 		($x,$y)=split ('x',$imgsize);
+		my $y_from_x=$y/$x;
 		my $myscale=$scale;
 		my $extra='';
 		if ($x>$variables{'imagex'}){$myscale=$variables{'imagex'}*$scale/$x;}
-		if ($iformat =~ /full/){ $myscale=50000/$x;$extra=' 14c';}
-		if ($iformat =~ /half/){ $myscale=25000/$x;$extra=' 7c';}
-		if ($iformat =~ /quart/){ $myscale=12500/$x;$extra=' 3.5c';}
-		my $y2=$y*$myscale/$variables{'imagey'};
-		if ($y2>$variables{'imagey'}){$myscale=$variables{'imagey'}*$scale/$y;}
-		$y=$y*$myscale/500;
-		$x=$x*$myscale/500;
+		#if ($iformat =~ /full/){ $myscale=50000/$x;$extra=' 14c';}
+		#if ($iformat =~ /half/){ $myscale=25000/$x;$extra=' 7c';}
+		#if ($iformat =~ /quart/){ $myscale=12500/$x;$extra=' 3.5c';}
+		if ($iformat =~ /full/){ $x=500; $y=$x*$y_from_x;}
+		elsif ($iformat =~ /half/){ $x=250; $y=$x*$y_from_x;}
+		elsif ($iformat =~ /quart/){ $x=125; $y=$x*$y_from_x;}
+		else {
+			my $y2=$y*$myscale/$variables{'imagey'};
+			if ($y2>$variables{'imagey'}){$myscale=$variables{'imagey'}*$scale/$y;}
+			$y=$y*$myscale/500;
+			$x=$x*$myscale/500;
+		}
 		my $up=$y/100;
 		my $need=$y*2;
 		#output ("\\v'$up"."c'");
@@ -641,15 +647,15 @@ sub outimage {
 		else {
 			output (".ne $need".'p');
 			output ('.ce 1');
-			if ($img=~/\.svg$/){
-				$x=$x*2; $y=$y*2;
-			}
-			elsif ($img=~/\.eps$/){
-				$x=$x*2; $y=$y*2;
-			}
-			else {
-				$x=$x*4; $y=$y*4;
-			}
+			#if ($img=~/\.svg$/){
+			#	$x=$x*2; $y=$y*2;
+			#}
+			#elsif ($img=~/\.eps$/){
+			#	$x=$x*2; $y=$y*2;
+			#}
+			#else {
+			#	$x=$x*4; $y=$y*4;
+			#}
 			output (".dospark block/$imagename $x $y");
 		}
 		#else {
@@ -1290,6 +1296,7 @@ while ( $linenumber <= $#input){
 				output ('.sp 1',,'.ps','.vs','.ft','.fi','.B2');
 				if ($caption ne ''){
 					output (".I \"$caption\"");
+					$caption='';
 				}
 			}
 			elsif ($type eq 'lst'){
@@ -1310,6 +1317,7 @@ while ( $linenumber <= $#input){
 				output ('.vs','.ps','.ft','.fi');
 				if ($caption ne ''){
 					output (".I \"$caption\"");
+					$caption='';
 				}
 			}
 			elsif ($type eq 'pic'){
@@ -1325,6 +1333,7 @@ while ( $linenumber <= $#input){
 				if ($caption ne ''){
 					output (".ce 1");
 					output (".I \"$caption\"");
+					$caption='';
 				}
 				else { # This is a hack because pic does not provide in-line images.
 					my $mscale=100;
@@ -1376,6 +1385,7 @@ while ( $linenumber <= $#input){
 				if ($caption ne ''){
 					output (".ce 1");
 					output (".I \"$caption\"");
+					$caption='';
 				}
 			}
 			elsif ($type eq 'piechart'){
@@ -1741,9 +1751,9 @@ while ( $linenumber <= $#input){
 					$fontfam=$rofffont;
 				}
 			}
-
+			my $vspace=$fontsize*1.5;
 			if ($fontname=~/([A-Za-z]+)([0-9]+)"*$/){
-				output ("$dot"."ft $fontfam","$dot"."ps $fontsize","$dot"."vs $fontsize",$input[$linenumber],"$dot"."vs","$dot"."ps","$dot"."ft");
+				output ("$dot"."ft $fontfam","$dot"."ps $fontsize","$dot"."vs $vspace",$input[$linenumber],"$dot"."vs","$dot"."ps","$dot"."ft");
 			}
 			elsif ($fontname=~/([A-Za-z]+)"*$/){
 				output ("$dot"."ft $fontfam",$input[$linenumber],"$dot"."ft");
