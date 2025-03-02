@@ -790,10 +790,10 @@ sub table_lookahead{
 				$substate='row';
 				$cellstring='';
 			}
-			elsif ($input[$localline] =~ /<\/row>/){
+			elsif ($input[$localline] =~ /<\/row>/){   # This would be a violation of the XML
 				$substate='table';
 			}
-			elsif ($input[$localline] =~ /<\/table>/){
+			elsif ($input[$localline] =~ /<\/table>/){   # This would be a violation of the XML
 				$substate='end';
 			}
 			else {
@@ -804,7 +804,7 @@ sub table_lookahead{
 		}
 		$localline++;
 	}
-	my $vspace=$maxrow;
+	my $vspace=$maxrow+5;
 	my $largestcol=0;
 	my $largestcolval=0;
 	for (my $i=0; $i<=$maxcol; $i++){
@@ -826,26 +826,26 @@ sub table_lookahead{
 		$colwidths[$j]='';
 	}
 	if ($variables{'tableexpand'} eq 'yes'){
-		$colwidths[$variables{'tableexpand'}]='x';
+		$colwidths[$variables{'expandcol'}-1]='x';
 	}
-	output (".ig TX");
-	output ('Columnsizes');
-	if (defined ($variables{'colwidth'})){
-		output ($variables{'colwidth'});
-		if ($variables{'colwidth'}=~/,/){
-			my @incw=split (',',$variables{'colwidth'});
-			for my $i (0 .. $#incw){
-				$colwidths[$i]=$incw[$i];
-			}
-		}
-		
-	}
-	else {
-	}
-	for (my $j=0; $j<=$maxcol; $j++){
-		output("col $j : $colwidths[$j]");
-	}
-	output (".TX");
+	#output (".ig TX");
+	#output ('Columnsizes');
+	#if (defined ($variables{'colwidth'})){
+		#output ($variables{'colwidth'});
+		#if ($variables{'colwidth'}=~/,/){
+			#my @incw=split (',',$variables{'colwidth'});
+			#for my $i (0 .. $#incw){
+				#$colwidths[$i]=$incw[$i];
+			#}
+		#}
+	#	
+	#}
+	#else {
+	#}
+	#for (my $j=0; $j<=$maxcol; $j++){
+		#output("col $j : $colwidths[$j]");
+	#}
+	#output (".TX");
 	for (my $j=0; $j<=$maxcol; $j++){
 		if ($colwidths[$j]=~/^[0-9]+$/){
 			output(".nr %$colwidths[$j] \\n(.lu*$colwidths[$j]u/100");
@@ -2402,7 +2402,8 @@ if ($variables{'COVER'} eq 'yes'){
 		if (! -f  "block/$cover"){
 			system("in3fileconv $variables{'cover'} $cover");
 		}
-		print ".PSPIC -L  block/$cover 6.25\n";
+		print ".sp 1i\n";
+		print ".PSPIC -C  block/$cover 6.25i\n";
 		print ".PGNG\n";
 		print ".SK\n";
 	}
