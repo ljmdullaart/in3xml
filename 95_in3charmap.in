@@ -4,599 +4,806 @@
 
 .h2 Percent translations
 
-	.b %% +	.b char	.b groff	.b html
-	%;	%%;	%	%
-	=;	%=;	=	=
-	ALPHA;	%ALPHA;	\[*A]	&Alpha;
-	BETHA;	%BETHA;	\[*B]	&Beta;
-	CHI;	%CHI;	\[*C]	&Xi;
-	CHI;	%CHI;	\[*X]	&Chi;
-	Colon;	%Colon;	::	&Colon;
-	Cset;	%Cset;	\f[dejavu]ℂ\f[]	&Copf;
-	DELTA;	%DELTA;	\[*D]	&Delta;
-	EPSILON;	%EPSILON;	\[*E]	&Epsilon;
-	ETA;	%ETA;	\[*Y]	&Eta;
-	GAMMA;	%GAMMA;	\[*G]	&Gamma;
-	Gt;	%Gt;	\f[dejavu]≫\f[]	&Gt;
-	Hset;	%Hset;	\f[dejavu]ℍ\f[]	&Hopf;
-	IOTA;	%IOTA;	\[*I]	&Iota;
-	KAPPA;	%KAPPA;	\[*K]	&Kappa;
-	LAMDA;	%LAMDA;	\[*L]	&Lambda;
-	Lt;	%Lt;	\f[dejavu]≪\f[]	&Lt;
-	MU;	%MU;	\[*M]	&Mu;
-	NU;	%NU;	\[*N]	&Nu;
-	Nset;	%Nset;	\f[dejavu]ℕ\f[]	&Nopf;
-	OMEGA;	%OMEGA;	\[*W]	&Omega;
-	OMICRON;	%OMICRON;	\[*O]	&Omicron;
-	PHI;	%PHI;	\[*F]	&Phi;
-	PI;	%PI;	\[*P]	&Pi;
-	PSI;	%PSI;	\[*Q]	&Psi;
-	Pset;	%Pset;	\f[dejavu]ℙ\f[]	&Popf;
-	Qset;	%Qset;	\f[dejavu]ℚ\f[]	&Qopf;
-	RHO;	%RHO;	\[*R]	&Rho;
-	Rset;	%Rset;	\f[dejavu]ℝ\f[]	&Ropf;
-	SIGMA;	%SIGMA;	\[*S]	&Sigma;
-
+	.b char +	.b %percnt;	.b groff	.b html
+	%!=;	!=;	f[DejaVuSans][u2260]f[]	&ne;
+	%'A;	'A;	['A]	&Aacute;
+	%'C;	'C;	['C]	&#262;
+	%'E;	'E;	['E]	&Eacute;
+	%'I;	'I;	['I]	&Iacute;
+	%'O;	'O;	['O]	&Oacute;
+	%'U;	'U;	['U]	&Uacute;
+	%'Y;	'Y;	['Y]	&Yacute;
+	%'a;	'a;	['a]	&aacute;
+	%'c;	'c;	['c]	&#263;
+	%'e;	'e;	['e]	&eacute;
+	%'i;	'i;	['i]	&iacute;
+	%'o;	'o;	['o]	&oacute;
+	%'u;	'u;	['u]	&uacute;
+	%'y;	'y;	['y]	&yacute;
+	%+-;	+-;	[+-]	&mnplus;
+	%+f;	+f;	[+f]	&phi;
+	%+h;	+h;	[+h]	&thetasym;
+	%+p;	+p;	[+p]	&piv;
+	%,C;	,C;	[,C]	&Ccedil;
+	%,c;	,c;	[,c]	&ccedil;
+	%-&gt;	-&gt;	[->]	&rarr;
+	%->;	->;	[->]	&rarr;
+	%-D;	-D;	[-D]	&ETH;
+	%-h;	-h;	[-h]	&#295;
+	%.i;	.i;	[.i]	&imath;
+	%.j;	.j;	[.j]	&#567;
+	%/L;	/L;	[/L]	&Lstrok;
+	%/O;	/O;	[/O]	&Oslash;
+	%/_;	/_;	[/_]	&ang;
 
 .page
 
-	.b %% +	.b char	.b groff	.b html
-	TAU;	%TAU;	\[*T]	&Tau;
-	THETA;	%THETA;	\[*H]	&Theta;
-	UPSILION;	%UPSILION;	\[*U]	&Upsilon;
-	YPSILION;	%YPSILION;	\[*U]	&Upsilon;
-	ZETA;	%ZETA;	\[*Z]	&Zeta;
-	Zset;	%Zset;	\f[dejavu]ℤ\f[]	&Zopf;
-	alpha;	%alpha;	\[*a]	&alpha;
-	ang;	%ang;	\f[dejavu]∠\f[]	&ang;
-	angrt;	%angrt;	\f[dejavu]∟\f[]	&angrt;
-	asymp;	%asymp;	\f[dejavu]≈\f[]	&asymp;
-	because;	%because;	\f[dejavu]∵\f[]	&because;
-	beta;	%beta;	\[*b]	&beta;
-	cap;	%cap;	\f[dejavu]∩\f[]	&cap;
-	chi;	%chi;	\[*x]	&chi;
-	cong;	%cong;	\f[dejavu]≅\f[]	&cong;
-	conint;	%conint;	\f[dejavu]∮\f[]	&conint;
-	cup;	%cup;	\f[dejavu]∪\f[]	&cup;
-	dashv;	%dashv;	\f[dejavu]⊣\f[]	&dashv;
-	deg;	%deg;	\f[dejavu]°\f[]	&deg;
-	delta;	%delta;	\[*d]	&delta;
-	divide;	%divide;	\f[dejavu]÷\f[]	&divide;
-	empty;	%empty;	Ø	&empty;
-	epsilon;	%epsilon;	\[*e]	&epsilon;
-	equiv;	%equiv;	\f[dejavu]≡\f[]	&equiv;
-	eta;	%eta;	\[*y]	&eta;
-	euro;	%euro;	\[eu]	&euro;
-	exist;	%exist;	\f[dejavu]∃\f[]	&exist;
-	fnof;	%fnof;	\f[dejavu]ƒ\f[]	&fnof;
-	forall;	%forall;	\f[dejavu]∀\f[]	&forall;
-	gamma;	%gamma;	\[*g]	&gamma;
-	ge;	%ge;	\f[dejavu]≥\f[]	&ge;
-	increment;	%increment;	\f[dejavu]∆\f[]	&#8710;
-	infin;	%infin;	\f[dejavu]∞\f[]	&infin;
-	int;	%int;	\f[dejavu]∫\f[]	&int;
-	iota;	%iota;	\[*i]	&iota;
-	isin;	%isin;	\f[dejavu]∈\f[]	&isin;
-
+	.b char +	.b %percnt;	.b groff	.b html
+	%/l;	/l;	[/l]	&lstrok;
+	%/o;	/o;	[/o]	&oslash;
+	%12;	12;	[12]	&frac12;
+	%14;	14;	[14]	&frac14;
+	%18;	18;	[18]	&#8539;
+	%34;	34;	[34]	&frac34;
+	%38;	38;	[38]	&#8540;
+	%3d;	3d;	[3d]	&there4;
+	%58;	58;	[58]	&#8541;
+	%78;	78;	[78]	&#8542;
+	%8X;	8X;	f[Zapf]$f[]	&#9988;
+	%8x;	8x;	f[Zapf]"f[]	&#9986;
+	%:A;	:A;	[:A]	&Auml;
+	%:E;	:E;	[:E]	&Euml;
+	%:I;	:I;	[:I]	&Iuml;
+	%:O;	:O;	[:O]	&Ouml;
+	%:U;	:U;	[:U]	&Uuml;
+	%:Y;	:Y;	[:Y]	&#159;
+	%:a;	:a;	[:a]	&auml;
+	%:e;	:e;	[:e]	&euml;
+	%:i;	:i;	[:i]	&iuml;
+	%:o;	:o;	[:o]	&ouml;
+	%:u;	:u;	[:u]	&uuml;
+	%:y;	:y;	[:y]	&yuml;
+	%<-;	<-;	[<-]	&larr;
+	%<<;	<<;	[<<]	&Lt;
+	%<=;	<=;	[<=]	&le;
+	%<>;	<>;	[<>]	&harr;
+	%=;	=;	=	=
+	%==;	==;	[==]	&equiv;
 
 .page
 
-	.b %% +	.b char	.b groff	.b html
-	kappa;	%kappa;	\[*k]	&kappa;
-	lambda;	%lambda;	\[*l]	&lambda;
-	le;	%le;	\f[dejavu]≤\f[]	&le;
-	lowast;	%lowast;	\f[dejavu]∗\f[]	&lowast;
-	mu;	%mu;	\[*m]	&mu;
-	nabla;	%nabla;	\f[dejavu]∇\f[]	&nabla;
-	ne;	%ne;	\f[dejavu]≠\f[]	&ne;
-	nequiv;	%nequiv;	\f[dejavu]≢\f[]	&nequiv;
-	ni;	%ni;	\f[dejavu]∋\f[]	&ni;
-	not;	%not;	\f[dejavu]¬\f[]	&not;
-	notin;	%notin;	\f[dejavu]∉\f[]	&notin;
-	nsub;	%nsub;	\f[dejavu]⊄\f[]	&nsub;
-	nsup;	%nsup;	\f[dejavu]⊅\f[]	&nsup;
-	nu;	%nu;	\[*n]	&nu;
-	odot;	%odot;	\f[dejavu]⊙\f[]	&odot;
-	omega;	%omega;	\[*w]	&omega;
-	omicron;	%omicron;	\[*o]	&omicron;
-	ominus;	%ominus;	\f[dejavu]⊖\f[]	&ominus;
-	osol;	%osol;	\f[dejavu]⊘\f[]	&osol;
-	otimes;	%otimes;	\f[dejavu]⊗\f[]	&otimes;
-	parallel;	%parallel;	\f[dejavu]∥\f[]	&parallel;
-	part;	%part;	\f[dejavu]∂\f[]	&part;
-	percnt;	%percnt;	\f[dejavu]%\f[]	&percnt;
-	permil;	%permil;	\f[dejavu]‰\f[]	&permil;
-	perp;	%perp;	\f[dejavu]⊥\f[]	&perp;
-	phi;	%phi;	\[+f]	&phi;
-	pi;	%pi;	\[*p]	&pi;
-	plusmn;	%plusmn;	\f[dejavu]±\f[]	&plusmn;
-	prod;	%prod;	\f[dejavu]∏\f[]	&prod;
-	prop;	%prop;	\f[dejavu]∝\f[]	&prop;
-	psi;	%psi;	\[*q]	&psi;
-	radic;	%radic;	\f[dejavu]√\f[]	&radic;
-	rho;	%rho;	\[*r]	&rho;
-	sigma;	%sigma;	\[*s]	&sigma;
-	sigmaf;	%sigmaf;	\[ts]	&sigmaf;
-	sub;	%sub;	\f[dejavu]⊂\f[]	&sub;
-
+	.b char +	.b %percnt;	.b groff	.b html
+	%=~;	=~;	[=~]	&cong;
+	%>=;	>=;	[>=]	&ge;
+	%>>;	>>;	[>>]	&Gt;
+	%AE;	AE;	[AE]	&AElig;
+	%ALPHA;	ALPHA;	[*A]	&Alpha;
+	%AN;	AN;	[AN]	&and;
+	%BETHA;	BETHA;	[*B]	&Beta;
+	%Bq;	Bq;	[Bq]	&bdquo;
+	%CHECK;	CHECK;	f[Zapf]4f[]	&#10004;
+	%CHI;	CHI;	[*C]	&Xi;
+	%CL;	CL;	[CL]	&clubs;
+	%CR;	CR;	[CR]	&crarr;
+	%CROSS;	CROSS;	f[Zapf]?f[]	&#10014;
+	%Colon;	Colon;	f[DejaVuSans][u2237]f[]	&Colon;
+	%Cs;	Cs;	[Cs]	&curren;
+	%Cset;	Cset;	f[DejaVuSans][u2102]f[]	&Copf;
+	%DELTA;	DELTA;	[*D]	&Delta;
+	%DI;	DI;	[DI]	&diams;
+	%EPSILON;	EPSILON;	[*E]	&Epsilon;
+	%ETA;	ETA;	[*Y]	&Eta;
+	%Fc;	Fc;	[Fc]	&raquo;
+	%Fn;	Fn;	[Fn]	&fnof;
+	%Fo;	Fo;	[Fo]	&laquo;
+	%GA;	GA;	[*A]	&Alpha;
+	%GAMMA;	GAMMA;	[*G]	&Gamma;
+	%GB;	GB;	[*B]	&Beta;
+	%GC;	GC;	[*C]	&Xi;
+	%GD;	GD;	[*D]	&Delta;
+	%GE;	GE;	[*E]	&Epsilon;
+	%GF;	GF;	[*F]	&Phi;
 
 .page
 
-	.b %% +	.b char	.b groff	.b html
-	sube;	%sube;	\f[dejavu]⊆\f[]	&sube;
-	sum;	%sum;	\f[dejavu]∑\f[]	&sum;
-	sup;	%sup;	\f[dejavu]⊃\f[]	&sup;
-	supe;	%supe;	\f[dejavu]⊇\f[]	&supe;
-	tau;	%tau;	\[*t]	&tau;
-	test;	%test;	!TEST GROFF!	!TEST HTML!
-	there4;	%there4;	\f[dejavu]∴\f[]	&there4;
-	theta;	%theta;	\[*h]	&theta;
-	thetasym;	%thetasym;	\[+h]	&thetasym;
-	times;	%times;	\f[dejavu]×\f[]	&times;
-	top;	%top;	\f[dejavu]⊤\f[]	&top;
-	upsilon;	%upsilon;	\[*u]	&upsilon;
-	vdash;	%vdash;	\f[dejavu]⊢\f[]	&vdash;
-	veebar;	%veebar;	\f[dejavu]⊻\f[]	&veebar;
-	xi;	%xi;	\[*c]	&xi;
-	zeta;	%zeta;	\[*z]	&zeta;
-	8X;	%8X;	\f[Zapf]$\f[]	&#9988;
-	8x;	%8x;	\f[Zapf]"\f[]	&#9986;
-	CHECK;	%CHECK;	\f[Zapf]4\f[]	&#10004;
-	CROSS;	%CROSS;	\f[Zapf]?\f[]	&#10014;
-	PHONE;	%PHONE;	\f[Zapf]%\f[]	&phone;
-	WRONG;	%WRONG;	\f[Zapf]8\f[]	&#10008;
-	check;	%check;	\f[Zapf]3\f[]	&check;
-	cross;	%cross;	\f[Zapf]=\f[]	&#10013;
-	david;	%david;	\f[Zapf]A\f[]	&#10017;
-	mail;	%mail;	\f[Zapf])\f[]	&#9993;
-	pen;	%pen;	\f[Zapf]1\f[]	&#10001;
-	phone;	%phone;	\f[Zapf]&\f[]	&#9990;
-	plane;	%plane;	\f[Zapf](\f[]	&#9992;
-	snow;	%snow;	\f[Zapf]d\f[]	&#10052;
-	star;	%star;	\f[Zapf]I\f[]	&#10025;
-	write;	%write;	\f[Zapf]-\f[]	&#9997;
-	wrong;	%wrong;	\f[Zapf]7\f[]	&#10007;
-	o1;	%o1;	\f[Zapf]â\f[]	&#10112;
-	o2;	%o2;	\f[Zapf]ê\f[]	&#10113;
-	o3;	%o3;	\f[Zapf]ô\f[]	&#10114;
-
+	.b char +	.b %percnt;	.b groff	.b html
+	%GG;	GG;	[*G]	&Gamma;
+	%GH;	GH;	[*H]	&Theta;
+	%GI;	GI;	[*I]	&Iota;
+	%GK;	GK;	[*K]	&Kappa;
+	%GL;	GL;	[*L]	&Lambda;
+	%GM;	GM;	[*M]	&Mu;
+	%GO;	GO;	[*O]	&Omicron;
+	%GP;	GP;	[*P]	&Pi;
+	%GQ;	GQ;	[*Q]	&Psi;
+	%GR;	GR;	[*R]	&Rho;
+	%GS;	GS;	[*S]	&Sigma;
+	%GT;	GT;	[*T]	&Tau;
+	%GU;	GU;	[*U]	&Upsilon;
+	%GW;	GW;	[*W]	&Omega;
+	%GX;	GX;	[*X]	&Chi;
+	%GY;	GY;	[*Y]	&Eta;
+	%GZ;	GZ;	[*Z]	&Zeta;
+	%G*;	G*;	[**]	&lowast;
+	%Ga;	Ga;	[*a]	&alpha;
+	%Gb;	Gb;	[*b]	&beta;
+	%Gc;	Gc;	[*c]	&xi;
+	%Gd;	Gd;	[*d]	&delta;
+	%Ge;	Ge;	[*e]	&epsilon;
+	%Gf;	Gf;	[*f]	&#981
+	%Gg;	Gg;	[*g]	&gamma;
+	%Gh;	Gh;	[*h]	&theta;
+	%Gi;	Gi;	[*i]	&iota;
+	%Gk;	Gk;	[*k]	&kappa;
+	%Gl;	Gl;	[*l]	&lambda;
+	%Gm;	Gm;	f[DejaVuSans][u03BC]f[]	&mu;
 
 .page
 
-	.b %% +	.b char	.b groff	.b html
-	o4;	%o4;	\f[Zapf]û\f[]	&#10115;
-	o5;	%o5;	\f[Zapf]á\f[]	&#10116;
-	o6;	%o6;	\f[Zapf]é\f[]	&#10117;
-	o7;	%o7;	\f[Zapf]ó\f[]	&#10118;
-	o8;	%o8;	\f[Zapf]ú\f[]	&#10119;
-	o9;	%o9;	\f[Zapf]à\f[]	&#10120;
-	o10;	%o10;	\f[Zapf]è\f[]	&#10121;
+	.b char +	.b %percnt;	.b groff	.b html
+	%Gn;	Gn;	[*n]	&nu;
+	%Go;	Go;	[*o]	&omicron;
+	%Gp;	Gp;	[*p]	&pi;
+	%Gq;	Gq;	[*q]	&psi;
+	%Gr;	Gr;	[*r]	&rho;
+	%Gs;	Gs;	[*s]	&sigma;
+	%Gt;	Gt;	&Gt;	&Gt;
+	%Gt;	Gt;	[*t]	&tau;
+	%Gu;	Gu;	[*u]	&upsilon;
+	%Gw;	Gw;	[*w]	&omega;
+	%Gx;	Gx;	[*x]	&chi;
+	%Gy;	Gy;	[*y]	&eta;
+	%Gz;	Gz;	[*z]	&zeta;
+	%HE;	HE;	[HE]	&hearts;
+	%Hset;	Hset;	f[DejaVuSans][u210D]f[]	&Hopf;
+	%IJ;	IJ;	[IJ]	&IJlig;
+	%IOTA;	IOTA;	[*I]	&Iota;
+	%Im;	Im;	[Im]	&Ifr;
+	%KAPPA;	KAPPA;	[*K]	&Kappa;
+	%LAMDA;	LAMDA;	[*L]	&Lambda;
+	%Lt;	Lt;	f[DejaVuSans]<<f[]	&Lt;
+	%MU;	MU;	[*M]	&Mu;
+	%NU;	NU;	[*N]	&Nu;
+	%Nset;	Nset;	f[DejaVuSans][u2115]f[]	&Nopf;
+	%OE;	OE;	[OE]	&OElig;
+	%OMEGA;	OMEGA;	[*W]	&Omega;
+	%OMICRON;	OMICRON;	[*O]	&Omicron;
+	%Of;	Of;	[Of]	&ordf;
+	%Om;	Om;	[Om]	&ordm;
+	%PHI;	PHI;	[*F]	&Phi;
 
+.page
+
+	.b char +	.b %percnt;	.b groff	.b html
+	%PHONE;	PHONE;	f[Zapf]%f[]	&phone;
+	%PI;	PI;	[*P]	&Pi;
+	%PSI;	PSI;	[*Q]	&Psi;
+	%Po;	Po;	[Po]	&pound;
+	%Pset;	Pset;	f[DejaVuSans][u2119]f[]	&Popf;
+	%Qset;	Qset;	f[DejaVuSans][u211A]f[]	&Qopf;
+	%RHO;	RHO;	[*R]	&Rho;
+	%Rset;	Rset;	f[DejaVuSans][u211D]f[]	&Ropf;
+	%S1;	S1;	[S1]	&#0185;
+	%S2;	S2;	[S2]	&#0178;
+	%S2;	S2;	[S2]	&sup2;
+	%S3;	S3;	[S3]	&#0179;
+	%SIDE0;	SIDE0;	*[SIDE 0]	&#8304;
+	%SIDE4;	SIDE4;	*[SIDE 4]	&#8308;
+	%SIDE5;	SIDE5;	*[SIDE 5]	&#8309;
+	%SIDE6;	SIDE6;	*[SIDE 6]	&#8310;
+	%SIDE7;	SIDE7;	*[SIDE 7]	&#8311;
+	%SIDE8;	SIDE8;	*[SIDE 8]	&#8312;
+	%SIDE9;	SIDE9;	*[SIDE 9]	&#8313;
+	%SIGMA;	SIGMA;	[*S]	&Sigma;
+	%SP;	SP;	[SP]	&spades;
+	%Sd;	Sd;	[Sd]	&eth;
+	%TAU;	TAU;	[*T]	&Tau;
+	%THETA;	THETA;	[*H]	&Theta;
+	%TP;	TP;	[TP]	&THORN;
+	%Tp;	Tp;	[Tp]	&thorn;
+	%UPSILION;	UPSILION;	[*U]	&Upsilon;
+	%WRONG;	WRONG;	f[Zapf]8f[]	&#10008;
+	%XI;	XI;	[*X]	&Chi;
+	%YPSILION;	YPSILION;	[*U]	&Upsilon;
+
+.page
+
+	.b char +	.b %percnt;	.b groff	.b html
+	%Ye;	Ye;	[Ye]	&yen;
+	%ZETA;	ZETA;	[*Z]	&Zeta;
+	%Zset;	Zset;	f[DejaVuSans][u2124]f[]	&Zopf;
+	%^A;	^A;	[^A]	&Acirc;
+	%^E;	^E;	[^E]	&Ecirc;
+	%^I;	^I;	[^I]	&Icirc;
+	%^O;	^O;	[^O]	&Ocirc;
+	%^U;	^U;	[^U]	&Ucirc;
+	%^a;	^a;	[^a]	&acirc;
+	%^e;	^e;	[^e]	&ecirc;
+	%^i;	^i;	[^i]	&icirc;
+	%^o;	^o;	[^o]	&ocirc;
+	%^u;	^u;	[^u]	&ucirc;
+	%|=;	|=;	[|=]	&sime;
+	%`A;	`A;	[`A]	&Agrave;
+	%`E;	`E;	[`E]	&Egrave;
+	%`I;	`I;	[`I]	&Igrave;
+	%`O;	`O;	[`O]	&Ograve;
+	%`U;	`U;	[`U]	&Ugrave;
+	%`a;	`a;	[`a]	&agrave;
+	%`e;	`e;	[`e]	&egrave;
+	%`o;	`o;	[`o]	&ograve;
+	%`u;	`u;	[`u]	&ugrave;
+	%a";	a";	[a"]	&#733;
+	%a.;	a.;	[a.]	&#729;
+	%ab;	ab;	[ab]	&#728;
+	%ad;	ad;	[ad]	&die;
+	%ae;	ae;	[ae]	&aelig;
+	%ah;	ah;	[ah]	&#711;
+	%alpha;	alpha;	[*a]	&alpha;
+
+.page
+
+	.b char +	.b %percnt;	.b groff	.b html
+	%an;	an;	[an]	&#9135
+	%ang;	ang;	f[DejaVuSans][u2220]f[]	&ang;
+	%angrt;	angrt;	f[DejaVuSans][u221F]f[]	&angrt;
+	%ao;	ao;	[ao]	&#730;
+	%ap;	ap;	[ap]	&sim;
+	%asymp;	asymp;	f[DejaVuSans][u2248]f[]	&asymp;
+	%because;	because;	f[DejaVuSans][u2235]f[]	&because;
+	%beta;	beta;	[*b]	&beta;
+	%bq;	bq;	[bq]	&sbquo;
+	%bu;	bu;	[bu]	&#8226;
+	%c+;	c+;	[c+]	⊕
+	%c*;	c*;	[c*]	&#8855;
+	%ca;	ca;	[ca]	&cap;
+	%cap;	cap;	[ca]	&cap;
+	%check;	check;	f[Zapf]3f[]	&check;
+	%chi;	chi;	[*x]	&chi;
+	%ci;	ci;	[ci]	&#9675;
+	%co;	co;	[co]	&copy;
+	%co;	co;	[coproduct]	&coprod;
+	%cong;	cong;	f[DejaVuSans]≅f[]	&cong;
+	%conint;	conint;	f[DejaVuSans][u222E]f[]	&conint;
+	%cq;	cq;	[cq]	&rsquo;
+	%cross;	cross;	f[Zapf]=f[]	&#10013;
+	%ct;	ct;	[ct]	&cent;
+	%cu;	cu;	[cu]	&cup;
+	%cup;	cup;	[cu]	&cup;
+	%dA;	dA;	[dA]	&dArr;
+	%da;	da;	[da]	&darr;
+	%dashv;	dashv;	f[DejaVuSans][u22A3]f[]	&dashv;
+	%david;	david;	f[Zapf]Af[]	&#10017;
+
+.page
+
+	.b char +	.b %percnt;	.b groff	.b html
+	%dd;	dd;	[dd]	&Dagger;
+	%deg;	deg;	[ao]	&deg;
+	%delta;	delta;	[*d]	&delta;
+	%dg;	dg;	[dg]	&dagger;
+	%divide;	divide;	[di]	&divide;
+	%em;	em;	[em]	&mdash;
+	%empty;	empty;	[/O]	&empty;
+	%en;	en;	[en]	&ndash;
+	%epsilon;	epsilon;	[*e]	&epsilon;
+	%equiv;	equiv;	[==]	&equiv;
+	%eta;	eta;	[*y]	&eta;
+	%eu;	eu;	[eu]	&euro;
+	%euro;	euro;	f[DejaVuSans][u20AC]f[]	&euro;
+	%exist;	exist;	f[DejaVuSans][u2203]f[]	&exist;
+	%f/;	f/;	[f/]	fraction
+	%fa;	fa;	[fa]	&forall;
+	%fc;	fc;	[fc]	&rsaquo;
+	%fnof;	fnof;	[Fn]	&fnof;
+	%fo;	fo;	[fo]	&lsaquo;
+	%forall;	forall;	f[DejaVuSans][u2200]f[]	&forall;
+	%gamma;	gamma;	[*g]	&gamma;
+	%ge;	ge;	[>=]	&ge;
+	%gr;	gr;	[gr]	&nabla;
+	%hA;	hA;	[hA]	&hArr;
+	%ho;	ho;	[ho]	&#731;
+	%hy;	hy;	[hy]	&#8208;
+	%ib;	ib;	[ib]	&sube;
+	%if;	if;	[if]	&infin;
+	%ij;	ij;	[ij]	&ijlig;
+	%increment;	increment;	f[DejaVuSans][u2206]f[]	&#8710;
+
+.page
+
+	.b char +	.b %percnt;	.b groff	.b html
+	%infin;	infin;	f[DejaVuSans][u221E]f[]	&infin;
+	%int;	int;	f[DejaVuSans][u222B]f[]	&int;
+	%iota;	iota;	[*i]	&iota;
+	%ip;	ip;	[ip]	&supe;
+	%is;	is;	[is]	&int;
+	%isin;	isin;	[mo]	&isin;
+	%kappa;	kappa;	[*k]	&kappa;
+	%lA;	lA;	[lA]	&lArr;
+	%lambda;	lambda;	[*l]	&lambda;
+	%lc;	lc;	[lc]	&#x2308;
+	%le;	le;	[<=]	&le;
+	%lf;	lf;	[lf]	&#x230A;
+	%lh;	lh;	[lh]	&#9756;
+	%lowast;	lowast;	[**]	&lowast;
+	%lq;	lq;	[lq]	&ldquo;
+	%lz;	lz;	[lz]	&loz;
+	%mail;	mail;	f[Zapf])f[]	&#9993;
+	%md;	md;	[md]	&sdot;
+	%mo;	mo;	[mo]	&#1013;
+	%mo;	mo;	[mo]	&isin;
+	%mu;	mu;	f[DejaVuSans][u03BC]f[]	&mu;
+	%nabla;	nabla;	f[DejaVuSans][u2207]f[]	&nabla;
+	%nb;	nb;	[nb]	&nsub;
+	%nc;	nc;	[nc]	&nsup;
+	%ne;	ne;	f[DejaVuSans][u2260]f[]	&ne;
+	%ne;	ne;	f[DejaVuSans][u2260]f[]	&nequiv;
+	%nequiv;	nequiv;	f[DejaVuSans][u2262]f[]	&nequiv;
+	%ni;	ni;	[st]	&ni;
+	%nm;	nm;	[nm]	&notin;
+	%no;	no;	[no]	&not;
+
+.page
+
+	.b char +	.b %percnt;	.b groff	.b html
+	%not;	not;	[no]	&not;
+	%notin;	notin;	f[DejaVuSans][u2209]f[]	&notin;
+	%nsub;	nsub;	f[DejaVuSans][u2284]f[]	&nsub;
+	%nsup;	nsup;	f[DejaVuSans][u2285]f[]	&nsup;
+	%nu;	nu;	[*n]	&nu;
+	%o+;	o+;	[c+]	⊕
+	%o10;	o10;	f[DejaVuSans][u2789]f[]	&#10121;
+	%o1;	o1;	f[DejaVuSans][u2780]f[]	&#10112;
+	%o2;	o2;	f[DejaVuSans][u2781]f[]	&#10113;
+	%o3;	o3;	f[DejaVuSans][u2782]f[]	&#10114;
+	%o4;	o4;	f[DejaVuSans][u2783]f[]	&#10115;
+	%o5;	o5;	f[DejaVuSans][u2784]f[]	&#10116;
+	%o6;	o6;	f[DejaVuSans][u2785]f[]	&#10117;
+	%o7;	o7;	f[DejaVuSans][u2786]f[]	&#10118;
+	%o8;	o8;	f[DejaVuSans][u2787]f[]	&#10119;
+	%o9;	o9;	f[DejaVuSans][u2788]f[]	&#10120;
+	%oA;	oA;	[oA]	&Aring;
+	%oa;	oa;	[oa]	&aring;
+	%odot;	odot;	f[DejaVuSans][u2299]f[]	&odot;
+	%oe;	oe;	[oe]	&oelig;
+	%omega;	omega;	[*w]	&omega;
+	%omicron;	omicron;	[*o]	&omicron;
+	%ominus;	ominus;	f[DejaVuSans][u2296]f[]	&ominus;
+	%oq;	oq;	[oq]	&lsquo;
+	%osol;	osol;	f[DejaVuSans][u2298]f[]	&osol;
+	%otimes;	otimes;	f[DejaVuSans][u2297]f[]	&otimes;
+	%parallel;	parallel;	f[DejaVuSans][u2225]f[]	&parallel;
+	%part;	part;	f[DejaVuSans][u2202]f[]	&part;
+	%pd;	pd;	[pd]	&part;
+	%pen;	pen;	f[Zapf]1f[]	&#10001;
+
+.page
+
+	.b char +	.b %percnt;	.b groff	.b html
+	%percnt;	percnt;	f[DejaVuSans]%f[]	&percnt;
+	%permil;	permil;	f[DejaVuSans][u2030]f[]	&permil;
+	%perp;	perp;	f[DejaVuSans][u22A5]f[]	&perp;
+	%phi;	phi;	[+f]	&phi;
+	%phone;	phone;	f[Zapf]&f[]	&#9990;
+	%pi;	pi;	[*p]	&pi;
+	%plane;	plane;	f[Zapf](f[]	&#9992;
+	%plusmn;	plusmn;	f[DejaVuSans][u00B1]f[]	&plusmn;
+	%pp;	pp;	[pp]	&perp;
+	%prod;	prod;	f[DejaVuSans][u220F]f[]	&prod;
+	%prop;	prop;	f[DejaVuSans][u221D]f[]	&prop;
+	%psi;	psi;	[*q]	&psi;
+	%pt;	pt;	[pt]	&prop;
+	%r!;	r!;	[r!]	&iexcl;
+	%rA;	rA;	[rA]	&rArr;
+	%r?;	r?;	[r?]	&iquest;
+	%radic;	radic;	f[DejaVuSans][u221A]f[]	&radic;
+	%rc;	rc;	[rc]	&#x2309;
+	%rf;	rf;	[rf]	&#x230B;
+	%rg;	rg;	[rg]	&reg;
+	%rh;	rh;	[rh]	&#9755;
+	%rho;	rho;	[*r]	&rho;
+	%rn;	rn;	[rn]	&oline;
+	%rq;	rq;	[rq]	&rdquo;
+	%sb;	sb;	[sb]	&sub;
+	%sc;	sc;	[sc]	&sect;
+	%sigma;	sigma;	[*s]	&sigma;
+	%sigmaf;	sigmaf;	[ts]	&sigmaf;
+	%snow;	snow;	f[Zapf]df[]	&#10052;
+	%sp;	sp;	[sp]	&sup;
+
+.page
+
+	.b char +	.b %percnt;	.b groff	.b html
+	%sq;	sq;	[sq]	&#9633;
+	%sr;	sr;	[sr]	&radic;
+	%ss;	ss;	[ss]	&szlig;
+	%st;	st;	[st]	&ni;
+	%star;	star;	f[Zapf]If[]	&#10025;
+	%sub;	sub;	[sb]	&sub;
+	%sube;	sube;	[ib]	&sube;
+	%sum;	sum;	[sum]	&sum;
+	%sum;	sum;	f[DejaVuSans][u221A]f[]	&sum;
+	%sup;	sup;	f[DejaVuSans][u2283]f[]	&sup;
+	%supe;	supe;	f[DejaVuSans][u2287]f[]	&supe;
+	%tau;	tau;	[*t]	&tau;
+	%te;	te;	[te]	&exist;
+	%test;	test;	!TEST GROFF!	!TEST HTML!
+	%there4;	there4;	f[DejaVuSans][u2234]f[]	&there4;
+	%theta;	theta;	[*h]	&theta;
+	%thetasym;	thetasym;	[+h]	&thetasym;
+	%times;	times;	f[DejaVuSans][u0215]f[]	&times;
+	%tm;	tm;	[tm]	&trade;
+	%top;	top;	f[DejaVuSans][u22A4]f[]	&top;
+	%ts;	ts;	[ts]	&sigmaf;
+	%uA;	uA;	[uA]	&uArr;
+	%ua;	ua;	[ua]	&uarr;
+	%upsilon;	upsilon;	[*u]	&upsilon;
+	%vA;	vA;	f[DejaVuSans][u21D5]f[]	&#8661
+	%vS;	vS;	[vS]	&#352;
+	%vZ;	vZ;	[vZ]	&#381;
+	%va;	va;	[va]	&#8597;
+	%vdash;	vdash;	f[DejaVuSans][u22A2]f[]	&vdash;
+	%veebar;	veebar;	f[DejaVuSans][u22BB]f[]	&veebar;
+
+.page
+
+	.b char +	.b %percnt;	.b groff	.b html
+	%vs;	vs;	[vs]	&#353;
+	%vz;	vz;	[vz]	&#382;
+	%write;	write;	f[Zapf]-f[]	&#9997;
+	%wrong;	wrong;	f[Zapf]7f[]	&#10007;
+	%xi;	xi;	[*c]	&xi;
+	%zeta;	zeta;	[*z]	&zeta;
+	%~=;	~=;	[~=]	&asymp;
+	%~A;	~A;	[~A]	&Atilde;
+	%~N;	~N;	[~N]	&Ntilde;
+	%~O;	~O;	[~O]	&Otilde;
+	%~a;	~a;	[~a]	&atilde;
+	%~n;	~n;	[~n]	&ntilde;
+	%~o;	~o;	[~o]	&otilde;
 
 .page
 
 .h2 Characterset
 
 	.b char	.b groff	.b html
-	¡	\[r!]	&iexcl;
-	¢	\[ct]	&cent;
-	£	\[Po]	&pound;
-	¤	\[Cs]	&curren;
-	¥	\[Ye]	&yen;
-	§	\[sc]	&sect;
-	¨	\[ad]	&die;
-	©	\[co]	&copy;
-	ª	\[Of]	&ordf;
-	«	\[Fo]	&laquo;
-	¬	\[no]	&not;
-	¬	\f[dejavu]¬\f[]	&not;
-	®	\[rg]	&reg;
-	¯	\[a-]	&macr;
-	°	\[ao]	&deg;
-	°	\f[dejavu]°\f[]	&deg;
-	±	\[+-]	&plusmn;
-	±	\f[dejavu]±\f[]	&plusmn;
-	²	\*[SIDE 2]	&#0178;
-	²	\[S2]	&sup2;
-	³	\*[SIDE 3]	&#0179;
-	³	\[S3]	&sup3;
-	µ	\[*m]	&micro;
-	¶	\[ps]	&para;
-	·	\[bu]	&middot;
-	¸	\[ac]	&cedil;
-	¹	\*[SIDE 1]	&#0185;
-	¹	\[S1]	&sup1;
-	º	\[Om]	&ordm;
-	»	\[Fc]	&raquo;
-	¼	\[14]	&frac14;
-	½	\[12]	&frac12;
-	¾	\[34]	&frac34;
-
+	;`i;	[`i]	&igrave;
+	¡	[r!]	&iexcl;
+	¢	[ct]	&cent;
+	£	[Po]	&pound;
+	¤	[Cs]	&curren;
+	¥	[Ye]	&yen;
+	§	[sc]	&sect;
+	¨	[ad]	&die;
+	©	[co]	&copy;
+	ª	[Of]	&ordf;
+	«	[Fo]	&laquo;
+	¬	[no]	&not;
+	¬	f[DejaVuSans]¬f[]	&not;
+	®	[rg]	&reg;
+	¯	[a-]	&macr;
+	°	[ao]	&deg;
+	°	f[DejaVuSans]°f[]	&deg;
+	±	[+-]	&plusmn;
+	±	f[DejaVuSans]±f[]	&plusmn;
+	²	[S2]	&#0178;
+	²	[S2]	&sup2;
+	³	[S3]	&#0179;
+	³	[S3]	&sup3;
+	µ	[*m]	&micro;
+	¶	[ps]	&para;
+	·	[bu]	&middot;
+	¸	[ac]	&cedil;
+	¹	[S1]	&#0185;
+	¹	[S1]	&sup1;
+	º	[Om]	&ordm;
 
 .page
 
 	.b char	.b groff	.b html
-	¿	\[r?]	&iquest;
-	À	\[`A]	&Agrave;
-	Á	\['A]	&Aacute;
-	Â	\[^A]	&Acirc;
-	Ã	\[~A]	&Atilde;
-	Ä	\[:A]	&Auml;
-	Å	\[oA]	&Aring;
-	Æ	\[AE]	&AElig;
-	Ç	\[,C]	&Ccedil;
-	È	\[`E]	&Egrave;
-	É	\['E]	&Eacute;
-	Ê	\[^E]	&Ecirc;
-	Ë	\[:E]	&Euml;
-	Ì	\[`I]	&Igrave;
-	Í	\['I]	&Iacute;
-	Î	\[^I]	&Icirc;
-	Ï	\[:I]	&Iuml;
-	Ð	\[-D]	&ETH;
-	Ñ	\[~N]	&Ntilde;
-	Ò	\[`O]	&Ograve;
-	Ó	\['O]	&Oacute;
-	Ô	\[^O]	&Ocirc;
-	Õ	\[~O]	&Otilde;
-	Ö	\[:O]	&Ouml;
-	×	\[mu]	&times;
-	×	\f[dejavu]×\f[]	&times;
-	Ø	\[/O]	&Oslash;
-	Ù	\[`U]	&Ugrave;
-	Ú	\['U]	&Uacute;
-	Û	\[^U]	&Ucirc;
-	Ü	\[:U]	&Uuml;
-	Ý	\['Y]	&Yacute;
-	Þ	\[TP]	&THORN;
-	ß	\[ss]	&szlig;
-	à	\[`a]	&agrave;
-	á	\['a]	&aacute;
-
+	»	[Fc]	&raquo;
+	¼	[14]	&frac14;
+	½	[12]	&frac12;
+	¾	[34]	&frac34;
+	¿	[r?]	&iquest;
+	À	[`A]	&Agrave;
+	Á	['A]	&Aacute;
+	Â	[^A]	&Acirc;
+	Ã	[~A]	&Atilde;
+	Ä	[:A]	&Auml;
+	Å	[oA]	&Aring;
+	Æ	[AE]	&AElig;
+	Ç	[,C]	&Ccedil;
+	È	[`E]	&Egrave;
+	É	['E]	&Eacute;
+	Ê	[^E]	&Ecirc;
+	Ë	[:E]	&Euml;
+	Ì	[`I]	&Igrave;
+	Í	['I]	&Iacute;
+	Î	[^I]	&Icirc;
+	Ï	[:I]	&Iuml;
+	Ð	[-D]	&ETH;
+	Ñ	[~N]	&Ntilde;
+	Ò	[`O]	&Ograve;
+	Ó	['O]	&Oacute;
+	Ô	[^O]	&Ocirc;
+	Õ	[~O]	&Otilde;
+	Ö	[:O]	&Ouml;
+	×	f[DejaVuSans][u00D7]f[]	&times;
+	Ø	[/O]	&Oslash;
 
 .page
 
 	.b char	.b groff	.b html
-	â	\[^a]	&acirc;
-	ã	\[~a]	&atilde;
-	ä	\[:a]	&auml;
-	å	\[oa]	&aring;
-	æ	\[ae]	&aelig;
-	ç	\[,c]	&ccedil;
-	è	\[`e]	&egrave;
-	é	\['e]	&eacute;
-	ê	\[^e]	&ecirc;
-	ë	\[:e]	&euml;
-	ì	\[`i]	&igrave;
-	í	\['i]	&iacute;
-	î	\[^i]	&icirc;
-	ï	\[:i]	&iuml;
-	ð	\[Sd]	&eth;
-	ñ	\[~n]	&ntilde;
-	ò	\[`o]	&ograve;
-	ó	\['o]	&oacute;
-	ô	\[^o]	&ocirc;
-	õ	\[~o]	&otilde;
-	ö	\[:o]	&ouml;
-	÷	\[di]	&divide;
-	÷	\f[dejavu]÷\f[]	&divide;
-	ø	\[/o]	&oslash;
-	ù	\[`u]	&ugrave;
-	ú	\['u]	&uacute;
-	û	\[^u]	&ucirc;
-	ü	\[:u]	&uuml;
-	ý	\['y]	&yacute;
-	þ	\[Tp]	&thorn;
-	ÿ	\[:y]	&yuml;
-	Ć	\['C]	&#262;
-	ć	\['c]	&#263;
-	ı	\[.i]	&imath;
-	Ĳ	\[IJ]	&IJlig;
-	ĳ	\[ij]	&ijlig;
-
+	Ù	[`U]	&Ugrave;
+	Ú	['U]	&Uacute;
+	Û	[^U]	&Ucirc;
+	Ü	[:U]	&Uuml;
+	Ý	['Y]	&Yacute;
+	Þ	[TP]	&THORN;
+	ß	[ss]	&szlig;
+	à	[`a]	&agrave;
+	á	['a]	&aacute;
+	â	[^a]	&acirc;
+	ã	[~a]	&atilde;
+	ä	[:a]	&auml;
+	å	[oa]	&aring;
+	æ	[ae]	&aelig;
+	ç	[,c]	&ccedil;
+	è	[`e]	&egrave;
+	é	['e]	&eacute;
+	ê	[^e]	&ecirc;
+	ë	[:e]	&euml;
+	ì	[`i]	&igrave;
+	í	['i]	&iacute;
+	î	[^i]	&icirc;
+	ï	[:i]	&iuml;
+	ð	[Sd]	&eth;
+	ñ	[~n]	&ntilde;
+	ò	[`o]	&ograve;
+	ó	['o]	&oacute;
+	ô	[^o]	&ocirc;
+	õ	[~o]	&otilde;
+	ö	[:o]	&ouml;
 
 .page
 
 	.b char	.b groff	.b html
-	Ł	\[/L]	&Lstrok;
-	ł	\[/l]	&lstrok;
-	Œ	\[OE]	&OElig;
-	œ	\[oe]	&oelig;
-	Š	\[vS]	&#352;
-	š	\[vs]	&#353;
-	Ÿ	\[:Y]	&#159;
-	Ž	\[vZ]	&#381;
-	ž	\[vz]	&#382;
-	ƒ	\[Fn]	&fnof;
-	ƒ	\f[dejavu]ƒ\f[]	&fnof;
-	ȷ	\[.j]	&#567;
-	ˇ	\[ah]	&#711;
-	˘	\[ab]	&#728;
-	˙	\[a.]	&#729;
-	˚	\[ao]	&#730;
-	˛	\[ho]	&#731;
-	˝	\[a"]	&#733;
-	Α	\[*A]	&Alpha;
-	Β	\[*B]	&Beta;
-	Γ	\[*G]	&Gamma;
-	Δ	\[*D]	&Delta;
-	Ε	\[*E]	&Epsilon;
-	Ζ	\[*Z]	&Zeta;
-	Η	\[*Y]	&Eta;
-	Θ	\[*H]	&Theta;
-	Ι	\[*I]	&Iota;
-	Κ	\[*K]	&Kappa;
-	Λ	\[*L]	&Lambda;
-	Μ	\[*M]	&Mu;
-	Ξ	\[*C]	&Xi;
-	Ο	\[*O]	&Omicron;
-	Π	\[*P]	&Pi;
-	Ρ	\[*R]	&Rho;
-	Σ	\[*S]	&Sigma;
-	Τ	\[*T]	&Tau;
-
+	÷	[di]	&divide;
+	ø	[/o]	&oslash;
+	ù	[`u]	&ugrave;
+	ú	['u]	&uacute;
+	û	[^u]	&ucirc;
+	ü	[:u]	&uuml;
+	ý	['y]	&yacute;
+	þ	[Tp]	&thorn;
+	ÿ	[:y]	&yuml;
+	Ć	['C]	&#262;
+	ć	['c]	&#263;
+	ı	[.i]	&imath;
+	Ĳ	[IJ]	&IJlig;
+	ĳ	[ij]	&ijlig;
+	Ł	[/L]	&Lstrok;
+	ł	[/l]	&lstrok;
+	Œ	[OE]	&OElig;
+	œ	[oe]	&oelig;
+	Š	[vS]	&#352;
+	š	[vs]	&#353;
+	Ÿ	[:Y]	&#159;
+	Ž	[vZ]	&#381;
+	ž	[vz]	&#382;
+	ƒ	[Fn]	&fnof;
+	ȷ	[.j]	&#567;
+	ˇ	[ah]	&#711;
+	˘	[ab]	&#728;
+	˙	[a.]	&#729;
+	˚	[ao]	&#730;
+	˛	[ho]	&#731;
 
 .page
 
 	.b char	.b groff	.b html
-	Υ	\[*U]	&Upsilon;
-	Φ	\[*F]	&Phi;
-	Χ	\[*X]	&Chi;
-	Ψ	\[*Q]	&Psi;
-	Ω	\[*W]	&Omega;
-	α	\[*a]	&alpha;
-	β	\[*b]	&beta;
-	γ	\[*g]	&gamma;
-	δ	\[*d]	&delta;
-	ε	\[*e]	&epsilon;
-	ζ	\[*z]	&zeta;
-	η	\[*y]	&eta;
-	θ	\[*h]	&theta;
-	ι	\[*i]	&iota;
-	κ	\[*k]	&kappa;
-	λ	\[*l]	&lambda;
-	μ	\[*m]	&mu;
-	ν	\[*n]	&nu;
-	ξ	\[*c]	&xi;
-	ο	\[*o]	&omicron;
-	π	\[*p]	&pi;
-	ρ	\[*r]	&rho;
-	ς	\[ts]	&sigmaf;
-	σ	\[*s]	&sigma;
-	τ	\[*t]	&tau;
-	υ	\[*u]	&upsilon;
-	φ	\[+f]	&phi;
-	χ	\[*x]	&chi;
-	ψ	\[*q]	&psi;
-	ω	\[*w]	&omega;
-	ϑ	\[+h]	&thetasym;
-	ϕ	\[*f]	&#981
-	ϖ	\[+p]	&piv;
-	ϵ	\[mo]	&#1013;
-	Ё	\f[SFOR]Ё\f[]	Ё
-	А	\f[SFOR]А\f[]	А
-
+	˝	[a"]	&#733;
+	Α	[*A]	&Alpha;
+	Β	[*B]	&Beta;
+	Γ	[*G]	&Gamma;
+	Δ	[*D]	&Delta;
+	Ε	[*E]	&Epsilon;
+	Ζ	[*Z]	&Zeta;
+	Η	[*Y]	&Eta;
+	Θ	[*H]	&Theta;
+	Ι	[*I]	&Iota;
+	Κ	[*K]	&Kappa;
+	Λ	[*L]	&Lambda;
+	Μ	[*M]	&Mu;
+	Ξ	[*C]	&Xi;
+	Ο	[*O]	&Omicron;
+	Π	[*P]	&Pi;
+	Ρ	[*R]	&Rho;
+	Σ	[*S]	&Sigma;
+	Τ	[*T]	&Tau;
+	Υ	[*U]	&Upsilon;
+	Φ	[*F]	&Phi;
+	Χ	[*X]	&Chi;
+	Ψ	[*Q]	&Psi;
+	Ω	[*W]	&Omega;
+	α	[*a]	&alpha;
+	β	[*b]	&beta;
+	γ	[*g]	&gamma;
+	δ	[*d]	&delta;
+	ε	[*e]	&epsilon;
+	ζ	[*z]	&zeta;
 
 .page
 
 	.b char	.b groff	.b html
-	Б	\f[SFOR]Б\f[]	Б
-	В	\f[SFOR]В\f[]	В
-	Г	\f[SFOR]Г\f[]	Г
-	Д	\f[SFOR]Д\f[]	Д
-	Е	\f[SFOR]Е\f[]	Е
-	Ж	\f[SFOR]Ж\f[]	Ж
-	З	\f[SFOR]З\f[]	З
-	И	\f[SFOR]И\f[]	И
-	Й	\f[SFOR]Й\f[]	Й
-	К	\f[SFOR]К\f[]	К
-	Л	\f[SFOR]Л\f[]	Л
-	М	\f[SFOR]М\f[]	М
-	Н	\f[SFOR]Н\f[]	Н
-	О	\f[SFOR]О\f[]	О
-	П	\f[SFOR]П\f[]	П
-	Р	\f[SFOR]Р\f[]	Р
-	Р	\f[SFOR]Р\f[]	Р
-	С	\f[SFOR]С\f[]	С
-	Т	\f[SFOR]Т\f[]	Т
-	У	\f[SFOR]У\f[]	У
-	Ф	\f[SFOR]Ф\f[]	Ф
-	Х	\f[SFOR]Х\f[]	Х
-	Ц	\f[SFOR]Ц\f[]	Ц
-	Ч	\f[SFOR]Ч\f[]	Ч
-	Ч	\f[SFOR]Ч\f[]	Ч
-	Ш	\f[SFOR]Ш\f[]	Ш
-	Щ	\f[SFOR]Щ\f[]	Щ
-	Ъ	\f[SFOR]Ъ\f[]	Ъ
-	Ы	\f[SFOR]Ы\f[]	Ы
-	Ь	\f[SFOR]Ь\f[]	Ь
-	Э	\f[SFOR]Э\f[]	Э
-	Ю	\f[SFOR]Ю\f[]	Ю
-	Я	\f[SFOR]Я\f[]	Я
-	а	\f[SFOR]а\f[]	а
-	б	\f[SFOR]б\f[]	б
-	в	\f[SFOR]в\f[]	в
-
+	η	[*y]	&eta;
+	θ	[*h]	&theta;
+	ι	[*i]	&iota;
+	κ	[*k]	&kappa;
+	λ	[*l]	&lambda;
+	μ	f[DejaVuSans][u03BC]f[]	&mu;
+	ν	[*n]	&nu;
+	ξ	[*c]	&xi;
+	ο	[*o]	&omicron;
+	π	[*p]	&pi;
+	ρ	[*r]	&rho;
+	ς	[ts]	&sigmaf;
+	σ	[*s]	&sigma;
+	τ	[*t]	&tau;
+	υ	[*u]	&upsilon;
+	φ	[+f]	&phi;
+	χ	[*x]	&chi;
+	ψ	[*q]	&psi;
+	ω	[*w]	&omega;
+	ϑ	[+h]	&thetasym;
+	ϕ	[*f]	&#981
+	ϖ	[+p]	&piv;
+	ϵ	[mo]	&#1013;
+	‐	[hy]	&#8208;
+	–	[en]	&ndash;
+	—	[em]	&mdash;
+	‘	[oq]	&lsquo;
+	’	[cq]	&rsquo;
+	‚	[bq]	&sbquo;
+	“	[lq]	&ldquo;
 
 .page
 
 	.b char	.b groff	.b html
-	г	\f[SFOR]г\f[]	г
-	д	\f[SFOR]д\f[]	д
-	е	\f[SFOR]е\f[]	е
-	ж	\f[SFOR]ж\f[]	ж
-	з	\f[SFOR]з\f[]	з
-	и	\f[SFOR]и\f[]	и
-	й	\f[SFOR]й\f[]	й
-	к	\f[SFOR]к\f[]	к
-	л	\f[SFOR]л\f[]	л
-	м	\f[SFOR]м\f[]	м
-	н	\f[SFOR]н\f[]	н
-	о	\f[SFOR]о\f[]	о
-	п	\f[SFOR]п\f[]	п
-	р	\f[SFOR]р\f[]	р
-	с	\f[SFOR]с\f[]	с
-	т	\f[SFOR]т\f[]	т
-	у	\f[SFOR]у\f[]	у
-	ф	\f[SFOR]ф\f[]	ф
-	х	\f[SFOR]х\f[]	х
-	ц	\f[SFOR]ц\f[]	ц
-	ч	\f[SFOR]ч\f[]	ч
-	ч	\f[SFOR]ч\f[]	ч
-	ш	\f[SFOR]ш\f[]	ш
-	щ	\f[SFOR]щ\f[]	щ
-	ъ	\f[SFOR]ъ\f[]	ъ
-	ы	\f[SFOR]ы\f[]	ы
-	ь	\f[SFOR]ь\f[]	ь
-	э	\f[SFOR]э\f[]	э
-	ю	\f[SFOR]ю\f[]	ю
-	я	\f[SFOR]я\f[]	я
-	ё	\f[SFOR]ё\f[]	ё
-	‐	\[hy]	&#8208;
-	–	\[en]	&ndash;
-	—	\[em]	&mdash;
-	‘	\[oq]	&lsquo;
-	’	\[cq]	&rsquo;
-
+	”	[rq]	&rdquo;
+	„	[Bq]	&bdquo;
+	†	[dg]	&dagger;
+	‡	[dd]	&Dagger;
+	•	[bu]	&#8226;
+	…	f[DejaVuSans][u2026]f[]	&hellip;
+	‰	f[DejaVuSans][u2030]f[]	&permil;
+	‹	[fo]	&lsaquo;
+	›	[fc]	&rsaquo;
+	‾	[rn]	&oline;
+	⁄	[f/]	fraction
+	⁰	*[SIDE 0]	&#8304;
+	⁴	*[SIDE 4]	&#8308;
+	⁵	*[SIDE 5]	&#8309;
+	⁶	*[SIDE 6]	&#8310;
+	⁷	*[SIDE 7]	&#8311;
+	⁸	*[SIDE 8]	&#8312;
+	⁹	*[SIDE 9]	&#8313;
+	€	[eu]	&euro;
+	ℂ	f[DejaVuSans][u2102]f[]	&Copf;
+	ℍ	f[DejaVuSans][u210D]f[]	&Hopf;
+	ℍ	f[DejaVuSans][u210D]f[]	&Hopf;
+	ℏ	[-h]	&#295;
+	ℑ	[Im]	&Ifr;
+	ℕ	f[DejaVuSans][u2115]f[]	&Nopf;
+	ℙ	f[DejaVuSans][u2119]f[]	&Popf;
+	ℚ	f[DejaVuSans][u211A]f[]	&Qopf;
+	ℝ	f[DejaVuSans][u211D]f[]	&Ropf;
+	™	[tm]	&trade;
+	ℤ	f[DejaVuSans][u2124]f[]	&Zopf;
 
 .page
 
 	.b char	.b groff	.b html
-	‚	\[bq]	&sbquo;
-	“	\[lq]	&ldquo;
-	”	\[rq]	&rdquo;
-	„	\[Bq]	&bdquo;
-	†	\[dg]	&dagger;
-	‡	\[dd]	&Dagger;
-	•	\[bu]	&#8226;
-	…	...	&hellip;
-	‰	\[%0]	&permil;
-	‰	\f[dejavu]‰\f[]	&permil;
-	‹	\[fo]	&lsaquo;
-	›	\[fc]	&rsaquo;
-	‾	\[rn]	&oline;
-	⁄	\[f/]	fraction
-	⁰	\*[SIDE 0]	&#8304;
-	⁴	\*[SIDE 4]	&#8308;
-	⁵	\*[SIDE 5]	&#8309;
-	⁶	\*[SIDE 6]	&#8310;
-	⁷	\*[SIDE 7]	&#8311;
-	⁸	\*[SIDE 8]	&#8312;
-	⁹	\*[SIDE 9]	&#8313;
-	€	\[eu]	&euro;
-	ℂ	\f[dejavu]ℂ\f[]	&Copf;
-	ℍ	\f[dejavu]ℍ\f[]	&Hopf;
-	ℏ	\[-h]	&#295; 
-	ℑ	\[Im]	&Ifr;
-	ℕ	\f[dejavu]ℕ\f[]	&Nopf;
-	ℙ	\f[dejavu]ℙ\f[]	&Popf;
-	ℚ	\f[dejavu]ℚ\f[]	&Qopf;
-	ℝ	\f[dejavu]ℝ\f[]	&Ropf;
-	™	\[tm]	&trade;
-	ℤ	\f[dejavu]ℤ\f[]	&Zopf;
-	ℵ	\f[dejavu]ℵ\f[]	&alefsym;
-	⅛	\[18]	&#8539;
-	⅜	\[38]	&#8540;
-	⅝	\[58]	&#8541;
-
+	ℤ	f[DejaVuSans][u2124]f[]	&ℤopf;
+	ℵ	f[DejaVuSans][u2135]f[]	&alefsym;
+	⅛	[18]	&#8539;
+	⅜	[38]	&#8540;
+	⅝	[58]	&#8541;
+	⅞	[78]	&#8542;
+	←	[<-]	&larr;
+	↑	[ua]	&uarr;
+	→	[->]	&rarr;
+	↓	[da]	&darr;
+	↔	[<>]	&harr;
+	↕	[va]	&#8597;
+	↵	[CR]	&crarr;
+	⇐	[lA]	&lArr;
+	⇑	[uA]	&uArr;
+	⇒	[rA]	&rArr;
+	⇓	[dA]	&dArr;
+	⇔	[hA]	&hArr;
+	⇕	f[DejaVuSans][u21D5]f[]	&#8661
+	∀	[fa]	&forall;
+	∂	[pd]	&part;
+	∃	[te]	&exist;
+	∅	[/o]	&empty;
+	∆	f[DejaVuSans]∆f[]	&#8710;
+	∇	[gr]	&nabla;
+	∈	[mo]	&isin;
+	∉	[nm]	&notin;
+	∋	[st]	&ni;
+	∏	f[DejaVuSans][u220F]f[]	&prod;
+	∐	[coproduct]	&coprod;
 
 .page
 
 	.b char	.b groff	.b html
-	⅞	\[78]	&#8542;
-	←	\[<-]	&larr;
-	↑	\[ua]	&uarr;
-	→	\[->]	&rarr;
-	↓	\[da]	&darr;
-	↔	\[<>]	&harr;
-	↕	\[va]	&#8597;
-	↵	\[CR]	&crarr;
-	⇐	\[lA]	&lArr;
-	⇑	\[uA]	&uArr;
-	⇒	\[rA]	&rArr;
-	⇓	\[dA]	&dArr;
-	⇔	\[hA]	&hArr;
-	⇕	\[vA]	&#8661
-	∀	\[fa]	&forall;
-	∂	\[pd]	&part;
-	∃	\[te]	&exist;
-	∅	Ø	&empty;
-	∆	\f[dejavu]∆\f[]	&#8710;
-	∇	\[gr]	&nabla;
-	∈	\[mo]	&isin;
-	∉	\[nm]	&notin;
-	∋	\[st]	&ni;
-	∏	\f[dejavu]∏\f[]	&prod;
-	∐	\[coproduct]	&coprod;
-	∑	\[sum]	&sum;
-	∓	\[+-]	&mnplus;
-	∗	\[**]	&lowast;
-	√	\[sr]	&radic;
-	∝	\[pt]	&prop;
-	∞	\[if]	&infin;
-	∟	\f[dejavu]∟\f[]	&angrt;
-	∠	\[/_]	&ang;
-	∥	\f[dejavu]∥\f[]	&parallel;
-	∧	\[AN]	&and;
-	∩	\[ca]	&cap;
-
+	∑	[sum]	&sum;
+	∓	[+-]	&mnplus;
+	∗	[**]	&lowast;
+	√	[sr]	&radic;
+	∝	[pt]	&prop;
+	∞	[if]	&infin;
+	∟	f[DejaVuSans][u221F]f[]	&angrt;
+	∠	[/_]	&ang;
+	∥	f[DejaVuSans][u2225]f[]	&parallel;
+	∧	[AN]	&and;
+	∩	[ca]	&cap;
+	∪	[cu]	&cup;
+	∫	[is]	&int;
+	∮	f[DejaVuSans][u222E]f[]	&conint;
+	∴	[3d]	&there4;
+	∵	f[DejaVuSans][u2235]f[]	&because;
+	∷	f[DejaVuSans][u2237]f[]	&Colon;
+	∼	[ap]	&sim;
+	≃	[|=]	&sime;
+	≅	[=~]	&cong;
+	≈	[~=]	&asymp;
+	≠	f[DejaVuSans][u2260]f[]	&ne;
+	≡	[==]	&equiv;
+	≢	f[DejaVuSans][u2262]f[]	&nequiv;
+	≤	[<=]	&le;
+	≥	[>=]	&ge;
+	≪	[<<]	&Lt;
+	≫	[>>]	&Gt;
+	⊂	[sb]	&sub;
+	⊃	[sp]	&sup;
 
 .page
 
 	.b char	.b groff	.b html
-	∪	\[cu]	&cup;
-	∫	\[is]	&int;
-	∮	\f[dejavu]∮\f[]	&conint;
-	∴	\[3d]	&there4;
-	∵	\f[dejavu]∵\f[]	&because;
-	∷	\f[dejavu]∷\f[]	&Colon;
-	∼	\[ap]	&sim;
-	≃	\[|=]	&sime;
-	≅	\[=~]	&cong;
-	≈	\[~=]	&asymp;
-	≠	\[!=]	&ne;
-	≡	\[==]	&equiv;
-	≢	\[ne]	&nequiv;
-	≤	\[<=]	&le;
-	≥	\[>=]	&ge;
-	≪	\[<<]	&Lt;
-	≫	\[>>]	&Gt;
-	⊂	\[sb]	&sub;
-	⊃	\[sp]	&sup;
-	⊄	\[nb]	&nsub;
-	⊅	\[nc]	&nsup;
-	⊆	\[ib]	&sube;
-	⊇	\[ip]	&supe;
-	⊖	\f[dejavu]⊖\f[]	&ominus;
-	⊗	\[c*]	&#8855;
-	⊘	\f[dejavu]⊘\f[]	&osol;
-	⊙	\f[dejavu]⊙\f[]	&odot;
-	⊢	\f[dejavu]⊢\f[]	&vdash;
-	⊣	\f[dejavu]⊣\f[]	&dashv;
-	⊤	\f[dejavu]⊤\f[]	&top;
-	⊥	\[pp]	&perp;
-	⊻	\f[dejavu]⊻\f[]	&veebar;
-	⋅	\[md]	&sdot;
-	⌈	\[lc]	&#x2308;
-	⌉	\[rc]	&#x2309;
-	⌊	\[lf]	&#x230A;
-
+	⊄	[nb]	&nsub;
+	⊅	[nc]	&nsup;
+	⊆	[ib]	&sube;
+	⊇	[ip]	&supe;
+	⊕	[c+]	⊕
+	⊖	f[DejaVuSans][u2296]f[]	&ominus;
+	⊗	[c*]	&#8855;
+	⊘	f[DejaVuSans][u2298]f[]	&osol;
+	⊙	f[DejaVuSans][u2299]f[]	&odot;
+	⊢	f[DejaVuSans][u22A2]f[]	&vdash;
+	⊣	f[DejaVuSans][u22A3]f[]	&dashv;
+	⊤	f[DejaVuSans][u22A4]f[]	&top;
+	⊥	[pp]	&perp;
+	⊻	f[DejaVuSans][u22BB]f[]	&veebar;
+	⋅	[md]	&sdot;
+	⌈	[lc]	&#x2308;
+	⌉	[rc]	&#x2309;
+	⌊	[lf]	&#x230A;
+	⌋	[rf]	&#x230B;
+	⎯	[an]	&#9135
+	□	[sq]	&#9633;
+	◊	[lz]	&loz;
+	○	[ci]	&#9675;
+	☜	[lh]	&#9756;
+	☞	[rh]	&#9755;
+	♠	[SP]	&spades;
+	♡	f[DejaVuSans][u2661]f[]	$#x2661;
+	♢	f[DejaVuSans][u2662]f[]	$#x2662;
+	♣	[CL]	&clubs;
+	♥	[HE]	&hearts;
 
 .page
 
 	.b char	.b groff	.b html
-	⌋	\[rf]	&#x230B;
-	⎯	\[an]	&#9135
-	□	\[sq]	&#9633;
-	◊	\[lz]	&loz;
-	○	\[ci]	&#9675;
-	☜	\[lh]	&#9756;
-	☞	\[rh]	&#9755;
-	♠	\[SP]	&spades;
-	♡	\[u2661]	$#x2661;
-	♢	\[u2662]	$#x2662;
-	♣	\[CL]	&clubs;
-	♥	\[HE]	&hearts;
-	♦	\[DI]	&diams;
-
-
+	♦	[DI]	&diams;
