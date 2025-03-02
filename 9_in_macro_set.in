@@ -17,6 +17,18 @@ The
 macroset is an adaptaion of the
 .fixed mgm
 macroset.
+.fixed mgm
+is again based on
+.fixed mm
+so most of the
+.fixed mm
+documentation is applicable. In this chapter, most extensions and
+changes are documented. I quote heavily from the MM documentation.
+
+Note that this documentation only applies to the direct use of the
+.fixed in.tmac
+macro set, outside its use via in3xml.
+There are features in the macro set that are not accessible via in3.
 
 .h2 Normal use
 
@@ -26,23 +38,231 @@ macros will be hidden by the
 .fixed xml3roff
 preprocessor. Most of the time, the use will be limited to the definitions in
 .fixed stylesheet.mm.
+An example would be:
 
-.h3 Page layout
+.pre
+ .ds pg*header '' in3 ''
+ .ds pg*footer ''- \\nP -''
+ .NOHEAD
+ .nr Ej 1
+ .ds HF  HB HB HI HI I I I
+ .ds HP  16 12 12  0 0 0 0
+ .nr Hb 4
+ .nr Hs 1
+ .nr Hps 0
+ .ev classtest
+ .ll 6i
+ .in 3i
+ .gcolor red
+ .ev
+.pre
 
-.ds pg*header '' in3 ''
-.ds pg*footer ''- \\nP -''
+
+.h2 Paragraps and headings
+
+.h3 Paragraphs
+
+.pre
+ .P [type]
+ one or more lines of text
+.pre
+
+The macro is used to begin a paragraph. Paragraphs may be indented.
+To indent the first line
+of a paragraph, use the number register
+.fixed Pt.
+
+The initial value of Pt is 0, which
+always provides blocked paragraphs. To force all paragraphs to
+be indented, insert:
+
+.pre
+ .nr Pt 1
+.pre
+
+at the beginning of the document. To indent all paragraphs except
+those that follow headings, lists, and
+displays, insert:
+
+.pre
+ .nr Pt 2
+.pre
+
+at the beginning of the document.
+The amount of paragraph indentation is contained in the register
+.fixed Pi
+this amount must be an unscaled
+number and is treated as ens. By default,
+.fixed Pi
+is set to 3. To indent
+paragraphs by 10 ens, insert:
+
+.pre
+ .nr Pi 10
+.pre
+
+at the beginning of the document. Of course, both the
+.fixed Pi
+and
+.fixed Pt
+register values must be greater than zero
+for any paragraphs to be indented.
+The number register
+.fixed Ps
+controls the amount of spacing between
+paragraphs. By default,
+.fixed Ps
+is set to 1, yielding one blank vertical space.
+
+Regardless of
+.fixed Pt,
+an individual paragraph can be forced to be
+blocked or indented. Use
+.fixed .P
+with type 0
+(e.g., 
+.fixed .P 0
+) to force left justification; type 1 (e.g., 
+.fixed .P 1
+) always causes indentation by the amount
+specified by the register
+.fixed Pi.
+If
+.fixed .P
+occurs inside a list, the indent (if any) of the paragraph is added
+to the current list indent.
+
+Numbered paragraphs may be produced by setting the register
+.fixed Np
+to 1. This produces paragraphs
+numbered within first level headings (e.g., 1.01, 1.02, 1.03,
+2.01, etc.). A different style of numbered
+paragraphs is obtained by using the
+.fixed .nP
+macro rather than the
+.fixed .P
+macro for paragraphs. This produces
+paragraphs that are numbered within second level headings and
+contain a ‘‘double-line indent’’ in which
+the text of the second line is indented to be aligned with the
+text of the first line so that the number stands
+out.
+
+At the end of the
+.fixed .P
+macro, the
+.fixed .Pexit
+macro is executed. This macro can be used to set point sizes, vertical 
+spacing or even provide a decoration between paragraphs.
+
+.h3 Numbered headings
+
+.pre
+ .H level [heading text]
+.pre
+
+The 
+.fixed .H
+macro provides 7 levels of headers. The default apperance is:
+
+|-----------------------------------------------------|
+|.b level |.b blank lines    |.b new line |.b format  |
+|-----------------------------------------------------|
+|  1      | 2 before, 1 after| yes        | bold      |
+|-----------------------------------------------------|
+|  2      | 1 before         | yes        | bold      |
+|-----------------------------------------------------|
+|  3-7    | 1 before         | no         | italic    |
+|-----------------------------------------------------|
 
 
-.NOHEAD
-.nr Ej 1
-.ds HF  HB HB HI HI I I I
-.ds HP  16 12 12  0 0 0 0
-.nr Hb 4
-.nr Hs 1
-.nr Hps 0
-.ev classtest
-.ll 6i
-.in 3i
-.gcolor red
-.ev
+The behaviour of headings may be altered:
+
+.set colwidth 25,20,x
+
+|--------------------------------------------------------------------------------------------------|
+| .fixed .nr Ej 1             | Eject         | Eject a page before each level 1 heading.          |
+|--------------------------------------------------------------------------------------------------|
+| .fixed .nr Hb 3             | Heading break | Force a break after headings up to level 3 (incl.) |
+|--------------------------------------------------------------------------------------------------|
+| .fixed .nr Hs 2             | Heading space | Force a vertical space after headings 1 and 2      |
+|--------------------------------------------------------------------------------------------------|
+| .fixed .nr Hi 0             | Heading Indent| Indent the line after a stand-alone heading. 0     |
+|                             |               | means no indent, 1 means folow                     |
+|                             |               | .fixed Pt                                          |
+|                             |               | and 2 means indent lining up with the header       |
+|--------------------------------------------------------------------------------------------------|
+| .fixed .nr Hc 2             | Heading Center| A heading ia centered if it is a stand-alone       |
+|                             |               | heading with a level less or equal to              |
+|                             |               | .fixed Hc                                          |
+|--------------------------------------------------------------------------------------------------|
+| .fixed .ds HF 3 3 2 2 2 2 2 |Heading Font   | Define the font number for the differnt levels     |
+|                             |               | of headings. Ommitted values are set to 1          |
+|--------------------------------------------------------------------------------------------------|
+| .fixed .ds HP 12 12 10 10   |Heading Points | Define the pointsizes of the headings. Note: you   |
+|                             |               | may also need to increase vertical spacing         |
+|--------------------------------------------------------------------------------------------------|
+| .fixed .HM I A 1 a i 0001   | Header Marking| Style for the maring of a header. I and i are roman|
+|                             |               | numerals, A and a aphabetical and 1 and 001 numbers|
+|--------------------------------------------------------------------------------------------------|
+| .fixed .nr Ht 1             | Header type   | Setting to 1 gives only the currnt level           |
+|--------------------------------------------------------------------------------------------------|
+
+
+Unnumbered heading may be created with
+
+.pre
+ .HU heading-text
+.pre
+
+In the hierarchical structure, the level is defined by
+
+.pre
+ .nr Hu 2
+.pre
+
+which has a default value of 2.
+
+
+.h2 Pictures
+
+There are different macros to include an Encapsulated Post Script (eps) file.
+
+.h3 dospark
+
+.pre
+ .dospark eps-file [ width [ height ] ]
+.pre
+
+includes a picture. The macro was written by Ted Harding and the explanatione below is from him as well.
+
+The two optional arguments:
+
+deswid is the desired width of the graphic in points (default)
+
+desht is the desired height of the graphic in points (default)
+
+If given simply as numbers, the size-units are taken to be points.
+A groff scaling factor (e.g. "m") can be appended to either.
+If desht is missing, then the height of the graphic will be the
+current point size (1m in groff units).
+
+If deswid is also missing, then the width of the graphic will be
+such as to preserve the aspect-ratio of the original.
+If desht is present (to set a custom height), and it is desired
+to preserve the aspect ratio, then use 0 for deswid (if desht is
+present then deswid must also be present; otherwise desht will
+be interpreted as deswid).
+
+When desht is present, and greater than the current point size,
+extra vertical space is automatically added above the current line
+to make room for the graphic. The graphic's baseline (bottom of
+the Bounding Box) will always be aligned with the baseline of
+the current text line.
+
+
+The macro was written for the case where an EPS graphic is to
+be placed at a particular position in running text (wherever
+this may occur on the page. Example:
+
 
