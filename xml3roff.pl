@@ -185,6 +185,7 @@ my $fontname='';
 my $qtyspace=1;
 
 # Control variables
+my $firstrow=1;
 my $currentline='';
 my $fileline=0;
 my $inline=0;
@@ -853,7 +854,13 @@ sub table_lookahead{
 			#output ($colwidths[$j]);
 		}
 	}
-	output ('.TS');
+	if (defined ($variables{'tableheader'}) && ($variables{'tableheader'} eq 'yes')){
+		output ('.TS H');
+	}
+	else {
+		output ('.TS');
+	}
+	$firstrow=1;
 	output ('allbox,center;');
 	for (my $i=0; $i<=$maxrow; $i++){
 		my $rowfmt='';
@@ -1605,6 +1612,10 @@ while ( $linenumber <= $#input){
 	elsif ($state  eq 'row'){
 		if ($input[$linenumber] =~/<\/row>/){
 			output ('T}');
+			if (defined ($variables{'tableheader'}) && ($variables{'tableheader'} eq 'yes') && ($firstrow==1)){
+				output ('.TH');
+				$firstrow=0;
+			}
 			$tablerow++;
 			state_pop();
 		}
