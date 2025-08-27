@@ -385,6 +385,18 @@ the output processor to make a guess what the width could be.
 This is for PDFs. It also works well for simple tables, but if you use 
 row- or columnspan, it quickly becomes very complex.
 
+The variable
+.fixed tableheader
+will control if the first row of the table is used as a header. In Groff output,
+this means that the first row will be on top of every page, and that the table 
+can be divided over multiple pages.
+
+.set tableexpand no
+
+	tableheader	meaning
+	yes	use first row as header
+	any other value	don't use first row as header
+
 .h2 Pipe tables
 There is another way, perhaps more intiutive to enter a table.
 You can draw a table with
@@ -481,6 +493,17 @@ d;e;f
 would give:
 
 .csvfile test.csv ;
+
+.h2 include
+
+It is possible to include an in3-file with
+
+.pre
+ .include file.txt
+.pre
+
+The include is done as one of the first passes, so the text in the include file will be 
+interpreted bij the multipass-parser.
 
 .h2 Chapter, sections et cetera
 
