@@ -5,6 +5,7 @@
 use File::Basename;
 use strict;
 use warnings;
+use Text::CSV;
 
 my $otrace=0;
 
@@ -772,51 +773,44 @@ sub includepass {
 			pushout('<header>');
 			pushout('</header>');
 		}
+		elsif (/^\.include  *([^ ]*)/) {
+			my $incl=$1;
+			if (open(my $INC,'<',$incl)){
+				while (my $inclline=<$INC>){
+					pushout($inclline);
+				}
+				close $INC;
+			}
+		}
 		elsif (/^\.csvfile/){
 			my $csv_file_name='NO_FILE_NAME';
 			my $csv_separator=',';
-			if (/^\.csvfile  *(.*)  *([,;:])/){
+			if (/^\.csvfile  *(.*)  *([,;:|])/){
 				$csv_file_name=$1;
 				$csv_separator=$2;
 			}
 			elsif (/^\.csvfile  *(.*)/){
 				$csv_file_name=$1;
 			}
-			if (open (my $CSVFILE,'<',$1)){
+			if (open (my $CSVFILE,'<',$csv_file_name)){
 				pushout('<table>');
 				my $csvlines=0;
 				while (my $csv_string=<$CSVFILE>){
 					my @csvfields=();
-					while ($csv_string =~ /
-						\s*                          # Allow optional leading spaces
-						(?:                          # Group for matching a field
-							"([^"]*)"                # Match double-quoted fields
-							|                        # OR
-							'([^']*)'                # Match single-quoted fields
-							|                        # OR
-							([^$csv_separator\s]+)   # Match unquoted fields (up to separator or whitespace)
-						)
-						\s*                          # Allow optional trailing spaces
-						$csv_separator?              # Match the separator if present
-					/xg) {
-						# Capture the matched field
-						push @csvfields, defined($1) ? $1 : defined($2) ? $2 : $3;
-					}
-					pushout('<row>');
+					my $csv=Text::CSV->new({ sep_char => $csv_separator });
 					my $rowcells=0;
-					for my $i (0 .. $#csvfields){
-						pushout('<cell format="left">');
-						pushout($csvfields[$i]);
-						pushout('</cell>');
+					if ($csv->parse($csv_string)) {
+						pushout('<row>');
+						@csvfields=$csv->fields();
+						for (@csvfields){
+							pushout('<cell format="left">');
+							pushout($_);
+							pushout('</cell>');
+						}
 						$rowcells++;
-					}
-					if ($rowcells==0){
-						pushout('<cell format="left">');
-						pushout(' ');
-						pushout('</cell>');
+						pushout('</row>');
 					}
 					$csvlines++;
-					pushout('</row>');
 				}
 				if ($csvlines==0){
 					pushout('<row>');
@@ -1462,7 +1456,7 @@ sub tablepass {
 			pushout("<row>");
 			my $cellopen='';
 			for (@row) {
-				# The construttion of <cs=..> is wrong. It is an xml-contruction
+				# The construction of <cs=..> is wrong. It is an xml-contruction
 				# in the in-language. Therefore we need to fiddle with the &lt; 
 				# and &gt;
 				my $content=$_;
@@ -1747,7 +1741,11 @@ sub commentpass {
 		elsif (/^\.block/){$inblock=0;}
 		varset($line);
 		$lineindex++;
-		if (/^#!(.*)/){
+		if (/^#DEP (.*)/){
+			if ($inblock==0){}
+			else { pushout($_); }
+		}
+		elsif (/^#!(.*)/){
 			if ($inblock==0){pushout("<!-- $1 -->");}
 			else { pushout($_); }
 		}
