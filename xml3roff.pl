@@ -1336,11 +1336,11 @@ while ( $linenumber <= $#input){
 						output($_);
 					}
 					output ('.PE');
-				}
-				if ($caption ne ''){
-					output (".ce 1");
-					output (".I \"$caption\"");
-					$caption='';
+					if ($caption ne ''){
+						output (".ce 1");
+						output (".I \"$caption\"");
+						$caption='';
+					}
 				}
 				else { # This is a hack because pic does not provide in-line images.
 					my $mscale=100;
