@@ -36,6 +36,9 @@ my %variables;
 	$variables{'blocktype'}='';
 	$variables{'cellalign'}='left';
 	$variables{'cover'}='';
+	$variables{'endnote_next'}=1;
+	$variables{'endnotestyle'}='(#)';
+	$variables{'endnoteheader'}='.hu1 Notes';
 	$variables{'equation'}=0;
 	$variables{'figure'}=0;
 	$variables{'filename'}='stdin';
@@ -1088,7 +1091,70 @@ sub mappass {
 }
 
 
+#                 _             _            
+#   ___ _ __   __| |_ __   ___ | |_ ___  ___ 
+#  / _ \ '_ \ / _` | '_ \ / _ \| __/ _ \/ __|
+# |  __/ | | | (_| | | | | (_) | ||  __/\__ \
+#  \___|_| |_|\__,_|_| |_|\___/ \__\___||___/
+#  
+my @endnotes;
+my $endnote_nr=0;
+my $endnotestyle=$variables{'endnotestyle'};
 
+my $circlenum='①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭⑮⑯⑰⑱⑲⑳㉑㉒㉓㉔㉕㉖㉗㉘㉙㉚㉛㉜㉝㉞㉟㊱㊲㊳㊴㊵㉛㉜㉝㉞㉟㊱㊲㊳㊴㊵';
+
+sub endnotepass {
+	$passname='endnotepass';
+	my $in_endnote=0;
+	for (@passin){
+		varset($_);
+		$lineindex++;
+		my $line=$_;
+		$line='' unless defined $line;
+		if ($in_endnote==0){
+			if ($line=~/^\.endnote  *start/){
+				$in_endnote=1;
+				$variables{'endnote_prev'}=$endnote_nr;
+				$endnote_nr++;
+				$variables{'endnote_nr'}=$endnote_nr;
+				$variables{'endnote_next'}=$endnote_nr+1;
+				my $letter=chr($endnote_nr+96);
+				my $onum=substr($circlenum,$endnote_nr-1,1);
+				my $endnote_ref=$endnotestyle;
+				$endnote_ref=~s/#/$endnote_nr/;
+				$endnote_ref=~s/@/$letter/;
+				$endnote_ref=~s/\*/$onum/;
+				$variables{'endnote_ref'}=$endnote_ref;
+				pushout($endnote_ref);
+				push @endnotes,'';
+				push @endnotes,$endnote_ref;
+				push @endnotes,'.br';
+			}
+			else { pushout($line); }
+		}
+		else {
+			if ($line=~/^\.endnote  *end/){
+				$in_endnote=0;
+			}
+			else {
+				push @endnotes,$line;
+			}
+		}
+	}
+	if ($endnote_nr>0){
+		pushout('');
+		pushout($variables{'endnoteheader'});
+		pushout('');
+		for my $el (@endnotes){
+			pushout($el);
+		}
+	}
+		
+	endpass();
+}
+			
+			
+		
 
 
 #  _     _            _
@@ -1352,6 +1418,8 @@ sub tocpass {
 	}
 	endpass();
 }
+
+
 
 #  _ _     _       
 # | (_)___| |_ ___ 
@@ -2260,10 +2328,11 @@ depricatepass();
 xmlifypass();
 includepass();
 markdownpass(); progress;
+endnotepass(); progress;
 blockpass(); progress;
 inlinepass(); progress;
 listpass(); progress;
-pipetablepass();
+pipetablepass();progress;
 tablepass(); progress;
 blockpass(); progress;
 inlinepass(); progress;
