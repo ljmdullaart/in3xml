@@ -3872,3 +3872,18 @@ in=\\n[.i] fi=\\n[.u] .d=\\n[.d] nl=\\n[nl] pg=\\n[%]
 \h'-0.1n-\\n(0hu'\
 \v'\\n(0du-1n'
 ..
+.de LinkLog
+.  \" Save current position
+.  nr xpos \n(.x
+.  nr ypos \n(.y
+.  nr pageno \n%p
+.  \" Determine link text
+.  ie \\n[.$]>1 \{\
+.    sy echo "\\$2 \\n[xpos] \\n[ypos] \\n[pageno] \\$1" >>linkcoords.txt
+.    \\$2
+.  \}
+.  el \{\
+.    sy echo "\\$1 \\n[xpos] \\n[ypos] \\n[pageno] \\$1" >>linkcoords.txt
+.    \\$1
+.  \}
+..
