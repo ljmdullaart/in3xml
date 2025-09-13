@@ -151,6 +151,8 @@ my @listtype;
 	push @listtype,'none';
 my @mapfields;
 my @sidenotes;
+my $linktext;
+my $notetext;
 # ----------------------------Charmapping ---------------------------------------
 my $charmapfile;
 if ( -f "/usr/local/share/in3/in3charmap$variables{'interpret'}" ){
@@ -1577,9 +1579,9 @@ while ( $linenumber <= $#input){
 		if ($input[$linenumber] =~/<\/notetext>/){
 			state_pop();
 		}
-		elsif ($input[$linenumber] =~/<\/text>/){
-			state_pop();
-		}
+		#elsif ($input[$linenumber] =~/<\/text>/){
+			#state_pop();
+		#}
 		else {
 			if ($noteatend==0){
 				$noteatend=1;
@@ -1656,6 +1658,7 @@ while ( $linenumber <= $#input){
 			state_push('seq');
 		}
 		elsif($input[$linenumber] =~/<notetext>/){
+			$notetext='';
 			state_push('notetext');
 		}
 		else {
@@ -1963,7 +1966,7 @@ while ( $linenumber <= $#input){
 			state_push('target');
 		}
 		else {
-			error("link: text outside text/target");
+			error("link: text outside text/target $input[$linenumber]");
 		}
 	}
 	elsif ($state  eq 'set'){
