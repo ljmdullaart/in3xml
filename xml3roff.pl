@@ -2176,7 +2176,8 @@ while ( $linenumber <= $#input){
 				if ($text eq ''){
 					$text=$target;
 				}
-				output ('.ft 6','.ps -2',$text,'.ps','.ft');
+				#output ('.ft 6','.ps -2',$text,'.ps','.ft');
+				output (".LinkLog $target $text");
 			}
 			else {
 				error ("Link without a target");
