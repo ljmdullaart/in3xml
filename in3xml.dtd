@@ -31,6 +31,7 @@ This is the in3 xml definition
 				  block     |
 				  caption   |
 				  cover     |
+                                  endnote   |
 				  header    |
 				  headerlink|
 				  heading   |
@@ -60,11 +61,13 @@ This is the in3 xml definition
 <!ELEMENT heading (level,seq,text)>
 <!ELEMENT toc (#PCDATA)>
 
+
 <!-- Paragraphs -->
 <!ELEMENT paragraph (text|sidenote|leftnote)*>
 <!ELEMENT text (#PCDATA |blank|hr|note|break|space|underline|italicnospace|italic|bold|center|font|fixednospace|fixed|lst|subscript|superscript|video|image|block|link|set|merge)* >
 <!ELEMENT sidenote (#PCDATA)>
 <!ELEMENT leftnote (#PCDATA)>
+<!ELEMENT endnote (#PCDATA |blank|break|space|underline|italicnospace|italic|bold|center|font|fixednospace|fixed|lst|subscript|superscript|video|image|block|link|set|merge)* >
 
 <!-- Tables -->
 <!ELEMENT table (row|caption)*>
