@@ -391,6 +391,9 @@ sub formatrequest {
 	elsif ($input[$linenumber] =~/<blank>/){
 		state_push('blank');
 	}
+	elsif ($input[$linenumber] =~/<superscript>/){
+		state_push('superscript');
+	}
 	elsif ($input[$linenumber] =~/<subscript>/){
 		state_push('subscript');
 	}
@@ -1728,6 +1731,16 @@ while ( $linenumber <= $#input){
 		else {
 			output (".ce 1");
 			output ($input[$linenumber]);
+		}
+	}
+	elsif ($state  eq 'superscript'){
+		if ($input[$linenumber] =~/<\/superscript>/){
+			state_pop();
+		}
+		else {
+			$outatol=1;
+			output ('\\*{',$input[$linenumber],'\\*}');
+			$outatol=1;
 		}
 	}
 	elsif ($state  eq 'subscript'){

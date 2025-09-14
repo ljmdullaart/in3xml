@@ -468,6 +468,12 @@ sub formatrequest {
 		$outatol=1;
 		state_push('fixednospace');
 	}
+	elsif ($input =~/<superscript>/){
+		$outatol=1;
+		output('<sup>');
+		$outatol=1;
+		state_push('superscript');
+	}
 	elsif ($input =~/<subscript>/){
 		$outatol=1;
 		output('<sub>');
@@ -1466,6 +1472,19 @@ while ( $linenumber <= $#input){
 		}
 		else {
 			output ($input[$linenumber]);
+		}
+	}
+	elsif ($state  eq 'superscript'){
+		if ($input[$linenumber] =~/<\/superscript>/){
+			$outatol=1;
+			output ('</sup>');
+			$outatol=1;
+			state_pop();
+		}
+		else {
+			$outatol=1;
+			output ($input[$linenumber]);
+			$outatol=1;
 		}
 	}
 	elsif ($state  eq 'subscript'){
