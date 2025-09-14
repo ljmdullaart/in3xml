@@ -41,6 +41,8 @@ A list of the constructs is in the table below:
 |---------------------------------------------------------------------------------------------------------------------------------|
 |map               | %.;map                | blank line       | Clickable map in HTML, an image in PS                             |
 |---------------------------------------------------------------------------------------------------------------------------------|
+|endnote           | %.;endnote start      | %.;endnote end   | Defines a endnote                                                 |
+|---------------------------------------------------------------------------------------------------------------------------------|
 |note              | %.;note               | End of line      | Defines a footnote                                                |
 |---------------------------------------------------------------------------------------------------------------------------------|
 |page              | %.;page               | End of line      | Ejects a page                                                     |
@@ -187,7 +189,7 @@ for all processing, even for
 .fixed complete.in
 which may not be obvious directly.
 
-.h2 Left notes and side notes
+.h2 Notes
 
 Left notes are short scribbles in the left margin. They are, for example, used 
 when typesetting theater plays:
@@ -271,6 +273,63 @@ can have a referral to the value of
 
 .set sidechar %num
 .set sideref %NUM:
+
+.fixed .note
+defines a footnote. These are printed at the bottom of each page. Because
+there is more room at the bottom of the page than in the right margin, the text can be
+longer than in the sidenote.
+
+If a elaborate formatting of the note is required, use
+.fixed .endnote
+%.; These notes are printed at the end of the document, and take all forms
+of formatting, embedding of links etc. As an example:
+
+.pre
+ .endnote start
+ This is an endnote that refers to
+ .link https://www.google.com
+ as a link.
+ .endnote end
+.pre
+
+The format of the referals is determined by the variable 
+.fixed endnotestyle
+and the default is of the type (1).
+The style accepts single formatting requests and 
+.fixed @
+is replaced with the sequence number in a, b, c format, # with the 
+sequence number in 1, 2, 3 format and * with the sequence number in
+%o1;, %o2;, %o3;.
+
+.set tableexpand no
+
+	.b Example	.b Result
+	.fixed %.;set endnotestyle (#)	(1)
+	.fixed %.;set endnotestyle .sup @	.sup a
+	.fixed %.;set endnotestyle *	%o1;
+
+.set tableexpand yes
+
+The value for the endnote can be reset, for example at the beginning 
+of each chapter. As an example:
+
+.pre
+ .set endnote_nr 0
+ .set endnotestyle .sup 3.#
+.pre
+
+could 
+be used to insert the chapter-number as part of the endnote reference.
+
+Endnotes are placed as a separate chapter with
+an unnumbered heading at the end of the document. The default 
+title is "Notes", but can be replaced by setting 
+.fixed endnoteheader
+to a specific value, for example:
+
+.pre
+ .set endnoteheader End Notes
+.pre
 
 .h2 Indent after
 
