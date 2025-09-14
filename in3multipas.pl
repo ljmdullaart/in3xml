@@ -1099,6 +1099,7 @@ sub mappass {
 #  
 my @endnotes;
 my $endnote_nr=0;
+my $endnote_flag=0;
 my $endnotestyle=$variables{'endnotestyle'};
 
 
@@ -1114,10 +1115,14 @@ sub endnotepass {
 			if ($line=~/^\.set  *endnotestyle *(..*)/){
 				$endnotestyle=$1
 			}
+			elsif ($line=~/^\.set  *endnote_nr *(..*)/){
+				$endnote_nr=$1
+			}
 			elsif ($line=~/^\.endnote  *start/){
 				$in_endnote=1;
 				$variables{'endnote_prev'}=$endnote_nr;
 				$endnote_nr++;
+				$endnote_flag++;
 				$variables{'endnote_nr'}=$endnote_nr;
 				$variables{'endnote_next'}=$endnote_nr+1;
 				my $letter=chr($endnote_nr+96);
@@ -1143,7 +1148,7 @@ sub endnotepass {
 			}
 		}
 	}
-	if ($endnote_nr>0){
+	if ($endnote_flag>0){
 		pushout('');
 		pushout($variables{'endnoteheader'});
 		pushout('');
