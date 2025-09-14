@@ -1101,7 +1101,6 @@ my @endnotes;
 my $endnote_nr=0;
 my $endnotestyle=$variables{'endnotestyle'};
 
-my $circlenum='①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭⑮⑯⑰⑱⑲⑳㉑㉒㉓㉔㉕㉖㉗㉘㉙㉚㉛㉜㉝㉞㉟㊱㊲㊳㊴㊵㉛㉜㉝㉞㉟㊱㊲㊳㊴㊵';
 
 sub endnotepass {
 	$passname='endnotepass';
@@ -1112,14 +1111,17 @@ sub endnotepass {
 		my $line=$_;
 		$line='' unless defined $line;
 		if ($in_endnote==0){
-			if ($line=~/^\.endnote  *start/){
+			if ($line=~/^\.set  *endnotestyle *(..*)/){
+				$endnotestyle=$1
+			}
+			elsif ($line=~/^\.endnote  *start/){
 				$in_endnote=1;
 				$variables{'endnote_prev'}=$endnote_nr;
 				$endnote_nr++;
 				$variables{'endnote_nr'}=$endnote_nr;
 				$variables{'endnote_next'}=$endnote_nr+1;
 				my $letter=chr($endnote_nr+96);
-				my $onum=substr($circlenum,$endnote_nr-1,1);
+				my $onum="%o$endnote_nr;";
 				my $endnote_ref=$endnotestyle;
 				$endnote_ref=~s/#/$endnote_nr/;
 				$endnote_ref=~s/@/$letter/;
@@ -1148,6 +1150,7 @@ sub endnotepass {
 		for my $el (@endnotes){
 			pushout($el);
 		}
+		pushout('');
 	}
 		
 	endpass();
