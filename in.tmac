@@ -3646,6 +3646,8 @@ in=\\n[.i] fi=\\n[.u] .d=\\n[.d] nl=\\n[nl] pg=\\n[%]
 .\" Superscripts (ex tmac.e) (current versions without extra line space)
 .\" (reinstate commented versions to restore extra line space)
 .\" .ds { \v'-0.3m'\x'-0.2m'\\s[\\n[.s]*8u/10u]
+.ds sups \v'-0.3m'\s[\\n[.s]*9u/12u]
+.ds esups \s0\v'0.3m'
 .ds { \v'-0.3m'\\s[\\n[.s]*9u/12u]
 .ds } \s0\v'0.3m'
 .\" Subscripts
@@ -3880,10 +3882,8 @@ in=\\n[.i] fi=\\n[.u] .d=\\n[.d] nl=\\n[nl] pg=\\n[%]
 .  \" Determine link text
 .  ie \\n[.$]>1 \{\
 .    sy echo "\\$2 \\n[xpos] \\n[ypos] \\n[pageno] \\$1" >>linkcoords.txt
-.    \\$2
 .  \}
 .  el \{\
 .    sy echo "\\$1 \\n[xpos] \\n[ypos] \\n[pageno] \\$1" >>linkcoords.txt
-.    \\$1
 .  \}
 ..
