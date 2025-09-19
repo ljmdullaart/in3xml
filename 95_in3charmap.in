@@ -5,6 +5,7 @@
 .h2 Percent translations
 
 	.b char +	.b %percnt;	.b groff	.b html
+	% ;	 ;	~	&nbsp;
 	%!=;	!=;	f[DejaVuSans][u2260]f[]	&ne;
 	%'A;	'A;	['A]	&Aacute;
 	%'C;	'C;	['C]	&#262;
@@ -34,11 +35,11 @@
 	%.j;	.j;	[.j]	&#567;
 	%/L;	/L;	[/L]	&Lstrok;
 	%/O;	/O;	[/O]	&Oslash;
-	%/_;	/_;	[/_]	&ang;
 
 .page
 
 	.b char +	.b %percnt;	.b groff	.b html
+	%/_;	/_;	[/_]	&ang;
 	%/l;	/l;	[/l]	&lstrok;
 	%/o;	/o;	[/o]	&oslash;
 	%12;	12;	[12]	&frac12;
@@ -68,11 +69,11 @@
 	%<=;	<=;	[<=]	&le;
 	%<>;	<>;	[<>]	&harr;
 	%=;	=;	=	=
-	%==;	==;	[==]	&equiv;
 
 .page
 
 	.b char +	.b %percnt;	.b groff	.b html
+	%==;	==;	[==]	&equiv;
 	%=~;	=~;	[=~]	&cong;
 	%>=;	>=;	[>=]	&ge;
 	%>>;	>>;	[>>]	&Gt;
@@ -102,11 +103,11 @@
 	%GC;	GC;	[*C]	&Xi;
 	%GD;	GD;	[*D]	&Delta;
 	%GE;	GE;	[*E]	&Epsilon;
-	%GF;	GF;	[*F]	&Phi;
 
 .page
 
 	.b char +	.b %percnt;	.b groff	.b html
+	%GF;	GF;	[*F]	&Phi;
 	%GG;	GG;	[*G]	&Gamma;
 	%GH;	GH;	[*H]	&Theta;
 	%GI;	GI;	[*I]	&Iota;
@@ -136,11 +137,11 @@
 	%Gi;	Gi;	[*i]	&iota;
 	%Gk;	Gk;	[*k]	&kappa;
 	%Gl;	Gl;	[*l]	&lambda;
-	%Gm;	Gm;	f[DejaVuSans][u03BC]f[]	&mu;
 
 .page
 
 	.b char +	.b %percnt;	.b groff	.b html
+	%Gm;	Gm;	f[DejaVuSans][u03BC]f[]	&mu;
 	%Gn;	Gn;	[*n]	&nu;
 	%Go;	Go;	[*o]	&omicron;
 	%Gp;	Gp;	[*p]	&pi;
@@ -170,11 +171,11 @@
 	%OMICRON;	OMICRON;	[*O]	&Omicron;
 	%Of;	Of;	[Of]	&ordf;
 	%Om;	Om;	[Om]	&ordm;
-	%PHI;	PHI;	[*F]	&Phi;
 
 .page
 
 	.b char +	.b %percnt;	.b groff	.b html
+	%PHI;	PHI;	[*F]	&Phi;
 	%PHONE;	PHONE;	f[Zapf]%f[]	&phone;
 	%PI;	PI;	[*P]	&Pi;
 	%PSI;	PSI;	[*Q]	&Psi;
@@ -204,11 +205,11 @@
 	%UPSILION;	UPSILION;	[*U]	&Upsilon;
 	%WRONG;	WRONG;	f[Zapf]8f[]	&#10008;
 	%XI;	XI;	[*X]	&Chi;
-	%YPSILION;	YPSILION;	[*U]	&Upsilon;
 
 .page
 
 	.b char +	.b %percnt;	.b groff	.b html
+	%YPSILION;	YPSILION;	[*U]	&Upsilon;
 	%Ye;	Ye;	[Ye]	&yen;
 	%ZETA;	ZETA;	[*Z]	&Zeta;
 	%Zset;	Zset;	f[DejaVuSans][u2124]f[]	&Zopf;
@@ -238,11 +239,11 @@
 	%ad;	ad;	[ad]	&die;
 	%ae;	ae;	[ae]	&aelig;
 	%ah;	ah;	[ah]	&#711;
-	%alpha;	alpha;	[*a]	&alpha;
 
 .page
 
 	.b char +	.b %percnt;	.b groff	.b html
+	%alpha;	alpha;	[*a]	&alpha;
 	%an;	an;	[an]	&#9135
 	%ang;	ang;	f[DejaVuSans][u2220]f[]	&ang;
 	%angrt;	angrt;	f[DejaVuSans][u221F]f[]	&angrt;
@@ -272,11 +273,11 @@
 	%dA;	dA;	[dA]	&dArr;
 	%da;	da;	[da]	&darr;
 	%dashv;	dashv;	f[DejaVuSans][u22A3]f[]	&dashv;
-	%david;	david;	f[Zapf]Af[]	&#10017;
 
 .page
 
 	.b char +	.b %percnt;	.b groff	.b html
+	%david;	david;	f[Zapf]Af[]	&#10017;
 	%dd;	dd;	[dd]	&Dagger;
 	%deg;	deg;	[ao]	&deg;
 	%delta;	delta;	[*d]	&delta;
@@ -306,11 +307,11 @@
 	%ib;	ib;	[ib]	&sube;
 	%if;	if;	[if]	&infin;
 	%ij;	ij;	[ij]	&ijlig;
-	%increment;	increment;	f[DejaVuSans][u2206]f[]	&#8710;
 
 .page
 
 	.b char +	.b %percnt;	.b groff	.b html
+	%increment;	increment;	f[DejaVuSans][u2206]f[]	&#8710;
 	%infin;	infin;	f[DejaVuSans][u221E]f[]	&infin;
 	%int;	int;	f[DejaVuSans][u222B]f[]	&int;
 	%iota;	iota;	[*i]	&iota;
@@ -340,11 +341,11 @@
 	%nequiv;	nequiv;	f[DejaVuSans][u2262]f[]	&nequiv;
 	%ni;	ni;	[st]	&ni;
 	%nm;	nm;	[nm]	&notin;
-	%no;	no;	[no]	&not;
 
 .page
 
 	.b char +	.b %percnt;	.b groff	.b html
+	%no;	no;	[no]	&not;
 	%not;	not;	[no]	&not;
 	%notin;	notin;	f[DejaVuSans][u2209]f[]	&notin;
 	%nsub;	nsub;	f[DejaVuSans][u2284]f[]	&nsub;
@@ -374,11 +375,11 @@
 	%parallel;	parallel;	f[DejaVuSans][u2225]f[]	&parallel;
 	%part;	part;	f[DejaVuSans][u2202]f[]	&part;
 	%pd;	pd;	[pd]	&part;
-	%pen;	pen;	f[Zapf]1f[]	&#10001;
 
 .page
 
 	.b char +	.b %percnt;	.b groff	.b html
+	%pen;	pen;	f[Zapf]1f[]	&#10001;
 	%percnt;	percnt;	f[DejaVuSans]%f[]	&percnt;
 	%permil;	permil;	f[DejaVuSans][u2030]f[]	&permil;
 	%perp;	perp;	f[DejaVuSans][u22A5]f[]	&perp;
@@ -408,11 +409,11 @@
 	%sigma;	sigma;	[*s]	&sigma;
 	%sigmaf;	sigmaf;	[ts]	&sigmaf;
 	%snow;	snow;	f[Zapf]df[]	&#10052;
-	%sp;	sp;	[sp]	&sup;
 
 .page
 
 	.b char +	.b %percnt;	.b groff	.b html
+	%sp;	sp;	[sp]	&sup;
 	%sq;	sq;	[sq]	&#9633;
 	%sr;	sr;	[sr]	&radic;
 	%ss;	ss;	[ss]	&szlig;
@@ -442,11 +443,11 @@
 	%vZ;	vZ;	[vZ]	&#381;
 	%va;	va;	[va]	&#8597;
 	%vdash;	vdash;	f[DejaVuSans][u22A2]f[]	&vdash;
-	%veebar;	veebar;	f[DejaVuSans][u22BB]f[]	&veebar;
 
 .page
 
 	.b char +	.b %percnt;	.b groff	.b html
+	%veebar;	veebar;	f[DejaVuSans][u22BB]f[]	&veebar;
 	%vs;	vs;	[vs]	&#353;
 	%vz;	vz;	[vz]	&#382;
 	%write;	write;	f[Zapf]-f[]	&#9997;
