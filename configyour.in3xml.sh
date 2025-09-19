@@ -313,6 +313,7 @@ echo >> Makefile
 if [ -d $WWW ] ; then
 	echo "$WWW/block: |block">> Makefile
 	echo "	- ln -s $(realpath block) $WWW" >> Makefile
+	echo "	[ -L $WWW/block ] || mkdir -p $WWW/block" >> Makefile
 	echo "WWW targets in $WWW:" >> $LOG
 	echo -n "tag/in3xml.$WWW: tag/in3xml.xml" >> Makefile
 	for infile in *.in ; do		# the *.in are the only guaranteed availables
@@ -327,6 +328,7 @@ if [ -d $WWW ] ; then
 	done
 	echo ' |tag'>> Makefile
 	echo "	touch tag/in3xml.$WWW" >> Makefile
+	echo "	[ -d $WWW/block ] || cp -ru block/* $WWW/block" >> Makefile
 
 	for infile in *.in ; do
 		stem=${infile%.in}
