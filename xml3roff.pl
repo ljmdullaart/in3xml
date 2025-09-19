@@ -148,6 +148,7 @@ my %variables;
     $variables{"tableexpand"}='no';
     $variables{"imagex"}=800;
     $variables{"imagey"}=800;
+    $variables{"linkstyle"}=".ft 6\n.ps -2";
     $variables{"subtitle"}='';
     $variables{"title"}='';
     $variables{'debug'}=$DEBUG;
@@ -365,6 +366,9 @@ sub formatrequest {
 	}
 	elsif ($input[$linenumber] =~/<italicnospace>/){
 		state_push('italicnospace');
+	}
+	elsif ($input[$linenumber] =~/<destination>/){
+		state_push('destination');
 	}
 	elsif ($input[$linenumber] =~/<bold>/){
 		state_push('bold');
@@ -1706,6 +1710,14 @@ while ( $linenumber <= $#input){
 			output (".I \"$input[$linenumber]\"");
 		}
 	}
+	elsif ($state  eq 'destination'){
+		if ($input[$linenumber] =~/<\/destination>/){
+			state_pop();
+		}
+		else {
+			#discard
+		}
+	}
 	elsif ($state  eq 'bold'){
 		if ($input[$linenumber] =~/<\/bold>/){
 			state_pop();
@@ -1937,6 +1949,7 @@ while ( $linenumber <= $#input){
 			state_push('seq');
 		}
 		elsif ($input[$linenumber] =~/<text>/){
+			$text='';
 			state_push('text');
 		}
 		else {
@@ -1971,6 +1984,7 @@ while ( $linenumber <= $#input){
 			state_pop();
 		}
 		elsif ($input[$linenumber]=~/<text>/){
+			$text='';
 			state_push('text');
 		}
 		elsif ($input[$linenumber]=~/<file>/){
@@ -2017,6 +2031,7 @@ while ( $linenumber <= $#input){
 			state_pop();
 		}
 		elsif ($input[$linenumber]=~/<text>/){
+			$text='';
 			state_push('text');
 		}
 		elsif ($input[$linenumber]=~/<caption>/){
@@ -2084,12 +2099,12 @@ while ( $linenumber <= $#input){
 	}
 	elsif ($state  eq 'text'){
 		if ($input[$linenumber] =~/<\/text>/){
-			$text=~s/^"//;
+			$text=~s/^"*//;
 			$text=~s/"$//;
 			state_pop();
 		}
 		else {
-			$text=$input[$linenumber];
+			$text="$text$input[$linenumber]";
 		}
 	}
 	elsif ($state  eq 'ref'){
@@ -2189,8 +2204,18 @@ while ( $linenumber <= $#input){
 				if ($text eq ''){
 					$text=$target;
 				}
-				#output ('.ft 6','.ps -2',$text,'.ps','.ft');
-				output (".LinkLog $target $text");
+				$text=~s/<[^>]*>//g;
+				if ($target =~/^#/){}
+				else {
+					output ($variables{"linkstyle"},$target);
+					if ($variables{"linkstyle"}=~/ps/){output ('.ps');}
+					if ($variables{"linkstyle"}=~/ft/){output ('.ft');}
+				}
+				if ($text ne $target){
+					output ($text);
+				}
+				#output (".LinkLog $target $text");
+				#output ('\\*{',$text,'\\*}');
 			}
 			else {
 				error ("Link without a target");
@@ -2200,6 +2225,7 @@ while ( $linenumber <= $#input){
 			state_pop();
 		}
 		elsif ($input[$linenumber] =~/<text>/){
+			$text='';
 			state_push('text');
 		}
 		elsif ($input[$linenumber] =~/<target>/){

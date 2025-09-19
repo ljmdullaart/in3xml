@@ -1123,6 +1123,8 @@ sub endnotepass {
 				$variables{'endnote_prev'}=$endnote_nr;
 				$endnote_nr++;
 				$endnote_flag++;
+				my $gonote="go$endnote_flag";
+				my $backnote="back$endnote_flag";
 				$variables{'endnote_nr'}=$endnote_nr;
 				$variables{'endnote_next'}=$endnote_nr+1;
 				my $letter=chr($endnote_nr+96);
@@ -1132,10 +1134,30 @@ sub endnotepass {
 				$endnote_ref=~s/@/$letter/;
 				$endnote_ref=~s/\*/$onum/;
 				$variables{'endnote_ref'}=$endnote_ref;
+				pushout("<link>");
+				pushout("<target>");
+				pushout("#$gonote");
+				pushout("</target>");
+				pushout("<text>");
 				pushout($endnote_ref);
+				pushout("</text>");
+				pushout("</link>");
+				pushout("<destination>");
+				pushout($backnote);
+				pushout("</destination>");
 				push @endnotes,'';
+				push @endnotes," <link>";
+				push @endnotes,"<target>";
+				push @endnotes,"#$backnote";
+				push @endnotes,"</target>";
+				push @endnotes,"<text>";
 				push @endnotes,$endnote_ref;
-				push @endnotes,'.br';
+				push @endnotes,"</text>";
+				push @endnotes,"</link>";
+				push @endnotes,"<destination>";
+				
+				push @endnotes,"$gonote";
+				push @endnotes,"</destination>";
 			}
 			else { pushout($line); }
 		}

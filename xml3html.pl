@@ -4,6 +4,8 @@
 use strict;
 use File::Basename;
 
+my $trace=0;
+
 my $dvifontpath=`find /usr/share -name 'ps2pk.map' 2>&1 | grep -v 'Permission denied' | tail -1`;
 chomp $dvifontpath;
 $dvifontpath=dirname($dvifontpath);
@@ -20,7 +22,6 @@ elsif (open (my $FM,'<','/usr/local/share/in3/fontmap')){
 }
 
 
-my $trace=0;
 my $DEBUG=0;
 my @output;
 my $outatol=0;
@@ -400,6 +401,9 @@ sub formatrequest {
 		output('<i>');
 		$outatol=1;
 		state_push('italicnospace');
+	}
+	elsif ($input =~/<destination>/){
+		state_push('destination');
 	}
 	elsif ($input =~/<bold>/){
 		output('<b>');
@@ -1456,6 +1460,14 @@ while ( $linenumber <= $#input){
 			output ($input[$linenumber]);
 		}
 	}
+	elsif ($state  eq 'destination'){
+		if ($input[$linenumber] =~/<\/destination>/){
+			state_pop();
+		}
+		else {
+			output ("<span id=\"$input[$linenumber]\"></span>");
+		}
+	}
 	elsif ($state  eq 'bold'){
 		if ($input[$linenumber] =~/<\/bold>/){
 			output ('</b>');
@@ -1574,6 +1586,7 @@ while ( $linenumber <= $#input){
 			else {
 				output ("<h$level>");
 			}
+			
 			if ($text ne ''){ output($text);}
 			output ("</h$level>");
 			$level=0;
@@ -1588,6 +1601,7 @@ while ( $linenumber <= $#input){
 			state_push('seq');
 		}
 		elsif ($input[$linenumber] =~/<text>/){
+			$text='';
 			state_push('text');
 		}
 		else {
@@ -1657,6 +1671,7 @@ while ( $linenumber <= $#input){
 			state_pop();
 		}
 		elsif ($input[$linenumber]=~/<text>/){
+			$text='';
 			state_push('text');
 		}
 		elsif ($input[$linenumber]=~/<file>/){
@@ -1708,6 +1723,7 @@ while ( $linenumber <= $#input){
 			state_pop();
 		}
 		elsif ($input[$linenumber]=~/<text>/){
+			$text='';
 			state_push('text');
 		}
 		elsif ($input[$linenumber]=~/<field>/){
@@ -1740,6 +1756,7 @@ while ( $linenumber <= $#input){
 			state_push('format');
 		}
 		elsif ($input[$linenumber]=~/<text>/){
+			$text='';
 			state_push('text');
 		}
 		elsif ($input[$linenumber]=~/<file>/){
@@ -1820,12 +1837,13 @@ while ( $linenumber <= $#input){
 	}
 	elsif ($state  eq 'text'){
 		if ($input[$linenumber] =~/<\/text>/){
+			$text=~s/^ //;
 			$text=~s/^"//;
 			$text=~s/"$//;
 			state_pop();
 		}
 		else {
-			$text=$input[$linenumber];
+			$text="$text $input[$linenumber]";
 		}
 	}
 	elsif ($state  eq 'ref'){
@@ -1979,6 +1997,7 @@ while ( $linenumber <= $#input){
 			state_pop();
 		}
 		elsif ($input[$linenumber] =~/<text>/){
+			$text='';
 			state_push('text');
 		}
 		elsif ($input[$linenumber] =~/<target>/){

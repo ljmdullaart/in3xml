@@ -6,16 +6,17 @@ This is the in3 xml definition
 <!-- Entity corresponding to formatrequest -->
 <!ELEMENT bold (#PCDATA)>
 <!ELEMENT center (#PCDATA)>
+<!ELEMENT destination (#PCDATA)>
 <!ELEMENT fixed (#PCDATA)>
 <!ELEMENT fixednospace (#PCDATA)>
-<!ELEMENT subscript (#PCDATA)>
-<!ELEMENT superscript (#PCDATA)>
 <!ELEMENT italic (#PCDATA)>
 <!ELEMENT italicnospace (#PCDATA)>
 <!ELEMENT link (target|text)+>
 <!ELEMENT lst (#PCDATA)>
-<!ELEMENT underline (#PCDATA)>
 <!ELEMENT space (#PCDATA)*>
+<!ELEMENT subscript (#PCDATA)>
+<!ELEMENT superscript (#PCDATA)>
+<!ELEMENT underline (#PCDATA)>
 <!ELEMENT font (#PCDATA)* >
 	<!ATTLIST font
 		type CDATA #IMPLIED
@@ -55,7 +56,7 @@ This is the in3 xml definition
 
 <!-- Lists -->
 <!ELEMENT list (type|list|item)*>
-<!ELEMENT item (#PCDATA |note|blank|break|space|underline|italic|italicnospace|bold|center|font|fixednospace|fixed|lst|subscript|superscript|video|image|block|link|set|merge)* >
+<!ELEMENT item (#PCDATA |note|blank|break|space|underline|italic|italicnospace|destination|bold|center|font|fixednospace|fixed|lst|subscript|superscript|video|image|block|link|set|merge)* >
 
 <!ELEMENT header (#PCDATA)>
 <!ELEMENT heading (level,seq,text)>
@@ -64,15 +65,15 @@ This is the in3 xml definition
 
 <!-- Paragraphs -->
 <!ELEMENT paragraph (text|sidenote|leftnote)*>
-<!ELEMENT text (#PCDATA |blank|hr|note|break|space|underline|italicnospace|italic|bold|center|font|fixednospace|fixed|lst|subscript|superscript|video|image|block|link|set|merge)* >
+<!ELEMENT text (#PCDATA |blank|hr|note|break|space|underline|italicnospace|italic|destination|bold|center|font|fixednospace|fixed|lst|subscript|superscript|video|image|block|link|set|merge)* >
 <!ELEMENT sidenote (#PCDATA)>
 <!ELEMENT leftnote (#PCDATA)>
-<!ELEMENT endnote (#PCDATA |blank|break|space|underline|italicnospace|italic|bold|center|font|fixednospace|fixed|lst|subscript|superscript|video|image|block|link|set|merge)* >
+<!ELEMENT endnote (#PCDATA |blank|break|space|underline|italicnospace|italic|destination|bold|center|font|fixednospace|fixed|lst|subscript|superscript|video|image|block|link|set|merge)* >
 
 <!-- Tables -->
 <!ELEMENT table (row|caption)*>
 <!ELEMENT row (cell*)>
-<!ELEMENT cell (#PCDATA |note|blank|break|space|underline|italicnospace|italic|bold|center|font|fixednospace|fixed|lst|subscript|superscript|video|image|block|link|set|merge)* >
+<!ELEMENT cell (#PCDATA |note|blank|break|space|underline|italicnospace|italic|destination|bold|center|font|fixednospace|fixed|lst|subscript|superscript|video|image|block|link|set|merge)* >
 	<!ATTLIST cell
 		rowspan CDATA #IMPLIED
 		colspan CDATA #IMPLIED
@@ -90,7 +91,7 @@ This is the in3 xml definition
 <!ELEMENT blocktext (#PCDATA)>
 
 <!ELEMENT note (ref|seq|notetext)*>
-<!ELEMENT notetext (#PCDATA |blank|break|space|underline|italicnospace|italic|bold|center|font|fixednospace|fixed|lst|subscript|superscript|video|image|block|link|set|merge)* >
+<!ELEMENT notetext (#PCDATA |blank|break|space|underline|italicnospace|italic|destination|bold|center|font|fixednospace|fixed|lst|subscript|superscript|video|image|block|link|set|merge)* >
 
 <!ELEMENT video (file)>
 
@@ -106,16 +107,16 @@ This is the in3 xml definition
 -->
 <!ELEMENT blank (#PCDATA)*>
 <!ELEMENT break (#PCDATA)*>
+<!ELEMENT caption (#PCDATA)>
 <!ELEMENT coord (#PCDATA)>
 <!ELEMENT file (#PCDATA)>
 <!ELEMENT format (#PCDATA)>
 <!ELEMENT hr (#PCDATA)*>
 <!ELEMENT level (#PCDATA)>
+<!ELEMENT merge (#PCDATA)>
 <!ELEMENT name (#PCDATA)>
 <!ELEMENT page (#PCDATA)>
 <!ELEMENT ref (#PCDATA)>
 <!ELEMENT seq (#PCDATA)>
 <!ELEMENT target (#PCDATA)>
 <!ELEMENT type (#PCDATA)>
-<!ELEMENT merge (#PCDATA)>
-<!ELEMENT caption (#PCDATA)>
