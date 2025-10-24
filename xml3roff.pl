@@ -1932,6 +1932,12 @@ while ( $linenumber <= $#input){
 				output (".ne $v".'v');
 				output (".APP \"\" \"$text\"");
 			}
+			elsif ($seq =~/^"*A\."*$/){	# The first appendix
+				my $v=15/$level;
+				output (".APPENDIX");
+				output (".ne $v".'v');
+				output (".H $level \"$text\"");
+			}
 			else {
 				my $v=15/$level;
 				output (".ne $v".'v');
@@ -2510,6 +2516,8 @@ if ($variables{'COVER'} eq 'yes'){
 
 my $a='';
 for (@output){
+	if ($trace > 0){print STDERR "--output-- $_\n";}
+	
 	#s/&lt;/</g;
 	#s/&gt;/>/g;
 	#s/&quot;/"/g;

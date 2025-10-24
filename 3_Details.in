@@ -17,6 +17,9 @@ A list of the constructs is in the table below:
 |---------------------------------------------------------------------------------------------------------------------------------|
 | .b Construct     |  .b Recognized by     | .b Ends with     | .b Usage                                                          |
 |---------------------------------------------------------------------------------------------------------------------------------|
+|appendix          | %.;APPENDIX           | End of line      | Marks the start of appendices. Chapter numbering wil start with   |
+|                  |                       |                  | A (reset counter and use capital letters)                         |
+|---------------------------------------------------------------------------------------------------------------------------------|
 |author            | %.;author             | End of line      | Defines the author of the document                                |
 |---------------------------------------------------------------------------------------------------------------------------------|
 |block             | %.;block <type>       | %.;block         | Defines different type of blocks                                  |

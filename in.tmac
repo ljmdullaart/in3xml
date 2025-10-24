@@ -1027,7 +1027,29 @@ in=\\n[.i] fi=\\n[.u] .d=\\n[.d] nl=\\n[nl] pg=\\n[%]
 .if (\\n[hd*level]=1)&(\\n[Sectp]>0) .hd@set-page 1
 .\"
 .\" hd*mark is the text written to the left of the header.
+.\" ----LJM ---test
 .ds hd*mark \\n[H1].
+.if \\n[h1alpha]>0 \{\
+.  if \\n[H1]=1 .ds hd*mark A.
+.  if \\n[H1]=2 .ds hd*mark B.
+.  if \\n[H1]=3 .ds hd*mark C.
+.  if \\n[H1]=4 .ds hd*mark D.
+.  if \\n[H1]=6 .ds hd*mark E.
+.  if \\n[H1]=7 .ds hd*mark E.
+.  if \\n[H1]=8 .ds hd*mark G.
+.  if \\n[H1]=9 .ds hd*mark H.
+.  if \\n[H1]=10 .ds hd*mark I.
+.  if \\n[H1]=11 .ds hd*mark J.
+.  if \\n[H1]=12 .ds hd*mark K.
+.  if \\n[H1]=13 .ds hd*mark L.
+.  if \\n[H1]=14 .ds hd*mark M.
+.  if \\n[H1]=15 .ds hd*mark N.
+.  if \\n[H1]=16 .ds hd*mark O.
+.  if \\n[H1]=17 .ds hd*mark P.
+.  if \\n[H1]=18 .ds hd*mark Q.
+.  if \\n[H1]=19 .ds hd*mark R.
+.  if \\n[H1]=20 .ds hd*mark S.
+\}
 .\"
 .if \\n[hd*level]>1 .as hd*mark \\n[H2]
 .\"
@@ -3886,4 +3908,9 @@ in=\\n[.i] fi=\\n[.u] .d=\\n[.d] nl=\\n[nl] pg=\\n[%]
 .  el \{\
 .    sy echo "\\$1 \\n[xpos] \\n[ypos] \\n[pageno] \\$1" >>linkcoords.txt
 .  \}
+..
+.nr h1alpha 0
+.de APPENDIX
+.nr h1alpha 1
+.nr H1 0
 ..

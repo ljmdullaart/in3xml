@@ -6,8 +6,18 @@ use File::Basename;
 use strict;
 use warnings;
 use Text::CSV;
+use Encode;
 
 my $otrace=0;
+sub otrace {
+	(my $string)=@_;
+	$string = Encode::decode('UTF-8', $string);
+	if ($otrace>0){
+		print "$string\n";
+	}
+}
+
+	
 
 # __     __         _       _     _
 # \ \   / /_ _ _ __(_) __ _| |__ | | ___  ___
@@ -135,7 +145,8 @@ if ( -f "meta.in" ){
 			push @realin,$_;
 			push @passin,$_;
 			push @inlinenr,"$variables{'filename'}:$lineindex";
-			if ($otrace>0){ print "READ LINE FROM $file: $_\n";}
+			otrace ("READ LINE FROM $file: $_");
+
 			$lineindex++;
 		}
 		push @realin,'';
@@ -156,7 +167,7 @@ if ($#ARGV<0){
 else {
 	my $what='';
 	for (@ARGV){
-		if ($otrace>0){ print STDERR "ARGUMENT: $_\n";}
+		otrace("ARGUMENT: $_");
 		if ($what eq ''){
 			if (/^--$/){ while (<STDIN>){push @input,$_;}}
 			elsif (/^--debug([0-9]+)/){ $variables{"DEBUG"}=$1; }
@@ -184,7 +195,7 @@ else {
 			else {
 				my $file=$_;
 				$variables{'filename'}=$file;
-				if ($otrace>0){ print "Processing $file\n";}
+				otrace ("Processing $file");
 				my $ch;	# Chapter number from filename
 				if ($file=~/^([0-9]+)_/){$ch=$1-1;} else {$ch=0;}
 				if (-f "meta.$file"){
@@ -194,7 +205,7 @@ else {
 							push @realin,$_;
 							push @passin,$_;
 							push @inlinenr,"$variables{'filename'}:$lineindex";
-							if ($otrace>0){ print "READ LINE FROM meta.$file: $_\n";}
+							otrace("READ LINE FROM meta.$file: $_");
 							$lineindex++;
 						}
 						push @realin,'';
@@ -205,7 +216,7 @@ else {
 				}
 				if (open(my $IN,'<',$file)){
 					if ($ch>0){
-						if ($otrace>0){ print "Chapter:$ch\n";}
+						otrace("Chapter:$ch");
 						push @passin,".set H1 $ch";
 						push @passin,'';
 						$variables{"H1"}=$ch;
@@ -217,7 +228,7 @@ else {
 						push @realin,$_;
 						push @passin,$_;
 						push @inlinenr,"$variables{'filename'}:$lineindex";
-						if ($otrace>0){ print "READ LINE FROM $file: $_\n";}
+						otrace("READ LINE FROM $file: $_");
 						$lineindex++;
 					}
 					push @realin,'';
@@ -1314,6 +1325,7 @@ sub inlinepass {
 # (chapter section paragraph)                                 
 sub headingpass {
 	$passname='headingpass';
+	my $appendix_flag=0;
 	for (@passin){
 		varset($_);
 		$lineindex++;
@@ -1364,6 +1376,9 @@ sub headingpass {
 			if ($variables{"H1"}>$variables{"appendix"}){
 				$seq=$alpha[$variables{"H1"}-$variables{"appendix"}];
 			}
+			elsif ( $appendix_flag >0 ){
+				$seq=$alpha[$variables{"H1"}];
+			}
 			else {
 				$seq=$variables{"H1"};
 			}
@@ -1383,6 +1398,11 @@ sub headingpass {
 			pushout("</text>");
 			pushout("</heading>");
 			pushout("");
+		}
+		elsif (/^\.APPENDIX/){
+			$appendix_flag=1;
+			$variables{"H1"}=0;
+		
 		}
 		else { pushout($_); }
 	}
