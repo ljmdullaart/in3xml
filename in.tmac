@@ -1012,9 +1012,10 @@ in=\\n[.i] fi=\\n[.u] .d=\\n[.d] nl=\\n[nl] pg=\\n[%]
 .\"	Check if it's time for new page. Only if text has
 .\"	appeared before.
 .if \\n[Ej]&(\\n[Ej]>=\\n[hd*level])&(\\n[nl]>\\n[hd*cur-bline]) .pg@next-page
-.\"
-.if \\n[Eo]&(\\n[Eo]>0)&(\\n[hd*level]<2) \{
-.if e \{
+.\" .if \\n[Eo]&(\\n[Eo]>0)&(\\n[hd*level]<2) \{
+.if \\n[Eo]&(\\n[Eo]>0) \{
+.if o \{
+.br
 
 .pg@next-page
 \}
